@@ -1,0 +1,7 @@
+﻿  GraphicsEngine.cpp
+d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lights.h(59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(100): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(139): warning C4305: 'argument': truncation from 'double' to 'float'
+  D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
+  D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.pdb (Full PDB)

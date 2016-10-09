@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{16d36930-bc20-4b50-83cd-53e12272e9b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Deferred">
+      <UniqueIdentifier>{f5292359-8501-445b-bd0d-395dcf52d9be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{3f8f2004-6936-4f0e-94c2-81f28976d922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NetWorking">
+      <UniqueIdentifier>{47251512-488f-4012-b2b4-500e128f9190}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+    <Text Include="shader-error.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D_Template.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TinyText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneClass.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureTA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredShader.h">
+      <Filter>Render\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="LightShader.h">
+      <Filter>Render\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredBufferClass.h">
+      <Filter>Render\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="OrthoWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderToTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureRenderShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpClass.h">
+      <Filter>NetWorking</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMapRenderTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lights.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3D_Template.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneClass.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureTA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredShader.cpp">
+      <Filter>Render\Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="LightShader.cpp">
+      <Filter>Render\Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredBufferClass.cpp">
+      <Filter>Render\Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="OrthoWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderToTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureRenderShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClass.cpp">
+      <Filter>NetWorking</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMapRenderTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="D3D_Template.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="D3D_Template.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="deferredps.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="deferredvs.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="lightps.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="lightvs.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="Commons.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="FXAA_TEST.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="TexturePS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="TextureVS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="depthPS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="depthVS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
