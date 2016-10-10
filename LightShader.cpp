@@ -315,8 +315,10 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	dataPtr2 = (LightBuffer*)mappedResource.pData;
 
 	// Copy the lighting variables into the constant buffer.
-	dataPtr2->LightPosition = -XMVector4Normalize(dlight.lightProperties.Position);
-	dataPtr2->LightColor = dlight.lightProperties.Color;
+	XMVECTOR pos = XMLoadFloat4(&dlight.lightProperties.Position);
+	XMVECTOR col = XMLoadFloat4(&dlight.lightProperties.Color);
+	dataPtr2->LightPosition = -XMVector4Normalize(pos);
+	dataPtr2->LightColor	= col;
 	dataPtr2->lightViewMatrix = XMMatrixTranspose(dlight.GetLightViewMatrix());
 	dataPtr2->lightProjectionMatrix = XMMatrixTranspose(dlight.GetLightProjectionMatrix());
 

@@ -48,10 +48,10 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	textureShader->Exposure = 5.5;
 
 	//Lights and shadow map rt
-	dirLight.lightProperties.Position = XMVectorSet(10.0f, 700.0f, 100.0f, 1.0f);
+	dirLight.lightProperties.Position = XMFLOAT4(10.0f, 700.0f, 100.0f, 1.0f);
 	dirLight.CalcLightViewMatrix();
 	dirLight.CalcProjectionMatrix(0.1f, 5000.0f, 400, 400);
-	dirLight.lightProperties.Color = XMVectorSet(0.984, 0.946, 0.89, 1.0f);
+	dirLight.lightProperties.Color = XMFLOAT4(0.984, 0.946, 0.89, 1.0f);
 
 	shadowMap = new ShadowMapRenderTarget();
 	

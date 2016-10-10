@@ -40,7 +40,8 @@ public:
 	std::vector<Actor*> m_Actors;
 
 	float BlurSigma = 5.0f;
-	
+	DirectionalLight dirLight;
+
 private:
 
 	void HandleSceneInput();
@@ -48,7 +49,7 @@ private:
 	int ResetBenchMark = 0;
 	int Setting = 0;
 
-	DirectionalLight dirLight;
+	
 
 	ShadowMapRenderTarget* shadowMap;
 

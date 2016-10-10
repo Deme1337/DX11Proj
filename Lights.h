@@ -20,8 +20,8 @@ private:
 
 	struct DLight
 	{
-		XMVECTOR Position = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		XMVECTOR Color = XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		XMFLOAT4 Position = XMFLOAT4(1.0, 1.0, 1.0, 1.0); //XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		XMFLOAT4 Color = XMFLOAT4(1.0, 1.0, 1.0, 1.0); //XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	};
 
 
@@ -46,10 +46,12 @@ public:
 
 inline void DirectionalLight::CalcLightViewMatrix()
 {
-	XMVECTOR lightLookAt = -XMVector3Normalize(lightProperties.Position);
+	XMVECTOR pos = XMLoadFloat4(&lightProperties.Position);
+
+	XMVECTOR lightLookAt = -XMVector3Normalize(pos);
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 
-	XMMATRIX viewMatrix = XMMatrixLookAtLH(lightProperties.Position, lightProperties.Position + lightLookAt, up);
+	XMMATRIX viewMatrix = XMMatrixLookAtLH(pos, pos + lightLookAt, up);
 
 	this->lightViewMat = viewMatrix;
 }

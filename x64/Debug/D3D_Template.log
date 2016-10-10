@@ -1,2 +1,40 @@
-﻿  D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
+﻿  TcpClass.cpp
+d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lights.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\tcpclass.cpp(115): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  SceneClass.cpp
+d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lights.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(21): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(54): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(113): warning C4244: '=': conversion from '__int64' to 'double', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(121): warning C4244: 'initializing': conversion from '__int64' to 'double', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(131): warning C4244: 'initializing': conversion from '__int64' to 'double', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(215): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(255): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(259): warning C4244: '-=': conversion from 'double' to 'int', possible loss of data
+  LightShader.cpp
+d:\graphics-programming\d3d_template\d3d_template\lights.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lightshader.cpp(267): warning C4101: 'dataPtr3': unreferenced local variable
+d:\graphics-programming\d3d_template\d3d_template\lightshader.cpp(439): warning C4244: '=': conversion from 'SIZE_T' to 'unsigned long', possible loss of data
+  GraphicsEngine.cpp
+d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lights.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(105): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(146): warning C4305: 'argument': truncation from 'double' to 'float'
+  D3D_Template.cpp
+d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lights.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(17): warning C4800: 'BOOL': forcing value to bool 'true' or 'false' (performance warning)
+d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(20): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'long'
+d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(20): warning C4302: 'type cast': truncation from 'HANDLE' to 'long'
+d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(26): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'long'
+d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(26): warning C4302: 'type cast': truncation from 'HANDLE' to 'long'
+d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(100): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  Actor.cpp
+d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lights.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+d:\graphics-programming\d3d_template\d3d_template\tcpclass.cpp(72): warning C4715: 'TcpClass::InitializeTcpClass': not all control paths return a value
+  D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
   D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.pdb (Full PDB)
