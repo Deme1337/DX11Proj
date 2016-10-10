@@ -38,6 +38,9 @@ public:
 	int viewPortOffSet = -330;
 
 	std::vector<Actor*> m_Actors;
+
+	float BlurSigma = 5.0f;
+	
 private:
 
 	void HandleSceneInput();
@@ -55,7 +58,7 @@ private:
 	LightShader* m_LightShader;
 	FreeCamera* m_Camera;
 
-	CRenderToTexture* postProcessTexture;
+	
 	CTextureRenderShader* textureShader;
 	CRenderToTexture* specularHighLight;
 
@@ -64,9 +67,7 @@ private:
 	bool ApplyPostProcess = true;
 	int _sceneWidth, _sceneHeight;	
 
-
-
-	//XMVECTOR lightPosition = XMVectorSet(10, 500, 10, 1.0);
+	CRenderToTexture* postProcessTexture;
 
 };
 

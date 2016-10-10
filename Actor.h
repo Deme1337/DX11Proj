@@ -16,16 +16,16 @@ class Actor
 private:
 	struct ActorMatrix
 	{
-		XMVECTOR position = XMVectorSet(0.0, 0.0, 0.0, 1.0);
-		XMVECTOR rotation = XMVectorSet(0.0, 0.0, 0.0, 1.0);
-		XMVECTOR size	  = XMVectorSet(1.0, 1.0, 1.0, 1.0);
+		XMFLOAT4 position = XMFLOAT4(0.0, 0.0, 0.0, 1.0);
+		XMFLOAT4 rotation = XMFLOAT4(0.0, 0.0, 0.0, 1.0);
+		XMFLOAT4 size	  = XMFLOAT4(1.0, 1.0, 1.0, 1.0);
 	};
 
 
 	//Holder for meshes
 	Model *actorMeshes;
+	
 
-	std::string ActorPath;
 
 	CDeviceClass* devclass;
 
@@ -36,6 +36,7 @@ private:
 public:
 
 	std::string ObjectTransmissionString();
+	std::string ActorPath;
 
 	Actor(const char* modelpath,CDeviceClass *devclass);
 	~Actor();

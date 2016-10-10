@@ -25,6 +25,9 @@
     <Filter Include="NetWorking">
       <UniqueIdentifier>{47251512-488f-4012-b2b4-500e128f9190}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{4d5b1af6-d714-43b6-b1c9-d06a6ebf20ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -108,6 +111,9 @@
     <ClInclude Include="Lights.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AntUI.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -173,6 +179,9 @@
     <ClCompile Include="ShadowMapRenderTarget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AntUI.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="D3D_Template.rc">
@@ -212,13 +221,7 @@
     <None Include="TextureVS.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="depthPS.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="depthVS.hlsl">
-      <Filter>Resource Files\Shaders</Filter>
-    </FxCompile>
+    <None Include="depthPS.hlsl" />
+    <None Include="depthVS.hlsl" />
   </ItemGroup>
 </Project>

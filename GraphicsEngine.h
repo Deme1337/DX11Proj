@@ -7,6 +7,7 @@
 #include "TinyText.h"
 #include "SceneClass.h"
 #include "TcpClass.h"
+#include "AntUI.h"
 
 class GraphicsEngine
 {
@@ -25,12 +26,13 @@ public:
 private:
 
 	void PrepareScene();
-
+	void PrepareTW();
 	void GetHwndSize(HWND hWnd, int &width, int &height);
 
 	CDeviceClass *m_D3DDevice;
 
 	SceneClass* m_Scene;
+	CAntUI* m_GUI;
 
 	std::string GPUinfo;
 

@@ -7,6 +7,7 @@
 #include <future>
 
 
+
 GraphicsEngine::GraphicsEngine()
 {
 }
@@ -50,7 +51,9 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 	textContext.SetViewportSize(wwidth, wheight);
 	textContext.Init(m_D3DDevice->GetDevice(), m_D3DDevice->GetDevCon(), 128 * 128);
 
+	m_GUI = new CAntUI();
 
+	m_GUI->InitializeTW(m_D3DDevice, wwidth, wheight);
 	
 	m_Scene->InitializeScene(m_D3DDevice,wwidth,wheight, hWnd);
 
@@ -59,6 +62,8 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 	bool result = GuiMessager.InitializeTcpClass();
 
 	this->PrepareScene();
+	
+	this->PrepareTW();
 }
 
 
@@ -116,12 +121,14 @@ void GraphicsEngine::UpdateEngine()
 
 	textContext.Render();
 
+	m_GUI->DrawTW();
 
 	m_D3DDevice->GetSwapChain()->Present(0, 0);
 }
 
 void GraphicsEngine::Release()
 {
+	m_GUI->Release();
 	GuiMessager.Release();
 	m_D3DDevice->Release();
 	m_Scene->Release();
@@ -145,6 +152,18 @@ void GraphicsEngine::PrepareScene()
 	//a[1]->SetModelPosition(XMVectorSet(40, 10, 1, 1.0f));
 	//m_Scene->AddSceneActor(a[1]);
 
+}
+
+void GraphicsEngine::PrepareTW()
+{
+	m_GUI->AddVariableString("Model: ", m_Scene->m_Actors[0]->ActorPath);
+
+	m_GUI->AddVariableXMfloat("Position: ", m_Scene->m_Actors[0]->actorMatrix.position);
+	m_GUI->AddVariableXMfloat("Rotation: ", m_Scene->m_Actors[0]->actorMatrix.rotation);
+	m_GUI->AddVariableXMfloat("Scale: ", m_Scene->m_Actors[0]->actorMatrix.size);
+
+
+	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 }
 
 void GraphicsEngine::GetHwndSize(HWND hWnd, int & width, int & height)

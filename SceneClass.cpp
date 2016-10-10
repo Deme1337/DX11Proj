@@ -208,9 +208,10 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		worldMatrix = XMMatrixIdentity();
 		orthoMatrix = DevClass->GetOrthoMatrix();
 		baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
-
+		
+		textureShader->Exposure = BlurSigma;
 		textureShader->SetSpecularHighLights(DevClass->GetDevCon(), postProcessTexture->GetShaderResourceView(1));
-	
+		
 		textureShader->Render(DevClass->GetDevCon(), m_Window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, postProcessTexture->GetShaderResourceView(0), XMFLOAT2(_sceneWidth,_sceneHeight));
 		textureShader->RenderShader(DevClass->GetDevCon(), m_Window->m_indexCount);
 	}

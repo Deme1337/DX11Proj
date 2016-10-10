@@ -71,13 +71,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\lib\x86;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\FreeImage\Dist;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Teemu\Documents\AntTweakBar\include;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\lib\x86;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\FreeImage\Dist;C:\Users\Teemu\Documents\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\include;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\FreeImage\Dist\x64;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\FreeImage\Dist\x64;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\include;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\FreeImage\Dist\x64;C:\Users\Teemu\Documents\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\FreeImage\Dist\x64;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\lib\x64;C:\Users\Teemu\Documents\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -98,7 +98,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp.lib;FreeImage.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -112,7 +112,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp.lib;FreeImaged.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp.lib;FreeImaged.lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="AntUI.h" />
     <ClInclude Include="D3D_Template.h" />
     <ClInclude Include="DeferredBufferClass.h" />
     <ClInclude Include="DeferredShader.h" />
@@ -183,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="AntUI.cpp" />
     <ClCompile Include="D3D_Template.cpp" />
     <ClCompile Include="DeferredBufferClass.cpp" />
     <ClCompile Include="DeferredShader.cpp" />

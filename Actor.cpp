@@ -7,10 +7,10 @@ std::string Actor::ObjectTransmissionString()
 {
 	std::string transmission;
 
-	XMFLOAT4 LocationData; XMStoreFloat4(&LocationData, this->actorMatrix.position);
-	XMFLOAT4 RotationData; XMStoreFloat4(&RotationData, this->actorMatrix.rotation);
-	XMFLOAT4 SizeData;     XMStoreFloat4(&SizeData, this->actorMatrix.size);
-
+	XMFLOAT4 LocationData = actorMatrix.position; //XMStoreFloat4(&LocationData, this->actorMatrix.position);
+	XMFLOAT4 RotationData = actorMatrix.rotation; //XMStoreFloat4(&RotationData, this->actorMatrix.rotation);
+	XMFLOAT4 SizeData	  = actorMatrix.size;     //XMStoreFloat4(&SizeData,    this->actorMatrix.size);
+	  
 	transmission += this->ActorPath;
 
 	std::string locS = "+" + std::to_string(LocationData.x) + "+" + std::to_string(LocationData.y) + "+" + std::to_string(LocationData.z) + "+" + std::to_string(LocationData.w) + "+";
@@ -42,11 +42,16 @@ inline void Actor::UpdateMatrix()
 	XMMATRIX ScaleMatrix = XMMatrixIdentity();
 	XMMATRIX TranslationMatrix = XMMatrixIdentity();
 	XMMATRIX RotationMatrix = XMMatrixIdentity();
+	XMVECTOR pos, rot, siz;
 
-	TranslationMatrix = XMMatrixTranslationFromVector(actorMatrix.position);
+	pos = XMLoadFloat4(&actorMatrix.position);
+	rot = XMLoadFloat4(&actorMatrix.rotation);
+	siz = XMLoadFloat4(&actorMatrix.size);
 
-	RotationMatrix = XMMatrixRotationRollPitchYawFromVector(actorMatrix.rotation);
-	ScaleMatrix = XMMatrixScalingFromVector(actorMatrix.size);
+	TranslationMatrix = XMMatrixTranslationFromVector(pos);
+
+	RotationMatrix = XMMatrixRotationRollPitchYawFromVector(rot);
+	ScaleMatrix = XMMatrixScalingFromVector(siz);
 
 
 	modelMatrix = RotationMatrix  * ScaleMatrix *TranslationMatrix;
@@ -54,7 +59,7 @@ inline void Actor::UpdateMatrix()
 
 void Actor::SetModelSize(XMVECTOR r)
 {
-	this->actorMatrix.size = r;
+	XMStoreFloat4(&actorMatrix.size, r);
 	UpdateMatrix();
 }
 
@@ -83,19 +88,7 @@ void Actor::SetBumpTexture(char * path)
 
 void Actor::RenderShadowMap(CDeviceClass * devclass, CDepthShader *shader)
 {
-	modelMatrix = XMMatrixIdentity();
-	XMMATRIX ScaleMatrix = XMMatrixIdentity();
-	XMMATRIX TranslationMatrix = XMMatrixIdentity();
-	XMMATRIX RotationMatrix = XMMatrixIdentity();
-
-	TranslationMatrix = XMMatrixTranslationFromVector(actorMatrix.position);
-
-	RotationMatrix = XMMatrixRotationRollPitchYawFromVector(actorMatrix.rotation);
-	ScaleMatrix = XMMatrixScalingFromVector(actorMatrix.size);
-
-
-	modelMatrix = RotationMatrix  * ScaleMatrix *TranslationMatrix;
-
+	UpdateMatrix();
 
 	for (size_t i = 0; i < this->actorMeshes->meshes.size(); i++)
 	{
@@ -106,18 +99,8 @@ void Actor::RenderShadowMap(CDeviceClass * devclass, CDepthShader *shader)
 void Actor::RenderModel(CDeviceClass * devclass, DeferredShader* defshader)
 {
 
-	modelMatrix = XMMatrixIdentity();
-	XMMATRIX ScaleMatrix = XMMatrixIdentity();
-	XMMATRIX TranslationMatrix = XMMatrixIdentity();
-	XMMATRIX RotationMatrix = XMMatrixIdentity();
+	UpdateMatrix();
 
-	TranslationMatrix = XMMatrixTranslationFromVector(actorMatrix.position);
-
-	RotationMatrix = XMMatrixRotationRollPitchYawFromVector(actorMatrix.rotation);
-	ScaleMatrix = XMMatrixScalingFromVector(actorMatrix.size);
-
-
-	modelMatrix = RotationMatrix  * ScaleMatrix *TranslationMatrix;
 
 	if (diffuse != nullptr || specular != nullptr || bump != nullptr)
 	{
@@ -143,12 +126,12 @@ void Actor::Release()
 
 void Actor::SetModelPosition(XMVECTOR s)
 {
-	this->actorMatrix.position = s;
+	XMStoreFloat4(&actorMatrix.position, s);
 	UpdateMatrix();
 }
 
 void Actor::SetModelRotation(XMVECTOR r)
 {
-	this->actorMatrix.rotation = r;
+	XMStoreFloat4(&actorMatrix.rotation, r);
 	UpdateMatrix();
 }

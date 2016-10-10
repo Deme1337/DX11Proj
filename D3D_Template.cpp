@@ -180,6 +180,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
+	if (TwEventWin(hWnd,message,wParam,lParam))
+	{
+		return 0;
+	}
+
     switch (message)
     {
     case WM_COMMAND:
