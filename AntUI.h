@@ -7,6 +7,7 @@
 #include "DeviceClass.h"
 #include <AntTweakBar.h>
 #include <vector>
+#include "SceneClass.h"
 
 
 class CAntUI
@@ -14,8 +15,12 @@ class CAntUI
 public:
 	CAntUI();
 	~CAntUI();
+	TwBar* testBar;
+	TwBar* loaderBar;
+	SceneClass* MainScene;
+	HWND mainWindow;
 
-	bool InitializeTW(CDeviceClass *devclass, int width, int height);
+	bool InitializeTW(CDeviceClass *devclass, int width, int height, SceneClass *scene);
 
 	
 	void AddVariableString(const char* name, std::string &var);
@@ -23,6 +28,7 @@ public:
 	void AddVariableFloat(const char* name, float &var);
 
 
+	void LoadModel(CAntUI *clientData);
 
 	void DrawTW();
 
@@ -32,10 +38,11 @@ private:
 	CDeviceClass* m_D3DClass;
 	int _width, _height;
 
-	TwBar* testBar;
+	std::string ModelPathLoad;
 
-	std::vector<TwBar*> twBars;
 
 };
+
+
 
 #endif

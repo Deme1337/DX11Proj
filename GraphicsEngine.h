@@ -38,8 +38,8 @@ private:
 
 	TinyTextContext_c textContext;
 	int _sampleCount = 1;
-	bool FullScreen = false;
-
+	bool FullScreen = true;
+	int ObjectSelectedIndex = 0;
 	
 
 	std::string SceneInitTime;

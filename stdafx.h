@@ -32,6 +32,10 @@ namespace Keys
 
 
 
+// wide char to multi byte:
+std::string ws2s(const std::wstring& wstr);
+
+
 //Safe release from http://www.3dgep.com/introduction-to-directx-11/#DXGI
 // Safely release a COM object.
 template<typename T>
@@ -165,3 +169,30 @@ int main(){
 	}
 	
 */
+
+
+
+#ifndef FILE_DLG
+#define FILE_DLG
+#include <Windows.h>
+#include <Commdlg.h>
+#include <tchar.h>
+
+class OpenFileDialog
+{
+public:
+	OpenFileDialog(void);
+
+	TCHAR*DefaultExtension;
+	TCHAR*FileName;
+	TCHAR*Filter;
+	int FilterIndex;
+	int Flags;
+	TCHAR*InitialDir;
+	HWND Owner;
+	TCHAR*Title;
+
+	bool ShowDialog();
+};
+
+#endif

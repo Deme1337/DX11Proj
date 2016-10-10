@@ -76,8 +76,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\include;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\FreeImage\Dist\x64;C:\Users\Teemu\Documents\AntTweakBar\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Graphics-programming\D3D_Template\D3D_Template\Ext\FreeImage\Dist\x64;D:\Graphics-programming\D3D_Template\D3D_Template\Ext\Assimp\lib\x64;C:\Users\Teemu\Documents\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>Ext\Assimp\include;Ext\FreeImage\Dist\x64;Ext\AntTweak\include;$(IncludePath)</IncludePath>
+    <LibraryPath>Ext\FreeImage\Dist\x64;Ext\Assimp\lib\x64;Ext\AntTweak\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

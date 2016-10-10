@@ -42,6 +42,7 @@ public:
 
 	void GetVideoCardInfo(char*, int&);
 	void Release();
+	void SetFullScreen();
 
 	void ResolveSubRC(ID3D11Resource &srcRes, UINT srcSubRes);
 

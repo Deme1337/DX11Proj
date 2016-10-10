@@ -50,11 +50,11 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 	output.position = input.worldPosition;
 
 	output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex);
-	
+	/*
 	if (output.color.a < 0.9)
 	{
 		discard;
 	}
-	
+	*/
     return output;
 }

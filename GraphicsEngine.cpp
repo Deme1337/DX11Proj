@@ -52,8 +52,8 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 	textContext.Init(m_D3DDevice->GetDevice(), m_D3DDevice->GetDevCon(), 128 * 128);
 
 	m_GUI = new CAntUI();
-
-	m_GUI->InitializeTW(m_D3DDevice, wwidth, wheight);
+	m_GUI->mainWindow = hWnd;
+	m_GUI->InitializeTW(m_D3DDevice, wwidth, wheight, m_Scene);
 	
 	m_Scene->InitializeScene(m_D3DDevice,wwidth,wheight, hWnd);
 
@@ -97,7 +97,16 @@ void GraphicsEngine::UpdateEngine()
 		GuiMessager.Send();
 	}
 
-
+	if (Keys::onekey(VKEY_UP_ARROW) && ObjectSelectedIndex < m_Scene->m_Actors.size())
+	{
+		ObjectSelectedIndex += 1;
+		this->PrepareTW();
+	}
+	if (Keys::onekey(VKEY_DOWN_ARROW) && ObjectSelectedIndex > 0)
+	{
+		ObjectSelectedIndex -= 1;
+		this->PrepareTW();
+	}
 
 	double lTime = tclock2 - tclock1;
 
@@ -145,22 +154,23 @@ void GraphicsEngine::PrepareScene()
 	a[0] = new Actor("Models\\Crytek\\sponza\\sponza.obj", m_D3DDevice);
 	a[0]->SetModelSize(XMVectorSet(0.1, 0.1, 0.1, 1.0));
 	a[0]->SetModelPosition(XMVectorSet(1, 1, 1, 1.0f));
-	m_Scene->AddSceneActor(a[0]);
+	m_Scene->AddSceneActor(a[0],m_D3DDevice);
 
-	//a[1] = new Actor("C:\\models\\cerberus\\cerberus.obj", m_D3DDevice);
-	//a[1]->SetModelSize(XMVectorSet(50.0, 50.0, 50.0, 1.0));
-	//a[1]->SetModelPosition(XMVectorSet(40, 10, 1, 1.0f));
-	//m_Scene->AddSceneActor(a[1]);
+	a[1] = new Actor("C:\\models\\cerberus\\cerberus.obj", m_D3DDevice);
+	a[1]->SetModelSize(XMVectorSet(5.0, 5.0, 5.0, 1.0));
+	a[1]->SetModelPosition(XMVectorSet(40, 10, 1, 1.0f));
+	m_Scene->AddSceneActor(a[1],m_D3DDevice);
 
 }
 
 void GraphicsEngine::PrepareTW()
 {
-	m_GUI->AddVariableString("Model: ", m_Scene->m_Actors[0]->ActorPath);
+	TwRemoveAllVars(m_GUI->testBar);
+	m_GUI->AddVariableString("Model: ", m_Scene->m_Actors[ObjectSelectedIndex]->ActorPath);
 
-	m_GUI->AddVariableXMfloat("Position: ", m_Scene->m_Actors[0]->actorMatrix.position);
-	m_GUI->AddVariableXMfloat("Rotation: ", m_Scene->m_Actors[0]->actorMatrix.rotation);
-	m_GUI->AddVariableXMfloat("Scale: ", m_Scene->m_Actors[0]->actorMatrix.size);
+	m_GUI->AddVariableXMfloat("Position: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.position);
+	m_GUI->AddVariableXMfloat("Rotation: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.rotation);
+	m_GUI->AddVariableXMfloat("Scale: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.size);
 
 
 	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);

@@ -15,6 +15,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 {
 	this->_sceneWidth = scenewidth;
 	this->_sceneHeight = sceneheight;
+	this->mainWindow = hWnd;
 
 	m_DeferredBuffer = new DeferredBuffersClass();
 	
@@ -220,6 +221,15 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	DevClass->TurnZBufferOn();
 }
 
+void SceneClass::AddSceneActor(Actor * a, CDeviceClass* devc)
+{
+	
+	this->m_Actors.push_back(a);
+	devc->ResetViewPort();
+	devc->UpdateViewPort(1920,1080);
+	
+}
+
 
 
 void SceneClass::Release()
@@ -242,14 +252,7 @@ void SceneClass::Release()
 void SceneClass::HandleSceneInput()
 {
 
-	if (Keys::key(VKEY_UP_ARROW))
-	{
-		textureShader->Exposure++;
-	}
-	if (Keys::key(VKEY_DOWN_ARROW))
-	{
-		textureShader->Exposure--;
-	}
+	
 	if (Keys::key(VKEY_LEFT_ARROW))
 	{
 		viewPortOffSet += 1.0;

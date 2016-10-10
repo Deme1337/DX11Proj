@@ -460,6 +460,11 @@ void CDeviceClass::Release()
 	SafeRelease(m_alphaDisableBlendingState);
 }
 
+void CDeviceClass::SetFullScreen()
+{
+	swapchain->SetFullscreenState(TRUE, adapterOutput);
+}
+
 void CDeviceClass::ResolveSubRC(ID3D11Resource &srcRes, UINT srcSubRes)
 {
 	this->devcon->ResolveSubresource(dstbbResource, 0, &srcRes, 0, DXGI_FORMAT_R32G32B32_FLOAT);
@@ -535,6 +540,7 @@ void CDeviceClass::SetAntiAliasing(int samplecount)
 void CDeviceClass::ResetViewPort()
 {
 	// Set the viewport.
+	UpdateWindow(this->mainWindow);
 	devcon->RSSetViewports(1, &viewport);
 }
 

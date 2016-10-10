@@ -30,7 +30,7 @@ public:
 	void GeometryPass(CDeviceClass *DevClass);
 	void LightPass(CDeviceClass *DevClass);
 
-	void AddSceneActor(Actor* a) { m_Actors.push_back(a); }
+	void AddSceneActor(Actor* a, CDeviceClass* devc);
 
 	void Release();	
 	double GeoBenchMarks[4];
@@ -64,6 +64,7 @@ private:
 	CRenderToTexture* specularHighLight;
 
 	COrthoWindow* m_Window;
+	HWND mainWindow;
 
 	bool ApplyPostProcess = true;
 	int _sceneWidth, _sceneHeight;	
