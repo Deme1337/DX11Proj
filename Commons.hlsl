@@ -117,7 +117,7 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 		lightMatrix.z < 0.0f  || lightMatrix.z > 1.0f 
 		)
 	{
-		return 0.4f;
+		return 0.2f;
 	}
 	
 	lightMatrix.x = lightMatrix.x / 2.0f + 0.5f;
@@ -144,12 +144,12 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 	
 	
 
-	if (visibility < 0.4f)
+	if (visibility < 0.2f)
 	{
-		visibility = 0.4f;
+		visibility = 0.2f;
 	}
 
-	visibility /= 4.0f;
+	visibility /= 8.0f;
 
 	
 	return visibility;

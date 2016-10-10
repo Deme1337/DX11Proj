@@ -91,7 +91,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float3 lightDir;
 	float lightIntensity;
 	float4 outputColor;
-	float4 ambientLight = 0.4;
+	float4 ambientLight = 0.2;
 	float4 specularColor;
 
 	float2 TexPos = input.tex;
@@ -135,23 +135,30 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
     // Calculate the amount of light on this pixel.
     lightIntensity = saturate(dot(normals.xyz, lightDir));
+	
+	
 	ambientLight *= colors;
 
 
 	float a = roughnessTexture.Sample(SampleTypePoint, input.tex).x;
 
 	float3 DiffuseLight = lightIntensity * colors * lightColor;
-
-	//Specular
-	//float4 specularLight = pow(saturate(dot(normals,H)), 20.0);
-	//specularLight *= specularColor.r;
+	
 
 	float4 specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f) * specularColor;
 	
 
     // Determine the final amount of diffuse color based on the color of the pixel combined with the light intensity.
-    output.color = saturate(ambientLight + (float4(DiffuseLight,1.0)* shadow + specularLight)) ;
-	output.specular = specularLight;
+    output.color = saturate(ambientLight + (float4(DiffuseLight,1.0)* shadow + specularLight));
+
+	if (shadow > 1.0f)
+	{
+		output.specular = saturate(ambientLight + (float4(DiffuseLight, 1.0) + specularLight)) * 0.4;
+	}
+	else
+	{
+		output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	}
 
 	return output;
 }

@@ -30,14 +30,14 @@ float4 Blur(PixelInputType input, Texture2D shaderTexture, float2 texScale, floa
 
 	float4 color = 0;
 	float weightSum = 0.0f;
-	for (int i = -7; i < 7; i++)
+	for (int i = -11; i < 11; i++)
 	{
 		float weight = CalcGaussianWeight(i, sigma);
 		weightSum += weight;
 		float2 texCoord = input.tex;
 		texCoord += (i / inputSize) * texScale;
-		float4 sample = shaderTexture.Sample(SampleType, texCoord);
-		color += sample * weight;
+		float4 samples = shaderTexture.Sample(SampleType, texCoord);
+		color += samples * weight;
 	}
 
 	if (nrmlize)
@@ -51,33 +51,6 @@ float2 texOffset(int u, int v)
 	return float2(u * 1.0f / screenWH.x, v * 1.0f / screenWH.y);
 }
 #include "FXAA_TEST.hlsl"
-float4 BlurTest(PixelInputType input)
-{
-	float4 BlurredColor = float4(0.0, 0.0, 0.0, 0.0);
-	// Initialize the color to black.
-
-	float x, y;
-	float LOS = 1.0f;
-
-
-	[unroll]
-			for (y = -LOS; y <= LOS; y += 1.0f)
-			{
-				for (x = -LOS; x <= LOS; x += 1.0f)
-				{
-
-					FxaaTex fColors;
-					fColors.smpl = SampleType;
-					fColors.tex = specHighTex;
-					BlurredColor += float4(FxaaPixelShader(input.tex + texOffset(x, y), fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
-				}
-			}
-		
-	
-
-
-	return BlurredColor / 4.0;
-}
 
 // Applies the approximated version of HP Duiker's film stock curve
 float3 ToneMapFilmicALU(in float3 color)
@@ -103,9 +76,9 @@ float4 ToneMap(float4 TexColor)
 // Initial pass for bloom
 float4 Bloom(PixelInputType input)
 {
-	float4 reds   = shaderTexture.GatherRed(  SampleType, input.tex);
-	float4 greens = shaderTexture.GatherGreen(SampleType, input.tex);
-	float4 blues  = shaderTexture.GatherBlue( SampleType, input.tex);
+	float4 reds   = specHighTex.GatherRed(  SampleType, input.tex);
+	float4 greens = specHighTex.GatherGreen(SampleType, input.tex);
+	float4 blues  = specHighTex.GatherBlue( SampleType, input.tex);
 
 	float3 result = 0.0f;
 
@@ -146,6 +119,7 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
 
+	float sigma = expa;
 
 	FxaaTex fColors;
 	fColors.smpl = SampleType;
@@ -155,9 +129,11 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 	float4 specBloomTex = specHighTex.Sample(SampleType, input.tex);
 
 
-	textureColor += Bloom(input) * Blur(input, shaderTexture, float2(0, 1), 0.5, false) * Blur(input, shaderTexture, float2(1, 0), 0.5, false);
+	textureColor += Bloom(input) + (Blur(input, specHighTex, float2(0, 1), sigma, false) + Blur(input, specHighTex, float2(1, 0), sigma, false));
 
 	textureColor *= ToneMap(textureColor);
+
+	textureColor = pow(textureColor, 1.0f / 1.6);
 
 	return textureColor;
 }

@@ -45,7 +45,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	textureShader = new CTextureRenderShader();
 
 	textureShader->Initialize(DevClass->GetDevice(), hWnd);
-
+	textureShader->Exposure = 5.5;
 
 	//Lights and shadow map rt
 	dirLight.lightProperties.Position = XMVectorSet(10.0f, 700.0f, 100.0f, 1.0f);
@@ -140,8 +140,8 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	HandleSceneInput();
 
 	DevClass->TurnZBufferOff();
-
-
+	m_Window->UpdateWindow(DevClass->GetDevCon(), viewPortOffSet, 0);
+	DevClass->ResetViewPort();
 	if (ApplyPostProcess)
 	{
 		postProcessTexture->ClearRenderTarget(DevClass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
@@ -189,12 +189,12 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight);
 	}
 
-	m_Window->UpdateWindow(DevClass->GetDevCon(), viewPortOffSet, 0);
+
 	m_Window->Render(DevClass->GetDevCon());
 	m_LightShader->Update(DevClass, m_Window->m_indexCount);
 
-	DevClass->ResetViewPort();
 
+	DevClass->ResetViewPort();
 	//Postprocess 
 	if (ApplyPostProcess)
 	{
@@ -210,6 +210,7 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
 		textureShader->SetSpecularHighLights(DevClass->GetDevCon(), postProcessTexture->GetShaderResourceView(1));
+	
 		textureShader->Render(DevClass->GetDevCon(), m_Window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, postProcessTexture->GetShaderResourceView(0), XMFLOAT2(_sceneWidth,_sceneHeight));
 		textureShader->RenderShader(DevClass->GetDevCon(), m_Window->m_indexCount);
 	}
@@ -240,6 +241,14 @@ void SceneClass::Release()
 void SceneClass::HandleSceneInput()
 {
 
+	if (Keys::key(VKEY_UP_ARROW))
+	{
+		textureShader->Exposure++;
+	}
+	if (Keys::key(VKEY_DOWN_ARROW))
+	{
+		textureShader->Exposure--;
+	}
 	if (Keys::key(VKEY_LEFT_ARROW))
 	{
 		viewPortOffSet += 1.0;
