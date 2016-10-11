@@ -19,6 +19,7 @@ public:
 	TwBar* loaderBar;
 	SceneClass* MainScene;
 	HWND mainWindow;
+	int SelectedIndex = 0;
 
 	bool InitializeTW(CDeviceClass *devclass, int width, int height, SceneClass *scene);
 
@@ -26,9 +27,12 @@ public:
 	void AddVariableString(const char* name, std::string &var);
 	void AddVariableXMfloat(const char* name, XMFLOAT4 &var);
 	void AddVariableFloat(const char* name, float &var);
-
+	void AddVariableBoolean(const char* name, bool &var);
 
 	void LoadModel(CAntUI *clientData);
+	void DeleteModel(CAntUI* clientData);
+
+	void SaveScene(CAntUI* clientData);
 
 	void DrawTW();
 

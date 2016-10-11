@@ -35,6 +35,7 @@ private:
 
 public:
 
+	bool HasAlpha = false;
 	std::string ObjectTransmissionString();
 	std::string ActorPath;
 

@@ -15,6 +15,8 @@
 #include "Lights.h"
 #include "ShadowMapRenderTarget.h"
 #include "DepthShader.h"
+#include "Skydome.h"
+#include "SkyDomeShader.h"
 
 #include <vector>
 
@@ -31,15 +33,19 @@ public:
 	void LightPass(CDeviceClass *DevClass);
 
 	void AddSceneActor(Actor* a, CDeviceClass* devc);
+	void SaveScene(std::string path);
+
 
 	void Release();	
 	double GeoBenchMarks[4];
 
 	int viewPortOffSet = -330;
+	std::string SceneName = ""; 
 
 	std::vector<Actor*> m_Actors;
 
-	float BlurSigma = 5.0f;
+	XMFLOAT4 sunProjectionFloats = XMFLOAT4(5000.0f, 400.0f, 400.0f,1.0f);
+	float BlurSigma = 11.0f;
 	DirectionalLight dirLight;
 
 private:
@@ -49,7 +55,8 @@ private:
 	int ResetBenchMark = 0;
 	int Setting = 0;
 
-	
+	CSkydome* m_SkyDome;
+	CSkyDomeShader* m_SkyDomeShader;
 
 	ShadowMapRenderTarget* shadowMap;
 
@@ -68,6 +75,7 @@ private:
 
 	bool ApplyPostProcess = true;
 	int _sceneWidth, _sceneHeight;	
+
 
 	CRenderToTexture* postProcessTexture;
 

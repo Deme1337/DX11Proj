@@ -18,7 +18,10 @@ private:
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX projection;
+		int HasAlpha;
 	};
+
+	
 
 public:
 	DeferredShader();
@@ -30,7 +33,7 @@ public:
 	void UpdateTextureSpecular(CDeviceClass * devclass, ID3D11ShaderResourceView* texture);
 	void UpdateTextureRough(CDeviceClass * devclass, ID3D11ShaderResourceView* texture);
 
-	void UpdateShader(CDeviceClass* devclass, XMMATRIX& world, XMMATRIX& view, XMMATRIX& projection);
+	void UpdateShader(CDeviceClass* devclass, XMMATRIX& world, XMMATRIX& view, XMMATRIX& projection, bool HasAlpha);
 
 	void RenderShader(CDeviceClass* devclass, int indexCount);
 	

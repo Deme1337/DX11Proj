@@ -152,8 +152,8 @@ bool CDeviceClass::InitDeviceAndSwapChain(HWND hWnd, HINSTANCE hInst, int width,
 
 
 	// Set the refresh rate of the back buffer.
-	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-	swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
+	swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
+	swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
 
 
 	// Set the usage of the back buffer.
@@ -187,7 +187,7 @@ bool CDeviceClass::InitDeviceAndSwapChain(HWND hWnd, HINSTANCE hInst, int width,
 
 	// Don't set the advanced flags.
 	swapChainDesc.Flags = 0;
-
+	
 	// Set the feature level to DirectX 11.
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 

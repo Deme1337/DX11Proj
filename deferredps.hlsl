@@ -16,6 +16,7 @@ struct PixelInputType
     float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
 	float4 worldPosition : TEXCOORD1;
+	int HasAlpha : TEXCOORD2;
 };
 
 struct PixelOutputType
@@ -50,11 +51,11 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 	output.position = input.worldPosition;
 
 	output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex);
-	/*
-	if (output.color.a < 0.9)
+	
+	if (output.color.a < 0.4 && input.HasAlpha == 1)
 	{
 		discard;
 	}
-	*/
+	
     return output;
 }

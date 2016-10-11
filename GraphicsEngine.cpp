@@ -61,6 +61,8 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 	
 	bool result = GuiMessager.InitializeTcpClass();
 
+	m_Scene->SceneName = "MainScene1";
+
 	this->PrepareScene();
 	
 	this->PrepareTW();
@@ -99,12 +101,28 @@ void GraphicsEngine::UpdateEngine()
 
 	if (Keys::onekey(VKEY_UP_ARROW) && ObjectSelectedIndex < m_Scene->m_Actors.size())
 	{
-		ObjectSelectedIndex += 1;
+		if (ObjectSelectedIndex >= m_Scene->m_Actors.size()-1)
+		{
+			ObjectSelectedIndex = 0;
+		}
+		else
+		{
+			ObjectSelectedIndex += 1;
+		}
+	
 		this->PrepareTW();
 	}
 	if (Keys::onekey(VKEY_DOWN_ARROW) && ObjectSelectedIndex > 0)
 	{
-		ObjectSelectedIndex -= 1;
+		if (ObjectSelectedIndex <= 0)
+		{
+			ObjectSelectedIndex = m_Scene->m_Actors.size()-1;
+		}
+		else
+		{
+			ObjectSelectedIndex -= 1;
+		}
+		
 		this->PrepareTW();
 	}
 
@@ -166,17 +184,19 @@ void GraphicsEngine::PrepareScene()
 void GraphicsEngine::PrepareTW()
 {
 	TwRemoveAllVars(m_GUI->testBar);
+	m_GUI->SelectedIndex = ObjectSelectedIndex;
 	m_GUI->AddVariableString("Model: ", m_Scene->m_Actors[ObjectSelectedIndex]->ActorPath);
 
 	m_GUI->AddVariableXMfloat("Position: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.position);
 	m_GUI->AddVariableXMfloat("Rotation: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.rotation);
 	m_GUI->AddVariableXMfloat("Scale: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.size);
-
+	m_GUI->AddVariableBoolean("Alpha cull: ", m_Scene->m_Actors[ObjectSelectedIndex]->HasAlpha);
 
 	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 
 	m_GUI->AddVariableXMfloat("Sun Position: ", m_Scene->dirLight.lightProperties.Position);
 	m_GUI->AddVariableXMfloat("Sun Color: ", m_Scene->dirLight.lightProperties.Color);
+	m_GUI->AddVariableXMfloat("Sun projection: ", m_Scene->sunProjectionFloats);
 }
 
 void GraphicsEngine::GetHwndSize(HWND hWnd, int & width, int & height)

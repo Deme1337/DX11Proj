@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "SceneClass.h"
+#include <fstream>
+
 
 
 SceneClass::SceneClass()
@@ -65,6 +67,15 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	m_ShadowShader->Initialize(DevClass->GetDevice(), NULL);
 
+	m_SkyDome = new CSkydome();
+
+	m_SkyDome->Initialize(DevClass->GetDevice());
+	
+
+	m_SkyDomeShader = new CSkyDomeShader();
+
+	m_SkyDomeShader->Initialize(DevClass->GetDevice(), hWnd);
+
 
 	m_Camera = new FreeCamera(hWnd);
 	m_Camera->SetCameraPosition(XMVectorSet(0, 10, -10, 1.0));
@@ -76,14 +87,14 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 void SceneClass::ShadowPass(CDeviceClass * DevClass)
 {
 	DevClass->TurnCullingOff();
-
+	DevClass->TurnZBufferOn();
 	XMMATRIX worlMatrix, viewMatrix, projectionMatrix;
 
 	shadowMap->SetRenderTarget(DevClass->GetDevCon());
 	shadowMap->ClearRenderTarget(DevClass->GetDevCon(),0.0f, 0.0f, 0.0f, 1.0f);
 
 	dirLight.CalcLightViewMatrix();
-	dirLight.CalcProjectionMatrix(0.1f, 5000.0f, 400, 400);
+	dirLight.CalcProjectionMatrix(0.1f, sunProjectionFloats.x, sunProjectionFloats.y, sunProjectionFloats.z);
 
 	for (size_t i = 0; i < this->m_Actors.size(); i++)
 	{
@@ -103,6 +114,10 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 {
 	
 	m_Camera->UpdateCamera();
+
+	DevClass->TurnCullingOn();
+	DevClass->TurnZBufferOn();
+
 	XMMATRIX projection, view;
 
 	projection = DevClass->GetProjectionMatrix();
@@ -118,7 +133,7 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	{
 
 		TimeVar time3 = timeNow();
-		m_DeferredShader->UpdateShader(DevClass, m_Actors[i]->modelMatrix, view, projection);
+		m_DeferredShader->UpdateShader(DevClass, m_Actors[i]->modelMatrix, view, projection, m_Actors[i]->HasAlpha);
 		double geo2New = duration(timeNow() - time3);
 		GeoBenchMarks[2] = geo2New;
 		
@@ -136,6 +151,28 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 
 void SceneClass::LightPass(CDeviceClass * DevClass)
 {
+	/*
+	//Skydome Rendering turn off culling and depth testing
+	{
+		DevClass->TurnCullingOff();
+		DevClass->TurnZBufferOff();
+		XMMATRIX projection, view;
+		XMMATRIX worldMat = XMMatrixIdentity();
+		projection = DevClass->GetProjectionMatrix();
+		view = m_Camera->GetCameraView();
+		m_SkyDome->Render(DevClass->GetDevCon());
+
+		if (!m_SkyDomeShader->Update(DevClass->GetDevCon(), m_SkyDome->GetIndexCount(),
+			worldMat, view, projection, m_SkyDome->GetApexColor(), m_SkyDome->GetCenterColor(), dirLight))
+		{
+			MessageBox(NULL, L"Error skydome rendering", L"ERROR", MB_OK);
+		}
+		DevClass->TurnCullingOn();
+		DevClass->TurnZBufferOn();
+		projection = DevClass->GetProjectionMatrix();
+		view = m_Camera->GetCameraView();
+	}
+	*/
 	XMMATRIX worldMatrix, baseViewMatrix, orthoMatrix;
 	
 	HandleSceneInput();
@@ -196,9 +233,12 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 
 
 	DevClass->ResetViewPort();
+
+
 	//Postprocess 
 	if (ApplyPostProcess)
 	{
+
 		DevClass->Begin();
 		DevClass->SetBackBufferRenderTarget();
 
@@ -218,7 +258,7 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	}
 
 
-	DevClass->TurnZBufferOn();
+
 }
 
 void SceneClass::AddSceneActor(Actor * a, CDeviceClass* devc)
@@ -229,6 +269,22 @@ void SceneClass::AddSceneActor(Actor * a, CDeviceClass* devc)
 	devc->UpdateViewPort(1920,1080);
 	
 }
+
+void SceneClass::SaveScene(std::string path)
+{
+	std::ofstream SaveFile;
+
+	SaveFile.open(path);
+
+	for (size_t i = 0; i < m_Actors.size(); i++)
+	{
+		SaveFile << m_Actors[i]->ObjectTransmissionString() << std::endl;
+	}
+
+	SaveFile.close();
+}
+
+
 
 
 
@@ -246,7 +302,8 @@ void SceneClass::Release()
 	m_LightShader->Release();
 	m_Window->Shutdown();
 	m_Camera->~FreeCamera();
-
+	m_SkyDome->Shutdown();
+	m_SkyDomeShader->Shutdown();
 }
 
 void SceneClass::HandleSceneInput()

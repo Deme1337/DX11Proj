@@ -2,6 +2,8 @@
 #include "AntUI.h"
 #include "Actor.h"
 
+
+
 CAntUI::CAntUI()
 {
 }
@@ -10,7 +12,7 @@ CAntUI::CAntUI()
 CAntUI::~CAntUI()
 {
 }
-CAntUI* c;
+
 
 
 void CAntUI::LoadModel(CAntUI *clientData)
@@ -36,7 +38,33 @@ void CAntUI::LoadModel(CAntUI *clientData)
 	}
 }
 
+void CAntUI::DeleteModel(CAntUI * clientData)
+{
+	clientData->MainScene->m_Actors[clientData->SelectedIndex]->Release();
+	clientData->MainScene->m_Actors.erase(clientData->MainScene->m_Actors.begin() + clientData->SelectedIndex);
+}
 
+void CAntUI::SaveScene(CAntUI * clientData)
+{
+	std::string SceneSavePath;
+
+	SceneSavePath = "Scenes\\" + clientData->MainScene->SceneName + ".scenefile";
+
+	clientData->MainScene->SaveScene(SceneSavePath);
+
+}
+
+void TW_CALL SaveSceneS(void *clientData)
+{
+	CAntUI *ca = (CAntUI*)clientData;
+	ca->SaveScene(ca);
+}
+
+void TW_CALL DeleteActor(void *clientData)
+{
+	CAntUI *ca = (CAntUI*)clientData;
+	ca->DeleteModel(ca);
+}
 
 void TW_CALL LoadModelS(void *clientData)
 {
@@ -70,8 +98,9 @@ bool CAntUI::InitializeTW(CDeviceClass *devclass, int width, int height,SceneCla
 
 	TwAddVarRW(loaderBar, "Load: ", TW_TYPE_STDSTRING, &ModelPathLoad, "");
 
-	TwAddButton(loaderBar, "LoadModel", LoadModelS, this, "");
-
+	TwAddButton(loaderBar, "Load Model", LoadModelS, this, "");
+	TwAddButton(loaderBar, "Delete Model", DeleteActor, this, "");
+	TwAddButton(loaderBar, "Save Scene",SaveSceneS , this, "");
 	return true;
 }
 
@@ -88,6 +117,11 @@ void CAntUI::AddVariableXMfloat(const char * name, XMFLOAT4 &var)
 void CAntUI::AddVariableFloat(const char * name, float & var)
 {
 	TwAddVarRW(testBar, name, TW_TYPE_FLOAT, &var, "");
+}
+
+void CAntUI::AddVariableBoolean(const char * name, bool & var)
+{
+	TwAddVarRW(testBar, name, TW_TYPE_BOOL32, &var, "");
 }
 
 void CAntUI::DrawTW()

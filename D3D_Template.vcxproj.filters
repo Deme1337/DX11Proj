@@ -114,6 +114,12 @@
     <ClInclude Include="AntUI.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Skydome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyDomeShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -182,6 +188,12 @@
     <ClCompile Include="AntUI.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Skydome.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyDomeShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="D3D_Template.rc">
@@ -221,7 +233,17 @@
     <None Include="TextureVS.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="depthPS.hlsl" />
-    <None Include="depthVS.hlsl" />
+    <None Include="depthVS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="depthPS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="SkydomeVS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="SkyDomePS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

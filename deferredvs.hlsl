@@ -4,6 +4,7 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
+	int HasAlpha;
 };
 
 
@@ -25,6 +26,7 @@ struct PixelInputType
     float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
 	float4 worldPosition : TEXCOORD1;
+	int HasAlpha : TEXCOORD2;
 };
 
 
@@ -44,7 +46,8 @@ PixelInputType DeferredVertexShader(VertexInputType input)
 
     
 	// Store the texture coordinates for the pixel shader.
-    output.tex = input.tex;
+	float2 newTex = input.tex;
+    output.tex = newTex;
     
 	// Calculate the normal vector against the world matrix only.
     output.normal = mul(input.normal, (float3x3)worldMatrix);
@@ -59,6 +62,8 @@ PixelInputType DeferredVertexShader(VertexInputType input)
 	// Calculate the binormal vector against the world matrix only and then normalize the final value.
 	output.binormal = mul(input.binormal, (float3x3)worldMatrix);
 	output.binormal = normalize(output.binormal);
+
+	output.HasAlpha = HasAlpha;
 
 	return output;
 }

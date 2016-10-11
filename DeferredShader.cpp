@@ -203,7 +203,7 @@ void DeferredShader::UpdateTextureRough(CDeviceClass * devclass, ID3D11ShaderRes
 	devclass->GetDevCon()->PSSetShaderResources(3, 1, &texture);
 }
 
-void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMATRIX & view, XMMATRIX & projection)
+void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMATRIX & view, XMMATRIX & projection, bool HasAlpha)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -229,6 +229,7 @@ void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMA
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = world;
 	dataPtr->view = XMMatrixMultiply(projection, view);
+	dataPtr->HasAlpha = HasAlpha;
 	//dataPtr->projection = projection;
 
 	// Unlock the constant buffer.

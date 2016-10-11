@@ -94,7 +94,6 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float4 ambientLight = 0.2;
 	float4 specularColor;
 
-	float2 TexPos = input.tex;
 
 	
 	// Sample the colors from the color render texture using the point sampler at this texture coordinate location.
@@ -148,15 +147,18 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float4 specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f) * specularColor;
 	
 
-    // Determine the final amount of diffuse color based on the color of the pixel combined with the light intensity.
-    output.color = saturate(ambientLight + (float4(DiffuseLight,1.0)* shadow + specularLight));
+	
+	
 
+	
 	if (shadow > 1.0f)
 	{
-		output.specular = saturate(ambientLight + (float4(DiffuseLight, 1.0) + specularLight)) * 0.4;
+		output.color = saturate(ambientLight + (float4(DiffuseLight, 1.0)* shadow + specularLight));
+		output.specular = saturate(ambientLight + (float4(DiffuseLight, 1.0) + specularLight)) * 0.4 ;
 	}
 	else
 	{
+		output.color = saturate(ambientLight + (float4(DiffuseLight, 1.0)* shadow));
 		output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 

@@ -174,6 +174,8 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SceneClass.h" />
     <ClInclude Include="ShadowMapRenderTarget.h" />
+    <ClInclude Include="Skydome.h" />
+    <ClInclude Include="SkyDomeShader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TcpClass.h" />
@@ -199,6 +201,8 @@
     <ClCompile Include="RenderToTexture.cpp" />
     <ClCompile Include="SceneClass.cpp" />
     <ClCompile Include="ShadowMapRenderTarget.cpp" />
+    <ClCompile Include="Skydome.cpp" />
+    <ClCompile Include="SkyDomeShader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -251,6 +255,14 @@
       <FileType>Document</FileType>
     </None>
     <None Include="depthVS.hlsl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SkyDomePS.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="SkydomeVS.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

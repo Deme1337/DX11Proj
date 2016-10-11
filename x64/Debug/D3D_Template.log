@@ -1,2 +1,14 @@
-﻿  D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
+﻿  SceneClass.cpp
+d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lights.h(61): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(24): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(57): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(97): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(129): warning C4244: '=': conversion from '__int64' to 'double', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(137): warning C4244: 'initializing': conversion from '__int64' to 'double', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(147): warning C4244: 'initializing': conversion from '__int64' to 'double', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(256): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(315): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(319): warning C4244: '-=': conversion from 'double' to 'int', possible loss of data
+  D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
   D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.pdb (Full PDB)
