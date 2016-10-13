@@ -33,7 +33,7 @@ public:
 	void LightPass(CDeviceClass *DevClass);
 
 	void AddSceneActor(Actor* a, CDeviceClass* devc);
-	void SaveScene(std::string path);
+
 
 
 	void Release();	
@@ -44,7 +44,7 @@ public:
 
 	std::vector<Actor*> m_Actors;
 
-	XMFLOAT4 sunProjectionFloats = XMFLOAT4(5000.0f, 400.0f, 400.0f,1.0f);
+	XMFLOAT4 sunProjectionFloats = XMFLOAT4(4000.0f, 1800.0f, 1800.0f,1.0f);
 	float BlurSigma = 11.0f;
 	DirectionalLight dirLight;
 
@@ -54,6 +54,8 @@ private:
 
 	int ResetBenchMark = 0;
 	int Setting = 0;
+
+	bool ShadowUseFrontCulling = false;
 
 	CSkydome* m_SkyDome;
 	CSkyDomeShader* m_SkyDomeShader;

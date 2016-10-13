@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DeviceClass.h"
 #include <string>
+#include <fstream>
 
 CDeviceClass::CDeviceClass()
 {
@@ -331,7 +332,12 @@ bool CDeviceClass::InitDeviceAndSwapChain(HWND hWnd, HINSTANCE hInst, int width,
 		return false;
 	}
 
-
+	rasterDesc.CullMode = D3D11_CULL_FRONT;
+	result = dev->CreateRasterizerState(&rasterDesc, &m_rasterStateCullFront);
+	if (FAILED(result))
+	{
+		return false;
+	}
 
 	// Setup the viewport for rendering.
 	viewport.Width = (float)width;
@@ -421,6 +427,11 @@ void CDeviceClass::TurnCullingOff()
 	devcon->RSSetState(m_rasterStateNoCulling);
 }
 
+void CDeviceClass::TurnCullingFront()
+{
+	devcon->RSSetState(m_rasterStateCullFront);
+}
+
 void CDeviceClass::TurnCullingOn()
 {
 	devcon->RSSetState(m_rasterState);
@@ -458,6 +469,7 @@ void CDeviceClass::Release()
 	SafeRelease(m_depthDisabledStencilState);
 	SafeRelease(m_alphaEnableBlendingState);
 	SafeRelease(m_alphaDisableBlendingState);
+	SafeRelease(m_rasterStateCullFront);
 }
 
 void CDeviceClass::SetFullScreen()
@@ -515,6 +527,41 @@ void CDeviceClass::Begin()
 	devcon->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void CDeviceClass::OutputErrorMessageD(ID3D10Blob * errorMessage, HWND hWnd, WCHAR * shaderFilename)
+{
+	char* compileErrors;
+	unsigned long bufferSize, i;
+	std::ofstream fout;
+
+
+	// Get a pointer to the error message text buffer.
+	compileErrors = (char*)(errorMessage->GetBufferPointer());
+
+	// Get the length of the message.
+	bufferSize = errorMessage->GetBufferSize();
+
+	// Open a file to write the error message to.
+	fout.open("shader-error.txt");
+
+	// Write out the error message.
+	for (i = 0; i<bufferSize; i++)
+	{
+		fout << compileErrors[i];
+	}
+
+	// Close the file.
+	fout.close();
+
+	// Release the error message.
+	errorMessage->Release();
+	errorMessage = 0;
+
+	// Pop a message up on the screen to notify the user to check the text file for compile errors.
+	MessageBox(NULL, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
+
+	return;
+}
+
 std::string CDeviceClass::GetGPU()
 {
 	std::string videomemory = std::to_string(m_videoCardMemory);
@@ -542,6 +589,58 @@ void CDeviceClass::ResetViewPort()
 	// Set the viewport.
 	UpdateWindow(this->mainWindow);
 	devcon->RSSetViewports(1, &viewport);
+}
+
+ID3D10Blob * CDeviceClass::CompileShader(WCHAR* fileName, ShaderCompilation sc, LPCSTR entrypoint)
+{
+	ID3D10Blob* shaderBuffer = 0;
+	ID3D10Blob* errorMessage = 0;
+	HRESULT result;
+
+	if (sc == VertexShader)
+	{
+		// Compile the vertex shader code.
+		result = D3DCompileFromFile(fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "LightVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+			&shaderBuffer, &errorMessage);
+		if (FAILED(result))
+		{
+			// If the shader failed to compile it should have writen something to the error message.
+			if (errorMessage)
+			{
+				OutputErrorMessageD(errorMessage, NULL, fileName);
+			}
+			// If there was nothing in the error message then it simply could not find the shader file itself.
+			else
+			{
+				MessageBox(NULL, fileName, L"Missing Shader File", MB_OK);
+			}
+
+			return nullptr;
+		}
+	}
+	if (sc == PixelShader)
+	{
+		// Compile the pixel shader code.
+		result = D3DCompileFromFile(fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "LightPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+			&shaderBuffer, &errorMessage);
+		if (FAILED(result))
+		{
+			// If the shader failed to compile it should have writen something to the error message.
+			if (errorMessage)
+			{
+				OutputErrorMessageD(errorMessage, NULL, fileName);
+			}
+			// If there was nothing in the error message then it simply could not find the file itself.
+			else
+			{
+				MessageBox(NULL, fileName, L"Missing Shader File", MB_OK);
+			}
+
+			return false;
+		}
+	}
+
+	return shaderBuffer;
 }
 
 

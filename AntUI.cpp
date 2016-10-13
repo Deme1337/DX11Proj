@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "AntUI.h"
 #include "Actor.h"
-
+#include <sstream>
+#include <string>
 
 
 CAntUI::CAntUI()
@@ -36,6 +37,9 @@ void CAntUI::LoadModel(CAntUI *clientData)
 		clientData->m_D3DClass->SetFullScreen();
 		return;
 	}
+	
+	ofd = nullptr;
+	delete ofd;
 }
 
 void CAntUI::DeleteModel(CAntUI * clientData)
@@ -44,13 +48,91 @@ void CAntUI::DeleteModel(CAntUI * clientData)
 	clientData->MainScene->m_Actors.erase(clientData->MainScene->m_Actors.begin() + clientData->SelectedIndex);
 }
 
+
+//TODO: Add "save file dialog"
 void CAntUI::SaveScene(CAntUI * clientData)
 {
 	std::string SceneSavePath;
 
-	SceneSavePath = "Scenes\\" + clientData->MainScene->SceneName + ".scenefile";
+	SceneSavePath = "D:\\Graphics-programming\\D3D_Template\\D3D_Template\\Scenes\\MainScene1.scenefile";
 
-	clientData->MainScene->SaveScene(SceneSavePath);
+	
+
+	SaveFile.open(SceneSavePath);
+
+	if (SaveFile.is_open())
+	{
+
+		for (size_t i = 0; i < clientData->MainScene->m_Actors.size(); i++)
+		{
+			std::string aData = clientData->MainScene->m_Actors[i]->ObjectTransmissionString() + "\n";
+			SaveFile << aData;
+		}
+
+		SaveFile.close();
+	}
+	else
+	{
+	
+		MessageBox(NULL, L"ERROR CANNOT OPEN FILE", L"ERROR", MB_OK);
+	
+		SaveFile.close();
+	}
+
+	SceneSavePath = "";
+}
+
+void CAntUI::LoadScene(CAntUI * clientData)
+{
+	std::vector<std::string> lines;
+
+	std::string Path = "";
+	OpenFileDialog* ofd = new OpenFileDialog();
+
+	if (ofd->ShowDialog() && ofd->FileName != nullptr)
+	{
+		std::wstring p(ofd->FileName);
+		Path = ws2s(p);
+
+		std::ifstream inFile(Path);
+		std::string line;
+		while (std::getline(inFile, line))
+		{
+			lines.push_back(line);
+		}
+
+		clientData->MainScene->m_Actors.clear();
+
+		for (size_t i = 0; i < lines.size(); i++)
+		{
+			std::vector<std::string> astring = split(lines[i], '+');
+			std::string::size_type sz;
+			Actor *a = new Actor(astring[0].c_str(), clientData->m_D3DClass);
+			a->actorMatrix.position.x = std::stof(astring[1], &sz);
+			a->actorMatrix.position.y = std::stof(astring[2], &sz);
+			a->actorMatrix.position.z = std::stof(astring[3], &sz);
+
+			a->actorMatrix.rotation.x = std::stof(astring[5], &sz);
+			a->actorMatrix.rotation.y = std::stof(astring[6], &sz);
+			a->actorMatrix.rotation.z = std::stof(astring[7], &sz);
+
+			a->actorMatrix.size.x = std::stof(astring[9], &sz);
+			a->actorMatrix.size.y = std::stof(astring[10], &sz);
+			a->actorMatrix.size.z = std::stof(astring[11], &sz);
+
+			clientData->MainScene->AddSceneActor(a, m_D3DClass);
+		}
+
+
+
+		clientData->m_D3DClass->SetFullScreen();
+	}
+
+	else
+	{
+		clientData->m_D3DClass->SetFullScreen();
+		return;
+	}
 
 }
 
@@ -70,6 +152,12 @@ void TW_CALL LoadModelS(void *clientData)
 {
 	CAntUI *ca = (CAntUI*)clientData;
 	ca->LoadModel(ca);
+}
+
+void TW_CALL LoadSceneS(void *clientData)
+{
+	CAntUI *ca = (CAntUI*)clientData;
+	ca->LoadScene(ca);
 }
 
 bool CAntUI::InitializeTW(CDeviceClass *devclass, int width, int height,SceneClass *scene)
@@ -101,6 +189,7 @@ bool CAntUI::InitializeTW(CDeviceClass *devclass, int width, int height,SceneCla
 	TwAddButton(loaderBar, "Load Model", LoadModelS, this, "");
 	TwAddButton(loaderBar, "Delete Model", DeleteActor, this, "");
 	TwAddButton(loaderBar, "Save Scene",SaveSceneS , this, "");
+	TwAddButton(loaderBar, "Load Scene", LoadSceneS, this, "");
 	return true;
 }
 

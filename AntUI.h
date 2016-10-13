@@ -33,6 +33,7 @@ public:
 	void DeleteModel(CAntUI* clientData);
 
 	void SaveScene(CAntUI* clientData);
+	void LoadScene(CAntUI* clientData);
 
 	void DrawTW();
 
@@ -41,7 +42,7 @@ public:
 private:
 	CDeviceClass* m_D3DClass;
 	int _width, _height;
-
+	std::ofstream SaveFile;
 	std::string ModelPathLoad;
 
 

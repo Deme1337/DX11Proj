@@ -30,6 +30,7 @@ bool LightShader::Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* p
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
 
+	/*
 	// Compile the vertex shader code.
 	result = D3DCompileFromFile(vsFilename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "LightVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 		&vertexShaderBuffer, &errorMessage);
@@ -67,6 +68,10 @@ bool LightShader::Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* p
 
 		return false;
 	}
+	*/
+
+	vertexShaderBuffer = CDeviceClass::CompileShader(vsFilename, VertexShader, "LightVertexShader");
+	pixelShaderBuffer = CDeviceClass::CompileShader(psFilename, PixelShader, "LightPixelShader");
 
 	// Create the vertex shader from the buffer.
 	result = devclass->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
@@ -119,9 +124,9 @@ bool LightShader::Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* p
 
 	// Create a texture sampler state description.
 	//Linear works with nvidia gpus not amd so i heard: gdc 2011
-	samplerDesc.Filter =  D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	//samplerDesc.Filter =  D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 	//samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-	//samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
 	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
 	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;

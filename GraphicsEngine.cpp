@@ -99,6 +99,11 @@ void GraphicsEngine::UpdateEngine()
 		GuiMessager.Send();
 	}
 
+	if (Keys::onekey(VKEY_B))
+	{
+		this->SaveScene();
+	}
+
 	if (Keys::onekey(VKEY_UP_ARROW) && ObjectSelectedIndex < m_Scene->m_Actors.size())
 	{
 		if (ObjectSelectedIndex >= m_Scene->m_Actors.size()-1)
@@ -164,6 +169,25 @@ void GraphicsEngine::Release()
 void GraphicsEngine::UpdateWindow(int x, int y)
 {
 	m_D3DDevice->UpdateViewPort(x, y);
+}
+
+void GraphicsEngine::SaveScene()
+{
+	std::string SceneSavePath;
+
+	SceneSavePath = "Scenes\\" + m_Scene->SceneName + ".scenefile";
+
+	std::ofstream SaveFile;
+
+	SaveFile.open(SceneSavePath);
+
+	for (size_t i = 0; i < m_Scene->m_Actors.size(); i++)
+	{
+		std::string aData = m_Scene->m_Actors[i]->ObjectTransmissionString() + "\n";
+		SaveFile << aData;
+	}
+
+	SaveFile.close();
 }
 
 void GraphicsEngine::PrepareScene()

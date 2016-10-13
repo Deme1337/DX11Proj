@@ -159,7 +159,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    }
 
    m_Engine = new GraphicsEngine();
-   
+  
    m_Engine->InitializeEngine(hWnd, hInst);
 
    ShowWindow(hWnd, nCmdShow);

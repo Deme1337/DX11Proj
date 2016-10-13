@@ -21,7 +21,7 @@ float CalcGaussianWeight(int sampleDist, float sigma)
 	float g = 1.0f / sqrt(2.0f * 3.14159 * sigma * sigma);
 	return (g * exp(-(sampleDist * sampleDist) / (2 * sigma * sigma)));
 }
-
+#include "FXAA_TEST.hlsl"
 // Performs a gaussian blur in one direction
 float4 Blur(PixelInputType input, Texture2D shaderTexture, float2 texScale, float sigma, bool nrmlize)
 {
@@ -30,8 +30,10 @@ float4 Blur(PixelInputType input, Texture2D shaderTexture, float2 texScale, floa
 
 	float4 color = 0;
 	float weightSum = 0.0f;
+	nrmlize = true;
 	for (int i = -11; i < 11; i++)
 	{
+
 		float weight = CalcGaussianWeight(i, sigma);
 		weightSum += weight;
 		float2 texCoord = input.tex;
@@ -50,15 +52,9 @@ float2 texOffset(int u, int v)
 {
 	return float2(u * 1.0f / screenWH.x, v * 1.0f / screenWH.y);
 }
-#include "FXAA_TEST.hlsl"
 
-// Applies the approximated version of HP Duiker's film stock curve
-float3 ToneMapFilmicALU(in float3 color)
-{
-	color = max(0, color - 0.004f);
-	color = (color * (6.2f * color + 0.5f)) / (color * (6.2f * color + 1.7f) + 0.06f);
-	return color;
-}
+
+
 
 //Jim Heijl & Richard Burgess-Dawson
 float4 ToneMap(float4 TexColor)
@@ -90,7 +86,7 @@ float4 Bloom(PixelInputType input)
 		result += color;
 	}
 
-	result /= 16.0f;
+	result /= 4.0f;
 
 	return float4(result, 1.0f);
 }
@@ -128,12 +124,16 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 
 	float4 specBloomTex = specHighTex.Sample(SampleType, input.tex);
 
+	if (sigma > 0.1)
+	{
+		textureColor += saturate(Bloom(input) + (Blur(input, specHighTex, float2(0, 1), sigma, false) + Blur(input, specHighTex, float2(1, 0), sigma, false)));
 
-	textureColor += Bloom(input) + (Blur(input, specHighTex, float2(0, 1), sigma, false) + Blur(input, specHighTex, float2(1, 0), sigma, false));
 
-	textureColor *= ToneMap(textureColor);
-
-	textureColor = pow(textureColor, 1.0f / 1.6);
+		textureColor *= ToneMap(textureColor);
+		textureColor = pow(textureColor, 1.0f / 1.4);
+	}
+	
+	
 
 	return textureColor;
 }

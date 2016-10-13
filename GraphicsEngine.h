@@ -25,6 +25,8 @@ public:
 
 private:
 
+	void SaveScene();
+
 	void PrepareScene();
 	void PrepareTW();
 	void GetHwndSize(HWND hWnd, int &width, int &height);
@@ -38,7 +40,7 @@ private:
 
 	TinyTextContext_c textContext;
 	int _sampleCount = 1;
-	bool FullScreen = true;
+	bool FullScreen = false;
 	int ObjectSelectedIndex = 0;
 	
 

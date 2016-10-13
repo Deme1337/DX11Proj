@@ -109,7 +109,7 @@ float2 texOffset(int u, int v )
 
 float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, float4 lightMatrix)
 {
-	float visibility = 1.0f;
+	float visibility = 0.0f;
 	lightMatrix.xyz = lightMatrix.xyz / lightMatrix.w;
 	
 	if (lightMatrix.x < -1.0f || lightMatrix.x > 1.0f ||
@@ -123,7 +123,7 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 	lightMatrix.x = lightMatrix.x / 2.0f + 0.5f;
 	lightMatrix.y = lightMatrix.y / -2.0f + 0.5f;
 	
-	float shadowBias = 0.00001f;
+	float shadowBias = 0.0000009f;
 
 	float x, y;
 	float LOS = 4;
@@ -134,22 +134,28 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 		for (x = -LOS; x <= LOS; x += 1.0f)
 		{
 			float shaderTex = shaderShadow.SampleCmpLevelZero(SampleTypeShadow, lightMatrix.xy + texOffset(x, y) * 0.1, lightMatrix.z - shadowBias).r;
+			
 			if (shaderTex > lightMatrix.z - shadowBias)
 			{
-				visibility += 0.3;
+				visibility += shaderTex;
 			}
-
+			
 		}
 	}
-	
-	
+
+	visibility /= 8.0f;
+
+	if (visibility > 1.1f)
+	{
+		visibility = 1.1f;
+	}
 
 	if (visibility < 0.2f)
 	{
 		visibility = 0.2f;
 	}
 
-	visibility /= 16.0f;
+
 
 	
 	return visibility;

@@ -51,7 +51,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	textureShader->Exposure = 5.5;
 
 	//Lights and shadow map rt
-	dirLight.lightProperties.Position = XMFLOAT4(10.0f, 700.0f, 100.0f, 1.0f);
+	dirLight.lightProperties.Position = XMFLOAT4(300.0f, 1500.0f, -400.0f, 1.0f);
 	dirLight.CalcLightViewMatrix();
 	dirLight.CalcProjectionMatrix(0.1f, 5000.0f, 400, 400);
 	dirLight.lightProperties.Color = XMFLOAT4(0.984, 0.946, 0.89, 1.0f);
@@ -86,13 +86,18 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 //Render shadow map to RT
 void SceneClass::ShadowPass(CDeviceClass * DevClass)
 {
-	DevClass->TurnCullingOff();
+	DevClass->TurnCullingOn();
 	DevClass->TurnZBufferOn();
 	XMMATRIX worlMatrix, viewMatrix, projectionMatrix;
 
 	shadowMap->SetRenderTarget(DevClass->GetDevCon());
 	shadowMap->ClearRenderTarget(DevClass->GetDevCon(),0.0f, 0.0f, 0.0f, 1.0f);
 
+	if (ShadowUseFrontCulling)
+	{
+		DevClass->TurnCullingFront();
+	}
+	
 	dirLight.CalcLightViewMatrix();
 	dirLight.CalcProjectionMatrix(0.1f, sunProjectionFloats.x, sunProjectionFloats.y, sunProjectionFloats.z);
 
@@ -128,6 +133,34 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	m_DeferredBuffer->ClearRenderTargets(DevClass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
 	GeoBenchMarks[0] = duration(timeNow() - time1);
 
+	//Skydome
+	{
+		XMMATRIX worldSphere = XMMatrixIdentity();
+
+		worldSphere = XMMatrixScalingFromVector(XMVectorSet(4000.0f, 4000.0f, 4000.0f, 1.0f));
+
+		projection = DevClass->GetProjectionMatrix();
+		view = m_Camera->GetCameraView();
+		DevClass->TurnCullingFront();
+		DevClass->TurnZBufferOff();
+
+		m_SkyDome->Render(DevClass->GetDevCon());
+
+		if (!m_SkyDomeShader->Update(DevClass->GetDevCon(), m_SkyDome->GetIndexCount(),
+			worldSphere, view, projection, m_SkyDome->GetApexColor(), m_SkyDome->GetCenterColor(), dirLight))
+		{
+			MessageBox(NULL, L"Error skydome rendering", L"ERROR", MB_OK);
+		}
+	}
+	DevClass->TurnCullingOn();
+	DevClass->TurnZBufferOn();
+
+	projection = DevClass->GetProjectionMatrix();
+	view = m_Camera->GetCameraView();
+
+	DevClass->TurnCullingOn();
+	DevClass->TurnZBufferOn();
+
 	TimeVar time2 = timeNow();
 	for (size_t i = 0; i < m_Actors.size(); i++)
 	{
@@ -147,32 +180,13 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	double geo3New = duration(timeNow() - time2);
 	GeoBenchMarks[1] = geo3New;
 
+
+
 }
 
 void SceneClass::LightPass(CDeviceClass * DevClass)
 {
-	/*
-	//Skydome Rendering turn off culling and depth testing
-	{
-		DevClass->TurnCullingOff();
-		DevClass->TurnZBufferOff();
-		XMMATRIX projection, view;
-		XMMATRIX worldMat = XMMatrixIdentity();
-		projection = DevClass->GetProjectionMatrix();
-		view = m_Camera->GetCameraView();
-		m_SkyDome->Render(DevClass->GetDevCon());
-
-		if (!m_SkyDomeShader->Update(DevClass->GetDevCon(), m_SkyDome->GetIndexCount(),
-			worldMat, view, projection, m_SkyDome->GetApexColor(), m_SkyDome->GetCenterColor(), dirLight))
-		{
-			MessageBox(NULL, L"Error skydome rendering", L"ERROR", MB_OK);
-		}
-		DevClass->TurnCullingOn();
-		DevClass->TurnZBufferOn();
-		projection = DevClass->GetProjectionMatrix();
-		view = m_Camera->GetCameraView();
-	}
-	*/
+	
 	XMMATRIX worldMatrix, baseViewMatrix, orthoMatrix;
 	
 	HandleSceneInput();
@@ -226,7 +240,7 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
 		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight);
 	}
-
+	
 
 	m_Window->Render(DevClass->GetDevCon());
 	m_LightShader->Update(DevClass, m_Window->m_indexCount);
@@ -250,11 +264,23 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		orthoMatrix = DevClass->GetOrthoMatrix();
 		baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 		
-		textureShader->Exposure = BlurSigma;
-		textureShader->SetSpecularHighLights(DevClass->GetDevCon(), postProcessTexture->GetShaderResourceView(1));
-		
-		textureShader->Render(DevClass->GetDevCon(), m_Window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, postProcessTexture->GetShaderResourceView(0), XMFLOAT2(_sceneWidth,_sceneHeight));
-		textureShader->RenderShader(DevClass->GetDevCon(), m_Window->m_indexCount);
+		if (Setting == 5)
+		{
+			textureShader->Exposure = BlurSigma;
+			textureShader->SetSpecularHighLights(DevClass->GetDevCon(), nullptr);
+
+			textureShader->Render(DevClass->GetDevCon(), m_Window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, shadowMap->GetShaderResourceView(), XMFLOAT2(_sceneWidth, _sceneHeight));
+			textureShader->RenderShader(DevClass->GetDevCon(), m_Window->m_indexCount);
+		}
+		else
+		{
+			textureShader->Exposure = BlurSigma;
+			textureShader->SetSpecularHighLights(DevClass->GetDevCon(), postProcessTexture->GetShaderResourceView(1));
+
+			textureShader->Render(DevClass->GetDevCon(), m_Window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, postProcessTexture->GetShaderResourceView(0), XMFLOAT2(_sceneWidth, _sceneHeight));
+			textureShader->RenderShader(DevClass->GetDevCon(), m_Window->m_indexCount);
+		}
+	
 	}
 
 
@@ -269,23 +295,6 @@ void SceneClass::AddSceneActor(Actor * a, CDeviceClass* devc)
 	devc->UpdateViewPort(1920,1080);
 	
 }
-
-void SceneClass::SaveScene(std::string path)
-{
-	std::ofstream SaveFile;
-
-	SaveFile.open(path);
-
-	for (size_t i = 0; i < m_Actors.size(); i++)
-	{
-		SaveFile << m_Actors[i]->ObjectTransmissionString() << std::endl;
-	}
-
-	SaveFile.close();
-}
-
-
-
 
 
 void SceneClass::Release()
@@ -308,8 +317,14 @@ void SceneClass::Release()
 
 void SceneClass::HandleSceneInput()
 {
-
-	
+	if (Keys::key(VKEY_H))
+	{
+		ShadowUseFrontCulling = true;
+	}
+	if (Keys::key(VKEY_J))
+	{
+		ShadowUseFrontCulling = false;
+	}
 	if (Keys::key(VKEY_LEFT_ARROW))
 	{
 		viewPortOffSet += 1.0;
@@ -345,6 +360,10 @@ void SceneClass::HandleSceneInput()
 	if (Keys::key(VKEY_F7))
 	{
 		Setting = 4;
+	}
+	if (Keys::key(VKEY_G))
+	{
+		Setting = 5;
 	}
 
 }

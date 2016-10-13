@@ -15,10 +15,20 @@ struct PixelInputType
 	float4 sunPosition : TEXCOORD1;
 };
 
+struct PixelOutputType
+{
+	float4 color : SV_Target0;
+	float4 normal : SV_Target1;
+	float4 specular : SV_Target2;
+	float4 position : SV_Target3;
+	float4 roughness : SV_Target4;
+};
 
 //TODO:: Add sun for this shader for sunlike effect to the sky
-float4 SkyDomePixelShader(PixelInputType input) : SV_TARGET
+PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 {
+	PixelOutputType output;
+
 	float height,width;
 	float4 outputColor;
 	float sunDiameter = 1.0f;
@@ -55,7 +65,11 @@ float4 SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
 	outputColor = lerp(centerColor, apexColor, height);
 
-	
+	output.color = outputColor*2.5;
+	output.normal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	output.position = input.domePosition;
+	output.roughness = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	return outputColor;
+	return output;
 }

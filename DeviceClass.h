@@ -39,6 +39,7 @@ public:
 
 	void TurnCullingOn();
 	void TurnCullingOff();
+	void TurnCullingFront();
 
 	void GetVideoCardInfo(char*, int&);
 	void Release();
@@ -73,7 +74,7 @@ private:
 
 	ID3D11RasterizerState* m_rasterState;
 	ID3D11RasterizerState* m_rasterStateNoCulling;
-
+	ID3D11RasterizerState* m_rasterStateCullFront;
 
 
 	ID3D11BlendState* m_alphaEnableBlendingState;
@@ -97,6 +98,7 @@ private:
 	bool enableAA_ = false;
 	bool Initialized = false;
 	
+	static void OutputErrorMessageD(ID3D10Blob * errorMessage, HWND hWnd, WCHAR * shaderFilename);
 
 public:
 	bool fullscreen = false;
@@ -108,6 +110,9 @@ public:
 
 	ID3D11DepthStencilView* GetDepthStencilView() { return m_depthStencilView; }
 	void ResetViewPort();
+
+	static ID3D10Blob *CompileShader(WCHAR* fileName, ShaderCompilation sc, LPCSTR entrypoint);
+
 };
 
 #endif

@@ -123,7 +123,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
 	float4 lightMatrix = mul(positionTex, lightViewMatrix);
 	lightMatrix = mul(lightMatrix, lightProjectionMatrix);
-
+	
 	float shadow = shadowAA(shadowMapTexture, SampleTypeShadow, lightMatrix);
 
 
@@ -140,27 +140,32 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
 
 	float a = roughnessTexture.Sample(SampleTypePoint, input.tex).x;
-
-	float3 DiffuseLight = lightIntensity * colors * lightColor;
 	
 
-	float4 specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f) * specularColor;
+	float3 DiffuseLight;
+	float4 specularLight;
 	
+	DiffuseLight = lightIntensity * colors * lightColor;
 
-	
-	
 
+	specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f) * specularColor.r;
+
+	output.color = saturate(ambientLight + (float4(DiffuseLight, 1.0)* shadow + specularLight));
 	
-	if (shadow > 1.0f)
+	if (shadow > 0.9)
 	{
-		output.color = saturate(ambientLight + (float4(DiffuseLight, 1.0)* shadow + specularLight));
-		output.specular = saturate(ambientLight + (float4(DiffuseLight, 1.0) + specularLight)) * 0.4 ;
+		output.specular = saturate(ambientLight + (float4(DiffuseLight, 1.0) + specularLight)) * 0.4;
 	}
+	
 	else
 	{
-		output.color = saturate(ambientLight + (float4(DiffuseLight, 1.0)* shadow));
-		output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
+		output.specular = float4(0.0,0.0,0.0,1.0);
 	}
+	
+		
+	
+	
+	
 
 	return output;
 }

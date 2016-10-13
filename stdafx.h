@@ -23,6 +23,20 @@
 typedef uint32_t uint32;
 typedef uint8_t uint8;
 
+
+
+
+
+
+enum ShaderCompilation
+{
+	VertexShader,
+	PixelShader
+};
+
+
+
+
 namespace Keys
 {
 	int key(int iKey);
@@ -196,3 +210,11 @@ public:
 };
 
 #endif
+
+#include <string>
+#include <sstream>
+#include <vector>
+
+
+void split(const std::string &s, char delim, std::vector<std::string> &elems);
+std::vector<std::string> split(const std::string &s, char delim);
