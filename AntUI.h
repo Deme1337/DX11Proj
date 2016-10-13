@@ -8,6 +8,7 @@
 #include <AntTweakBar.h>
 #include <vector>
 #include "SceneClass.h"
+#include "Lights.h"
 
 
 class CAntUI
@@ -17,6 +18,8 @@ public:
 	~CAntUI();
 	TwBar* testBar;
 	TwBar* loaderBar;
+	TwBar* lightBar;
+
 	SceneClass* MainScene;
 	HWND mainWindow;
 	int SelectedIndex = 0;
@@ -28,6 +31,10 @@ public:
 	void AddVariableXMfloat(const char* name, XMFLOAT4 &var);
 	void AddVariableFloat(const char* name, float &var);
 	void AddVariableBoolean(const char* name, bool &var);
+
+	void AddDirectionalLight(DirectionalLight& dlight);
+	void AddPointLights(std::vector<PointLight>& plight);
+
 
 	void LoadModel(CAntUI *clientData);
 	void DeleteModel(CAntUI* clientData);

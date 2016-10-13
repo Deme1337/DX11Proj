@@ -218,9 +218,9 @@ void GraphicsEngine::PrepareTW()
 
 	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 
-	m_GUI->AddVariableXMfloat("Sun Position: ", m_Scene->dirLight.lightProperties.Position);
-	m_GUI->AddVariableXMfloat("Sun Color: ", m_Scene->dirLight.lightProperties.Color);
-	m_GUI->AddVariableXMfloat("Sun projection: ", m_Scene->sunProjectionFloats);
+	m_GUI->AddPointLights(m_Scene->pointLights);
+
+	m_GUI->AddDirectionalLight(m_Scene->dirLight);
 }
 
 void GraphicsEngine::GetHwndSize(HWND hWnd, int & width, int & height)

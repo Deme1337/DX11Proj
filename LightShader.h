@@ -52,7 +52,7 @@ public:
 	void UpdateShadowMap(CDeviceClass* devclass, ID3D11ShaderResourceView* shadowmap);
 	void UpdateShaderParameters(CDeviceClass *devclass, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix,
 		ID3D11ShaderResourceView* colorTexture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* specularTexture, 
-		ID3D11ShaderResourceView* positionTexture, ID3D11ShaderResourceView* roughnessTexture, DirectionalLight dlight);
+		ID3D11ShaderResourceView* positionTexture, ID3D11ShaderResourceView* roughnessTexture, DirectionalLight dlight, std::vector<PointLight> plights);
 	void Release();
 
 	void Update(CDeviceClass *devclass, int indexCount);

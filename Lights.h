@@ -20,8 +20,8 @@ private:
 
 	struct DLight
 	{
-		XMFLOAT4 Position = XMFLOAT4(1.0, 1.0, 1.0, 1.0); //XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
-		XMFLOAT4 Color = XMFLOAT4(1.0, 1.0, 1.0, 1.0); //XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
+		XMFLOAT4 Position = XMFLOAT4(1.0, 1.0, 1.0, 1.0); 
+		XMFLOAT4 Color = XMFLOAT4(1.0, 1.0, 1.0, 1.0); 
 	};
 
 
@@ -30,11 +30,12 @@ private:
 
 public:
 
+	XMFLOAT4 lightProjectionF = XMFLOAT4(5000.0f, 1800, 1800, 1.0f);
 
 	DLight lightProperties;
 
 	void CalcLightViewMatrix();
-	void CalcProjectionMatrix(float nearplane, float farplane, int iwidth, int iheight);
+	void CalcProjectionMatrix();
 	XMMATRIX GetLightViewMatrix() { return this->lightViewMat; }
 	XMMATRIX GetLightProjectionMatrix() { return this->lightProjectionMat; }
 
@@ -42,6 +43,21 @@ public:
 
 };
 
+
+class PointLight
+{
+private:
+	struct PLight
+	{
+		XMFLOAT4 Position = XMFLOAT4(1.0, 1.0, 1.0, 1.0); 
+		XMFLOAT4 Color = XMFLOAT4(1.0, 1.0, 1.0, 1.0); 
+	};
+
+public:
+
+	PLight lightProperties;
+
+};
 
 
 inline void DirectionalLight::CalcLightViewMatrix()
@@ -56,9 +72,9 @@ inline void DirectionalLight::CalcLightViewMatrix()
 	this->lightViewMat = viewMatrix;
 }
 
-inline void DirectionalLight::CalcProjectionMatrix(float nearplane, float farplane, int iwidth, int iheight)
+inline void DirectionalLight::CalcProjectionMatrix()
 {
-	XMMATRIX projMat = XMMatrixOrthographicLH(iwidth, iheight, nearplane, farplane);
+	XMMATRIX projMat = XMMatrixOrthographicLH(lightProjectionF.y, lightProjectionF.z, 0.1, lightProjectionF.x);
 
 	this->lightProjectionMat = projMat;
 }

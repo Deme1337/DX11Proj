@@ -175,14 +175,16 @@ bool CAntUI::InitializeTW(CDeviceClass *devclass, int width, int height,SceneCla
 	
 
 
-	TwDefine(" Main label = 'Scene Parameters' position = '1600 10'");
+	TwDefine(" Main label = 'Scene Parameters' position = '1400 10' size='400 300'");
 
 
 	loaderBar = TwNewBar("Loader");
 
+	lightBar = TwNewBar("Lights");
 
 	TwDefine(" Loader label = 'Object load' position = '1600 500'");
 
+	TwDefine(" Lights label = 'Light properties' position = '500 800' size='500 400' ");
 
 	TwAddVarRW(loaderBar, "Load: ", TW_TYPE_STDSTRING, &ModelPathLoad, "");
 
@@ -211,6 +213,24 @@ void CAntUI::AddVariableFloat(const char * name, float & var)
 void CAntUI::AddVariableBoolean(const char * name, bool & var)
 {
 	TwAddVarRW(testBar, name, TW_TYPE_BOOL32, &var, "");
+}
+
+void CAntUI::AddDirectionalLight(DirectionalLight& dlight)
+{
+	TwAddVarRW(lightBar, "Light position: ", TW_TYPE_DIR3F, &dlight.lightProperties.Position, "");
+	TwAddVarRW(lightBar, "Light color: ", TW_TYPE_DIR3F, &dlight.lightProperties.Color, "");
+	TwAddVarRW(lightBar, "Light projection matrix: ", TW_TYPE_DIR3F, &dlight.lightProjectionF, "");
+}
+
+void CAntUI::AddPointLights(std::vector<PointLight> &plight)
+{
+	for (size_t i = 0; i < plight.size(); i++)
+	{
+		std::string name1 = "Plight position: " + std::to_string(i) + ": ";
+		std::string name2 = "Plight Color: " + std::to_string(i) + ": ";
+		TwAddVarRW(lightBar, name1.c_str(), TW_TYPE_DIR3F, &plight[i].lightProperties.Position, "");
+		TwAddVarRW(lightBar, name2.c_str(), TW_TYPE_DIR3F, &plight[i].lightProperties.Color, "");
+	}
 }
 
 void CAntUI::DrawTW()

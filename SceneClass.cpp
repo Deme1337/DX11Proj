@@ -53,7 +53,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	//Lights and shadow map rt
 	dirLight.lightProperties.Position = XMFLOAT4(300.0f, 1500.0f, -400.0f, 1.0f);
 	dirLight.CalcLightViewMatrix();
-	dirLight.CalcProjectionMatrix(0.1f, 5000.0f, 400, 400);
+	dirLight.CalcProjectionMatrix();
 	dirLight.lightProperties.Color = XMFLOAT4(0.984, 0.946, 0.89, 1.0f);
 
 	shadowMap = new ShadowMapRenderTarget();
@@ -80,6 +80,16 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	m_Camera = new FreeCamera(hWnd);
 	m_Camera->SetCameraPosition(XMVectorSet(0, 10, -10, 1.0));
 
+
+	for (size_t i = 0; i < POINT_LIGHT_COUNT; i++)
+	{
+		PointLight p = PointLight();
+		p.lightProperties.Position = XMFLOAT4(50 * i, 10, i * 20, 1.0f);
+		pointLights.push_back(p);
+	}
+
+
+
 	m_Camera->UpdateCamera();
 }
 
@@ -99,7 +109,7 @@ void SceneClass::ShadowPass(CDeviceClass * DevClass)
 	}
 	
 	dirLight.CalcLightViewMatrix();
-	dirLight.CalcProjectionMatrix(0.1f, sunProjectionFloats.x, sunProjectionFloats.y, sunProjectionFloats.z);
+	dirLight.CalcProjectionMatrix();
 
 	for (size_t i = 0; i < this->m_Actors.size(); i++)
 	{
@@ -214,31 +224,31 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	if (Setting == 0)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(0), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3),m_DeferredBuffer->GetShaderResourceView(4), dirLight);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(0), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3),m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
 
 	}
 	if (Setting == 1)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
 	}
 
 	if (Setting == 2)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
 	}
 
 	if (Setting == 3)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
 	}
 
 	if (Setting == 4)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
 	}
 	
 

@@ -43,6 +43,7 @@ public:
 	std::string SceneName = ""; 
 
 	std::vector<Actor*> m_Actors;
+	std::vector<PointLight> pointLights;
 
 	XMFLOAT4 sunProjectionFloats = XMFLOAT4(4000.0f, 1800.0f, 1800.0f,1.0f);
 	float BlurSigma = 11.0f;
@@ -54,6 +55,7 @@ private:
 
 	int ResetBenchMark = 0;
 	int Setting = 0;
+	const int POINT_LIGHT_COUNT = 40;
 
 	bool ShadowUseFrontCulling = false;
 

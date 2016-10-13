@@ -262,7 +262,7 @@ void LightShader::UpdateShadowMap(CDeviceClass * devclass, ID3D11ShaderResourceV
 void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & worldMatrix, XMMATRIX & viewMatrix, XMMATRIX & projectionMatrix,
 	ID3D11ShaderResourceView * colorTexture, ID3D11ShaderResourceView * normalTexture,
 	ID3D11ShaderResourceView* specularTexture,  ID3D11ShaderResourceView* positionTexture, 
-	ID3D11ShaderResourceView* roughnessTexture, DirectionalLight dlight)
+	ID3D11ShaderResourceView* roughnessTexture, DirectionalLight dlight, std::vector<PointLight> plights)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -337,7 +337,7 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	devclass->GetDevCon()->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
 
 
-	/*
+	
 	//Lock pointlight constantbuffer
 	result = devclass->GetDevCon()->Map(m_PointLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
@@ -351,8 +351,8 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	// Copy the lighting variables into the constant buffer.
 	for (size_t i = 0; i < POINT_LIGHTS; i++)
 	{
-		dataPtr3->PointLightColor[i] = plights.PointLightColor[i];
-		dataPtr3->PointLightPosition[i] = plights.PointLightPosition[i];
+		dataPtr3->PointLightColor[i] = XMLoadFloat4(&plights[i].lightProperties.Color);
+		dataPtr3->PointLightPosition[i] = XMLoadFloat4(&plights[i].lightProperties.Position);
 	}
 
 
@@ -364,7 +364,7 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	devclass->GetDevCon()->PSSetConstantBuffers(bufferNumber, 1, &m_PointLightBuffer);
-	*/
+	
 }
 
 void LightShader::Release()
