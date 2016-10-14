@@ -21,11 +21,11 @@ struct PixelInputType
 
 struct PixelOutputType
 {
-    float4 color : SV_Target0;
+    float3 color : SV_Target0;
     float4 normal : SV_Target1;
-	float4 specular : SV_Target2;
+	float specular : SV_Target2;
 	float4 position : SV_Target3;
-	float4 roughness : SV_Target4;
+	float roughness : SV_Target4;
 };
 
 
@@ -36,8 +36,8 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 
 
 	// Sample the color from the texture and store it for output to the render target.
-	output.color = shaderTexture.Sample(SampleTypeWrap, input.tex);
-	output.specular = shaderSpecular.Sample(SampleTypeWrap, input.tex);
+	output.color = shaderTexture.Sample(SampleTypeWrap, input.tex).xyz;
+	output.specular = shaderSpecular.Sample(SampleTypeWrap, input.tex).x;
 	
 
 	float3 bumpMap = shaderBumpMap.Sample(SampleTypeWrap, input.tex);
@@ -50,9 +50,9 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 
 	output.position = input.worldPosition;
 
-	output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex);
+	output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex).x;
 	
-	if (output.color.a < 0.4 && input.HasAlpha == 1)
+	if (shaderTexture.Sample(SampleTypeWrap, input.tex).w < 0.4 && input.HasAlpha == 1)
 	{
 		discard;
 	}

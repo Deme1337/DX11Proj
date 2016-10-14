@@ -106,6 +106,8 @@ float4 BlurV(in PSInput input) : SV_Target
 
 */
 
+
+
 float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 {
 	float4 textureColor = 0.0f;
@@ -124,6 +126,8 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 
 	float4 specBloomTex = specHighTex.Sample(SampleType, input.tex);
 
+	
+	
 	if (sigma > 0.1)
 	{
 		textureColor += saturate(Bloom(input) + (Blur(input, specHighTex, float2(0, 1), sigma, false) + Blur(input, specHighTex, float2(1, 0), sigma, false)));
