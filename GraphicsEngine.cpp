@@ -218,9 +218,11 @@ void GraphicsEngine::PrepareTW()
 
 	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 
+	m_GUI->AddDirectionalLight(m_Scene->dirLight);
+
 	m_GUI->AddPointLights(m_Scene->pointLights);
 
-	m_GUI->AddDirectionalLight(m_Scene->dirLight);
+	
 }
 
 void GraphicsEngine::GetHwndSize(HWND hWnd, int & width, int & height)

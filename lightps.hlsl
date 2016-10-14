@@ -89,7 +89,7 @@ float4 PointLightCalculation(float4 Ppos, float4 Pcolor, float4 ColorTex, float3
 	float4 PointLightColor = 0.0f;
 	float4 DiffuseColor = 0.0f;
 	float4 SpecularColor = 0.0f;
-	float AmbientColor = 0.2f;
+
 
 	
 	//Diffuse color
@@ -98,23 +98,23 @@ float4 PointLightCalculation(float4 Ppos, float4 Pcolor, float4 ColorTex, float3
 
 	if (NdotL < 0.0f)
 	{
-		return AmbientColor * Pcolor;
+		return float4(0.0f,0.0f,0.0f,1.0f);
 	}
 
 	DiffuseColor = Pcolor * NdotL * ColorTex;
 
 	//Specular color
-	SpecularColor = LightingFuncGGX_REF(Normals, View, lightDir, Roughness, 0.1f) * Spec;
+	SpecularColor = LightingFuncGGX_REF(Normals, View, lightDir, Roughness, 0.1f) * Spec * Pcolor;
 
 
 	float dist = length(Ppos - FragPos);
 	float atten = 10.0f / (1.0f + 0.09 * dist + 0.032 * (dist * dist));
 
-	AmbientColor *= atten;
+
 	SpecularColor *= atten;
 	DiffuseColor *= atten;
 
-	PointLightColor = AmbientColor + DiffuseColor + SpecularColor;
+	PointLightColor = DiffuseColor + SpecularColor;
 
 	return PointLightColor;
 }
@@ -153,11 +153,9 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float4 positionTex = positionTexture.Sample(SampleTypePoint, input.tex);
 	positionTex /= positionTex.w;
 
+	
 
-	//lightstuff dunno if works
-	//float4 lightMatrix = input.lightView * input.lightProj;
-	//lightMatrix *= positionTex;
-
+	
 	float4 lightMatrix = mul(positionTex, lightViewMatrix);
 	lightMatrix = mul(lightMatrix, lightProjectionMatrix);
 	
@@ -187,20 +185,25 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
 	specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f) * specularColor.r;
 
-	if (length(lightColor.xyz) > 0.01f)
-	{
-		output.color = saturate(ambientLight + (float4(DiffuseLight, 1.0)* shadow + specularLight));
-	}
-
-
 	float4 PointLightVal = 0.0f;
 
 	for (int i = 0; i < POINT_LIGHT_COUNT; i++)
 	{
 		PointLightVal += PointLightCalculation(PointLightPosition[i], PointLightColor[i], colors, normals, specularColor.r, a, positionTex, viewDirection);
 	}
+
+
+	if (length(lightColor.xyz) > 0.01f)
+	{
+		output.color = saturate((float4(DiffuseLight, 1.0)* shadow + specularLight));
+	}
+
+
+
 	
 	output.color += PointLightVal;
+
+	output.color += ambientLight;
 
 	if (shadow > 0.9 && length(lightColor.xyz) > 0.01f)
 	{
@@ -213,7 +216,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	}
 	
 		
-	
+
 	
 	
 

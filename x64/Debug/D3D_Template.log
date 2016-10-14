@@ -1,21 +1,5 @@
-﻿  GraphicsEngine.cpp
+﻿  AntUI.cpp
 d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\lights.h(77): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(124): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(137): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(197): warning C4305: 'argument': truncation from 'double' to 'float'
-  D3D_Template.cpp
-d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\lights.h(77): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(17): warning C4800: 'BOOL': forcing value to bool 'true' or 'false' (performance warning)
-d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(20): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'long'
-d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(20): warning C4302: 'type cast': truncation from 'HANDLE' to 'long'
-d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(26): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'long'
-d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(26): warning C4302: 'type cast': truncation from 'HANDLE' to 'long'
-d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(100): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  AntUI.cpp
-d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\lights.h(77): warning C4305: 'argument': truncation from 'double' to 'float'
-  Generating Code...
   D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
   D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.pdb (Full PDB)

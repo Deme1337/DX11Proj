@@ -16,6 +16,14 @@ CAntUI::~CAntUI()
 
 
 
+void CAntUI::ShutDownPointLights(CAntUI * clientData)
+{
+	for (size_t i = 0; i < clientData->MainScene->pointLights.size(); i++)
+	{
+		clientData->MainScene->pointLights[i].lightProperties.Color = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	}
+}
+
 void CAntUI::LoadModel(CAntUI *clientData)
 {
 	
@@ -160,6 +168,13 @@ void TW_CALL LoadSceneS(void *clientData)
 	ca->LoadScene(ca);
 }
 
+
+void TW_CALL PointLightOff(void *clientData)
+{
+	CAntUI *ca = (CAntUI*)clientData;
+	ca->ShutDownPointLights(ca);
+}
+
 bool CAntUI::InitializeTW(CDeviceClass *devclass, int width, int height,SceneClass *scene)
 {
 	TwInit(TW_DIRECT3D11, devclass->GetDevice());
@@ -192,6 +207,7 @@ bool CAntUI::InitializeTW(CDeviceClass *devclass, int width, int height,SceneCla
 	TwAddButton(loaderBar, "Delete Model", DeleteActor, this, "");
 	TwAddButton(loaderBar, "Save Scene",SaveSceneS , this, "");
 	TwAddButton(loaderBar, "Load Scene", LoadSceneS, this, "");
+	TwAddButton(loaderBar, "Point light off", PointLightOff, this, "");
 	return true;
 }
 

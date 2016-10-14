@@ -34,8 +34,8 @@ public:
 
 	void AddDirectionalLight(DirectionalLight& dlight);
 	void AddPointLights(std::vector<PointLight>& plight);
-
-
+	
+	void ShutDownPointLights(CAntUI *clientData);
 	void LoadModel(CAntUI *clientData);
 	void DeleteModel(CAntUI* clientData);
 
