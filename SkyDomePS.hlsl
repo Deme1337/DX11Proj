@@ -65,8 +65,8 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
 	outputColor = lerp(centerColor, apexColor, height);
 
-	output.color = outputColor*2.5;
-	output.normal = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	output.color = outputColor*1.5;
+	output.normal = float4(1.0f, 1.0f, 1.0f, 0.5f);
 	output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	output.position = input.domePosition;
 	output.roughness = float4(1.0f, 1.0f, 1.0f, 1.0f);

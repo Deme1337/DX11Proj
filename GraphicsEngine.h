@@ -18,7 +18,7 @@ public:
 	~GraphicsEngine();
 
 	void InitializeEngine(HWND hWnd, HINSTANCE hInst);
-	void UpdateEngine();
+	void UpdateEngine(int fps, double frameTime);
 	void Release();
 
 	void UpdateWindow(int x, int y);

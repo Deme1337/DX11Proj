@@ -55,7 +55,8 @@ bool CRenderToTexture::Initialize(CDeviceClass* devclass, int textureWidth, int 
 	}
 	else
 	{
-		textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		//textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	}
 
 	textureDesc.SampleDesc.Count = samplecount;
@@ -216,7 +217,7 @@ void CRenderToTexture::SetRenderTarget(ID3D11DeviceContext* deviceContext)
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 
 
-	deviceContext->OMSetRenderTargets(BUFFER_COUNT_PP, m_renderTargetView, m_depthStencilView);
+	deviceContext->OMSetRenderTargets(BUFFER_COUNT_PP, m_renderTargetView, nullptr);
 
 	// Set the viewport.
 	deviceContext->RSSetViewports(1, &m_viewport);
@@ -244,7 +245,7 @@ void CRenderToTexture::ClearRenderTarget(ID3D11DeviceContext* deviceContext, flo
 	}
 
 	// Clear the depth buffer.
-	deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	//deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	return;
 }

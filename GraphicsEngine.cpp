@@ -70,23 +70,26 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 
 
 //Frame update, first geometry pass and then light pass
-void GraphicsEngine::UpdateEngine()
+void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 {
 	
 	m_D3DDevice->Begin();
 	m_D3DDevice->AlphaBlendingOff();
 
+	TimeVar shadowTime = timeNow();
 	m_Scene->ShadowPass(m_D3DDevice);
+	double sTime = duration(timeNow() - shadowTime) * pow(10, -6);
 
-	clock_t gclock1 = clock();
+	TimeVar gbTime = timeNow();
 	m_Scene->GeometryPass(m_D3DDevice);
-	clock_t gclock2 = clock();
+	double gTime = duration(timeNow() - gbTime) * pow(10, -6);
 
-	double gTime = gclock2 - gclock1;
-
-	clock_t tclock1 = clock();
+	TimeVar lpTime = timeNow();
 	m_Scene->LightPass(m_D3DDevice);
-	clock_t tclock2 = clock();
+	double lTime = duration(timeNow() - lpTime) * pow(10, -6);
+
+
+
 
 	if (Keys::key(VKEY_F9))
 	{
@@ -131,29 +134,21 @@ void GraphicsEngine::UpdateEngine()
 		this->PrepareTW();
 	}
 
-	double lTime = tclock2 - tclock1;
-
-	double deltaTime = Timer::GetDeltaTime();
-	int fps = 1/deltaTime;
-	std::string vpofs = "Frame s:  " + std::to_string(deltaTime) + " FPS: " + std::to_string(fps) + " Pass1: " + std::to_string(gTime) + " Pass2: " + std::to_string(lTime);
-	
-	SceneInitTime = std::to_string(m_Scene->GeoBenchMarks[0] * pow(10,-6)) + " :: " + std::to_string(m_Scene->GeoBenchMarks[1] * pow(10, -6)) + " :: " + std::to_string(m_Scene->GeoBenchMarks[2] * pow(10, -6));
-
-	textContext.Print(5,15,vpofs.c_str());
-	textContext.Print(5, 35, GPUinfo.c_str());
-	textContext.Print(5, 55, SceneInitTime.c_str());
-	if (GuiMessager.Connected)
-	{
-		textContext.Print(5, 75, "Connected to UI");
-	}
-	else
-	{
-		textContext.Print(5, 75, "Disconnected from UI, press F9 to try connecting");
-	}
-
-	textContext.Render();
 
 	m_GUI->DrawTW();
+
+	
+	std::string vpofs = "Frame s:  " + std::to_string(frameTime) + " FPS: " + std::to_string(fps) + " Pass1: " + std::to_string(gTime) + " Pass2: " + std::to_string(lTime) + " Shadow pass: " + std::to_string(sTime);
+
+	SceneInitTime = "Deferred rt: " + std::to_string(m_Scene->GeoBenchMarks[0] * pow(10, -6)) + " : Mesh: " + std::to_string(m_Scene->GeoBenchMarks[1] * pow(10, -6)) + " : Mesh shader: " + std::to_string(m_Scene->GeoBenchMarks[2] * pow(10, -6));
+
+	textContext.Print(5, 15, vpofs.c_str());
+	textContext.Print(5, 35, GPUinfo.c_str());
+	textContext.Print(5, 55, SceneInitTime.c_str());
+
+
+
+	textContext.Render();
 
 	m_D3DDevice->GetSwapChain()->Present(0, 0);
 }
@@ -193,15 +188,12 @@ void GraphicsEngine::SaveScene()
 void GraphicsEngine::PrepareScene()
 {
 
-	a[0] = new Actor("Models\\Crytek\\sponza\\sponza.obj", m_D3DDevice);
+	a[0] = new Actor("Models\\Crytek\\Sponza\\sponza.obj", m_D3DDevice);
 	a[0]->SetModelSize(XMVectorSet(0.1, 0.1, 0.1, 1.0));
 	a[0]->SetModelPosition(XMVectorSet(1, 1, 1, 1.0f));
+	a[0]->HasAlpha = false;
+	a[0]->UseTextures = true;
 	m_Scene->AddSceneActor(a[0],m_D3DDevice);
-
-	a[1] = new Actor("C:\\models\\cerberus\\cerberus.obj", m_D3DDevice);
-	a[1]->SetModelSize(XMVectorSet(5.0, 5.0, 5.0, 1.0));
-	a[1]->SetModelPosition(XMVectorSet(40, 10, 1, 1.0f));
-	m_Scene->AddSceneActor(a[1],m_D3DDevice);
 
 }
 
@@ -215,6 +207,7 @@ void GraphicsEngine::PrepareTW()
 	m_GUI->AddVariableXMfloat("Rotation: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.rotation);
 	m_GUI->AddVariableXMfloat("Scale: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.size);
 	m_GUI->AddVariableBoolean("Alpha cull: ", m_Scene->m_Actors[ObjectSelectedIndex]->HasAlpha);
+	m_GUI->AddVariableBoolean("Use textures: ", m_Scene->m_Actors[ObjectSelectedIndex]->UseTextures);
 
 	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 

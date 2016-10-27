@@ -89,7 +89,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		else if (GetActiveWindow() == hWnd)
 		{ 
 			frameCount++;
-			if (Timer::GetTime() > 1.0f)
+			if (Timer::GetTime() >= 1.0f)
 			{
 				Timer::SetDeltaTime(frameTime);
 				fps = 0;
@@ -98,7 +98,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			}
 			frameTime = Timer::GetFrameTime();
 			fps = 1 / frameTime;
-			m_Engine->UpdateEngine();
+			m_Engine->UpdateEngine(fps, frameTime);
 			
 		}
 		

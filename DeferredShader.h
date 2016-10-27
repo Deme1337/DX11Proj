@@ -21,11 +21,17 @@ private:
 		int HasAlpha;
 	};
 
+	struct ObjectData
+	{
+		int UseTextures;
+	};
 	
 
 public:
 	DeferredShader();
 	~DeferredShader();
+
+	void SetObjectData(CDeviceClass * devclass, int useTex);
 
 	bool Initialize(CDeviceClass* devclass, WCHAR* vsFilename, WCHAR* psFilename);
 	void UpdateTexture(CDeviceClass * devclass, ID3D11ShaderResourceView* texture);
@@ -47,6 +53,8 @@ private:
 	ID3D11InputLayout* m_layout;
 	ID3D11SamplerState* m_sampleStateWrap;
 	ID3D11Buffer* m_matrixBuffer;
+	ID3D11Buffer* m_ObjDataBuffer;
+	int UseTex = 1.0f;
 };
 
 #endif

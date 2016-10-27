@@ -153,8 +153,8 @@ bool CDeviceClass::InitDeviceAndSwapChain(HWND hWnd, HINSTANCE hInst, int width,
 
 
 	// Set the refresh rate of the back buffer.
-	swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
-	swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
+	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 
 
 	// Set the usage of the back buffer.

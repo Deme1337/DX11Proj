@@ -141,8 +141,10 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	TimeVar time1 = timeNow();
 	m_DeferredBuffer->SetRenderTargets(DevClass->GetDevCon());
 	m_DeferredBuffer->ClearRenderTargets(DevClass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
+	m_DeferredShader->SetObjectData(DevClass, 1);
 	GeoBenchMarks[0] = duration(timeNow() - time1);
 
+	
 	//Skydome
 	{
 		XMMATRIX worldSphere = XMMatrixIdentity();

@@ -1,2 +1,10 @@
-﻿  D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
+﻿  TextureRenderShader.cpp
+  TcpClass.cpp
+d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(57): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\mesh.h(46): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\lights.h(77): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\graphics-programming\d3d_template\d3d_template\tcpclass.cpp(115): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Skydome.cpp
+  Generating Code...
+  D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
   D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.pdb (Full PDB)

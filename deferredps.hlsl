@@ -7,6 +7,10 @@ Texture2D shaderRoughness : register(t3);
 SamplerState SampleTypeWrap : register(s0);
 
 
+cbuffer	ObjectData
+{
+	int UseTextures;
+};
 
 struct PixelInputType
 {
@@ -35,23 +39,36 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 	PixelOutputType output;
 
 
-	// Sample the color from the texture and store it for output to the render target.
-	output.color = shaderTexture.Sample(SampleTypeWrap, input.tex).xyz;
-	output.specular = shaderSpecular.Sample(SampleTypeWrap, input.tex).x;
+	if (UseTextures > 0.9)
+	{
+		// Sample the color from the texture and store it for output to the render target.
+		output.color = shaderTexture.Sample(SampleTypeWrap, input.tex).xyz;
+		output.specular = shaderSpecular.Sample(SampleTypeWrap, input.tex).x;
+
+
+		float3 bumpMap = shaderBumpMap.Sample(SampleTypeWrap, input.tex);
+
+		bumpMap = (bumpMap * 2.0f) - 1.0f;
+
+		// Calculate the normal from the data in the bump map.
+		float3 bumpNormal = (bumpMap.x * input.tangent) + (bumpMap.y * input.binormal) + (bumpMap.z * input.normal);
+		output.normal = float4(bumpNormal, 1.0f);
+
+		output.position = input.worldPosition;
+
+		output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex).x;
+
+	}
 	
+	else
+	{
+		output.color = float3(1.0f, 1.0f, 1.0f);
+		output.specular = 1.0f;
+		output.position = input.worldPosition;
+		output.normal = float4(input.normal,1.0f);
+		output.roughness = 1.0f;
+	}
 
-	float3 bumpMap = shaderBumpMap.Sample(SampleTypeWrap, input.tex);
-
-	bumpMap = (bumpMap * 2.0f) - 1.0f;
-
-	// Calculate the normal from the data in the bump map.
-	float3 bumpNormal = (bumpMap.x * input.tangent) + (bumpMap.y * input.binormal) + (bumpMap.z * input.normal);
-	output.normal = float4(bumpNormal,1.0f);
-
-	output.position = input.worldPosition;
-
-	output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex).x;
-	
 	if (shaderTexture.Sample(SampleTypeWrap, input.tex).w < 0.4 && input.HasAlpha == 1)
 	{
 		discard;

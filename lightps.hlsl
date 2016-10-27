@@ -73,6 +73,8 @@ float LightingFuncGGX_REF(float3 N, float3 V, float3 L, float roughness, float F
 	vis = G1V(dotNL, k)*G1V(dotNV, k);
 
 	float specular = dotNL * D * F * vis;
+
+	
 	return specular;
 }
 
@@ -170,6 +172,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
     // Calculate the amount of light on this pixel.
     lightIntensity = saturate(dot(normals.xyz, lightDir));
 	
+
 	
 	ambientLight *= colors;
 
@@ -215,8 +218,8 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 		output.specular = float4(0.0,0.0,0.0,1.0);
 	}
 	
-	if (positionTex.x > 3900.0f || positionTex.y > 3900.0f || positionTex.y > 3900.0f
-		|| positionTex.x < -3900.0f || positionTex.y < -3900.0f || positionTex.y < -3900.0f)
+	//check if it is skydome so use only color
+	if (normals.w < 1.0f)
 	{
 		output.color = colors;
 		output.specular = float4(0.0, 0.0, 0.0, 1.0);

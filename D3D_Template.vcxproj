@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="AntUI.h" />
+    <ClInclude Include="CubeMap.h" />
     <ClInclude Include="D3D_Template.h" />
     <ClInclude Include="DeferredBufferClass.h" />
     <ClInclude Include="DeferredShader.h" />
@@ -187,6 +188,7 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="AntUI.cpp" />
+    <ClCompile Include="CubeMap.cpp" />
     <ClCompile Include="D3D_Template.cpp" />
     <ClCompile Include="DeferredBufferClass.cpp" />
     <ClCompile Include="DeferredShader.cpp" />

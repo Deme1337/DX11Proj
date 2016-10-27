@@ -68,7 +68,7 @@ bool TcpClass::InitializeTcpClass()
 		Connected = true;
 		return true;
 	}
-
+	return true;
 }
 
 void TcpClass::UpdateActorList(std::vector<Actor*> actors)

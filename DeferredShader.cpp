@@ -11,6 +11,8 @@ DeferredShader::~DeferredShader()
 {
 }
 
+
+
 bool DeferredShader::Initialize(CDeviceClass * devclass, WCHAR* vsFilename, WCHAR* psFilename)
 {
 	HRESULT result;
@@ -21,7 +23,7 @@ bool DeferredShader::Initialize(CDeviceClass * devclass, WCHAR* vsFilename, WCHA
 	unsigned int numElements;
 	D3D11_SAMPLER_DESC samplerDesc;
 	D3D11_BUFFER_DESC matrixBufferDesc;
-
+	D3D11_BUFFER_DESC objDataDesc;
 
 	// Initialize the pointers this function will use to null.
 	errorMessage = 0;
@@ -176,6 +178,21 @@ bool DeferredShader::Initialize(CDeviceClass * devclass, WCHAR* vsFilename, WCHA
 		return false;
 	}
 
+	//Set obj data desc
+	objDataDesc.Usage = D3D11_USAGE_DYNAMIC;
+	objDataDesc.ByteWidth = sizeof(ObjectData)*4;
+	objDataDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	objDataDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	objDataDesc.MiscFlags = 0;
+	objDataDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	result = devclass->GetDevice()->CreateBuffer(&objDataDesc, NULL, &m_ObjDataBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -243,6 +260,36 @@ void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMA
 
 }
 
+void DeferredShader::SetObjectData(CDeviceClass * devclass, int useTex)
+{
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	unsigned int bufferNumber;
+	ObjectData* dataPtr;
+
+	
+
+	result = devclass->GetDevCon()->Map(m_ObjDataBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return;
+	}
+
+	dataPtr = (ObjectData*)mappedResource.pData;
+
+	dataPtr->UseTextures = useTex;
+
+	devclass->GetDevCon()->Unmap(m_ObjDataBuffer, 0);
+
+	bufferNumber = 0;
+
+	
+	devclass->GetDevCon()->PSSetConstantBuffers(bufferNumber, 1, &m_ObjDataBuffer);
+
+	dataPtr = 0;
+	delete dataPtr;
+}
+
 void DeferredShader::RenderShader(CDeviceClass * devclass, int indexCount)
 {
 	// Set the vertex input layout.
@@ -262,6 +309,8 @@ void DeferredShader::RenderShader(CDeviceClass * devclass, int indexCount)
 
 void DeferredShader::Release()
 {
+	SafeRelease(m_ObjDataBuffer);
+
 	if (m_matrixBuffer)
 	{
 		m_matrixBuffer->Release();

@@ -110,7 +110,7 @@ void Actor::RenderModel(CDeviceClass * devclass, DeferredShader* defshader)
 	}
 
 	
-
+	defshader->SetObjectData(devclass, UseTextures);
 	for (size_t i = 0; i < actorMeshes->meshes.size(); ++i)
 	{
 

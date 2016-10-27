@@ -34,7 +34,7 @@ private:
 	CTextureTA* bump;
 
 public:
-
+	bool UseTextures = true;
 	bool HasAlpha = false;
 	std::string ObjectTransmissionString();
 	std::string ActorPath;
