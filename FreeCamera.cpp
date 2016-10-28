@@ -71,6 +71,7 @@ void FreeCamera::UpdateCamera()
 	GetCursorPos(&cPos);
 	ScreenToClient(_viewport, &cPos);
 
+	XMStoreFloat4(&CameraPositionXF, position);
 
 	if (Keys::key(VKEY_RIGHT_BUTTON))
 	{

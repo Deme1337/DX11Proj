@@ -27,7 +27,7 @@ DeferredBuffersClass::~DeferredBuffersClass()
 }
 
 
-bool DeferredBuffersClass::Initialize(ID3D11Device* device, int textureWidth, int textureHeight, float screenDepth, float screenNear)
+bool DeferredBuffersClass::Initialize(ID3D11Device* device, int textureWidth, int textureHeight, float screenDepth, float screenNear, DXGI_FORMAT format)
 {
 	D3D11_TEXTURE2D_DESC textureDesc, textureDesc1;
 	HRESULT result;
@@ -52,7 +52,7 @@ bool DeferredBuffersClass::Initialize(ID3D11Device* device, int textureWidth, in
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	//textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	textureDesc.Format = format;
 	//textureDesc.Format = DXGI_FORMAT_R16G16B16A16_SNORM;
 	//textureDesc.Format = DXGI_FORMAT_R10G10B10A2_UNORM;
 	textureDesc.SampleDesc.Count = 1;

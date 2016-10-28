@@ -128,7 +128,7 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 
 	
 	
-	if (sigma > 0.1)
+	if (sigma > 0.1 && specBloomTex.w  > 0.6)
 	{
 		textureColor += saturate(Bloom(input) + (Blur(input, specHighTex, float2(0, 1), sigma, false) + Blur(input, specHighTex, float2(1, 0), sigma, false)));
 

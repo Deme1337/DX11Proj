@@ -34,6 +34,9 @@ public:
 	XMFLOAT4 GetApexColor();
 	XMFLOAT4 GetCenterColor();
 
+	//To work with ui
+	XMFLOAT4 m_apexColor, m_centerColor;
+
 private:
 	bool LoadSkyDomeModel(char*);
 	void ReleaseSkyDomeModel();
@@ -46,7 +49,7 @@ private:
 	ModelType* m_model;
 	int m_vertexCount, m_indexCount;
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
-	XMFLOAT4 m_apexColor, m_centerColor;
+	
 };
 
 #endif

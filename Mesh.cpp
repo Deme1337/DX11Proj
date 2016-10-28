@@ -62,7 +62,6 @@ void Mesh::DrawMeshGeometry(DeferredShader* defshader)
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	//Dx11Call(deviceContext, &m_vertexBuffer, &stride, &offset); // Testing stuff
 	DevClass->GetDevCon()->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 
 	// Set the index buffer to active in the input assembler so it can be rendered.
@@ -81,6 +80,7 @@ void Mesh::DrawMeshGeometry(DeferredShader* defshader)
 		defshader->UpdateTexture(DevClass, nullptr);
 		defshader->UpdateTextureBump(DevClass, nullptr);
 		defshader->UpdateTextureSpecular(DevClass, nullptr);
+		defshader->UpdateTextureRough(DevClass, nullptr);
 	}
 
 }

@@ -21,7 +21,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	m_DeferredBuffer = new DeferredBuffersClass();
 	
-	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth*2, sceneheight*2, 10, 0.1);
+	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth * 1.3, sceneheight*1.3, 10, 0.1, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 
 	m_DeferredShader = new DeferredShader();
@@ -54,7 +54,8 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	dirLight.lightProperties.Position = XMFLOAT4(300.0f, 1500.0f, -400.0f, 1.0f);
 	dirLight.CalcLightViewMatrix();
 	dirLight.CalcProjectionMatrix();
-	dirLight.lightProperties.Color = XMFLOAT4(0.984, 0.946, 0.89, 1.0f);
+	dirLight.lightProperties.Color = XMFLOAT4(1, 0.95871, 0.84518, 1.0f);
+	dirLight.lightProjectionF = XMFLOAT4(4000.0f, 500.0f, 500.0f, 1.0f);
 
 	shadowMap = new ShadowMapRenderTarget();
 	

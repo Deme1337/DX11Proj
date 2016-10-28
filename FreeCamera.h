@@ -26,6 +26,8 @@ public:
 	XMVECTOR lookAt;
 	XMMATRIX GetBaseViewMatrix();
 
+	XMFLOAT4 CameraPositionXF;
+
 private:
 	void Speedup();
 	void Slow();

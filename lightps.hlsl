@@ -183,10 +183,11 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float3 DiffuseLight;
 	float4 specularLight;
 	
-	DiffuseLight = lightIntensity * colors * lightColor;
+	DiffuseLight = colors * lightColor;
 
 
-	specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f) * specularColor.r;
+
+	specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f)*specularColor.r;
 
 	float4 PointLightVal = 0.0f;
 
@@ -198,7 +199,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
 	if (length(lightColor.xyz) > 0.01f)
 	{
-		output.color = saturate((float4(DiffuseLight, 1.0)* shadow + specularLight));
+		output.color = saturate(lightIntensity * (float4(DiffuseLight, 1.0)* shadow));
 	}
 
 
@@ -208,21 +209,22 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
 	output.color += ambientLight;
 
-	if (shadow > 0.9 && length(lightColor.xyz) > 0.01f)
+	if (shadow > 0.4 && length(lightColor.xyz) > 0.01f)
 	{
-		output.specular = saturate(ambientLight + (float4(DiffuseLight, 1.0) + specularLight)) * 0.4;
+		output.specular = saturate(lightIntensity * (float4(DiffuseLight, 1.0) + specularLight)) * 0.4;
+		output.specular.w = 1.0;
 	}
 	
 	else
 	{
-		output.specular = float4(0.0,0.0,0.0,1.0);
+		output.specular = float4(0.0,0.0,0.0,0.5);
 	}
 	
 	//check if it is skydome so use only color
 	if (normals.w < 1.0f)
 	{
 		output.color = colors;
-		output.specular = float4(0.0, 0.0, 0.0, 1.0);
+		output.specular = float4(0.0, 0.0, 0.0, 0.5);
 	}
 		
 

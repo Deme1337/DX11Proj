@@ -45,10 +45,12 @@ public:
 	std::vector<Actor*> m_Actors;
 	std::vector<PointLight> pointLights;
 
-	XMFLOAT4 sunProjectionFloats = XMFLOAT4(4000.0f, 1800.0f, 1800.0f,1.0f);
+	 
 	float BlurSigma = 11.0f;
 	DirectionalLight dirLight;
-
+	
+	CSkydome* GetSkyDome() { return this->m_SkyDome; }
+	FreeCamera* GetCamera() { return this->m_Camera; }
 private:
 
 	void HandleSceneInput();
@@ -68,8 +70,8 @@ private:
 	DeferredBuffersClass* m_DeferredBuffer;
 	DeferredShader* m_DeferredShader;
 	LightShader* m_LightShader;
+	
 	FreeCamera* m_Camera;
-
 	
 	CTextureRenderShader* textureShader;
 	CRenderToTexture* specularHighLight;

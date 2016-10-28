@@ -15,7 +15,7 @@ public:
 	~DeferredBuffersClass();
 
 
-	bool Initialize(ID3D11Device*, int, int, float, float);
+	bool Initialize(ID3D11Device*, int, int, float, float, DXGI_FORMAT format);
 	void Shutdown();
 
 	void SetRenderTargets(ID3D11DeviceContext*);

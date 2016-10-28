@@ -316,7 +316,7 @@ like fences and wires.
 #define FXAA_SUBPIX              1
 #define FXAA_SUBPIX_FASTER       0
 #define FXAA_SUBPIX_CAP          (7.0/8.0)
-#define FXAA_SUBPIX_TRIM         (1.0/8.0)
+#define FXAA_SUBPIX_TRIM         (0)
 #endif
 /*--------------------------------------------------------------------------*/
 #define FXAA_SUBPIX_TRIM_SCALE (1.0/(1.0 - FXAA_SUBPIX_TRIM))

@@ -42,17 +42,8 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	width  = input.domePosition.x;
 	// The value ranges from -1.0f to +1.0f so change it to only positive values.
 
-	//Draw sun 
-	/*
-	float3 dir = normalize(input.domePosition);
-	float cosSunAngle = dot(dir, normalize(input.sunPosition));
-	if (cosSunAngle >= 0.892f)
-	{
-		float lum = (1 + 2 * cosSunAngle) / 3;
-		float4 sunColor = float4(lum,lum,lum, 1.0f);
-		return sunColor;
-	}
-	*/
+
+	
 	if (height < 0.0)
 	{
 		height = 0.0f;
@@ -65,6 +56,17 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
 	outputColor = lerp(centerColor, apexColor, height);
 
+		//Draw sun 
+	/*
+	float3 dir = normalize(input.domePosition);
+	float cosSunAngle = dot(dir, normalize(input.sunPosition));
+	if (cosSunAngle >= 0.892f)
+	{
+		float lum = (1 + 2 * cosSunAngle) / 3;
+		float4 sunColor = float4(lum,lum,lum, 1.0f);
+		outputColor 
+	}
+	*/
 	output.color = outputColor*1.5;
 	output.normal = float4(1.0f, 1.0f, 1.0f, 0.5f);
 	output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);

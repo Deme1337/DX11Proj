@@ -55,8 +55,8 @@ bool CRenderToTexture::Initialize(CDeviceClass* devclass, int textureWidth, int 
 	}
 	else
 	{
-		//textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		//textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 	}
 
 	textureDesc.SampleDesc.Count = samplecount;

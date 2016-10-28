@@ -87,18 +87,6 @@ float2 poissonDisk[16] = {
 
 };
 
-float2 rand_2_10(float2 uv) {
-	float noiseX = (frac(sin(dot(uv, float2(12.9898, 78.233) * 2.0)) * 43758.5453));
-	float noiseY = sqrt(1 - noiseX * noiseX);
-	return float2(noiseX, noiseY);
-}
-
-float random(float3 seed0,int seed1)
-{
-	float4 seed01 = float4(seed0, seed1);
-	float dot_product = dot(seed01, float4(12.9898, 78.233, 45.164, 94.673));
-	return frac(sin(dot_product) * 43758.5453);
-}
 
 float2 texOffset(int u, int v )
 {
@@ -123,7 +111,7 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 	lightMatrix.x = lightMatrix.x / 2.0f + 0.5f;
 	lightMatrix.y = lightMatrix.y / -2.0f + 0.5f;
 	
-	float shadowBias = 0.0000009f;
+	float shadowBias = 0.0000000f;
 
 	float x, y;
 	float LOS = 4;
@@ -145,15 +133,12 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 
 	visibility /= 8.0f;
 
-	if (visibility > 1.1f)
-	{
-		visibility = 1.1f;
-	}
+	//if (visibility > 1.1f)
+	//{
+	//	visibility = 1.1f;
+	//}
 
-	if (visibility < 0.2f)
-	{
-		visibility = 0.2f;
-	}
+	
 
 
 
