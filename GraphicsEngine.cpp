@@ -138,7 +138,7 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 	m_GUI->DrawTW();
 
 	
-	std::string vpofs = "Frame s:  " + std::to_string(frameTime) + " FPS: " + std::to_string(fps) + " Pass1: " + std::to_string(gTime) + " Pass2: " + std::to_string(lTime) + " Shadow pass: " + std::to_string(sTime);
+	std::string vpofs = "Frame:  " + std::to_string(frameTime) + " FPS: " + std::to_string(fps) + " Pass1: " + std::to_string(gTime) + " Pass2: " + std::to_string(lTime) + " Shadow pass: " + std::to_string(sTime);
 
 	SceneInitTime = "Deferred rt: " + std::to_string(m_Scene->GeoBenchMarks[0] * pow(10, -6)) + " : Mesh: " + std::to_string(m_Scene->GeoBenchMarks[1] * pow(10, -6)) + " : Mesh shader: " + std::to_string(m_Scene->GeoBenchMarks[2] * pow(10, -6));
 
@@ -150,7 +150,15 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 
 	textContext.Render();
 
-	m_D3DDevice->GetSwapChain()->Present(0, 0);
+	if (_vSyncEnabled)
+	{
+		m_D3DDevice->GetSwapChain()->Present(1, 0);
+	}
+	else
+	{
+		m_D3DDevice->GetSwapChain()->Present(0, 0);
+	}
+	
 }
 
 void GraphicsEngine::Release()
@@ -191,7 +199,7 @@ void GraphicsEngine::PrepareScene()
 	a[0] = new Actor("Models\\Crytek\\Sponza\\sponza.obj", m_D3DDevice);
 	a[0]->SetModelSize(XMVectorSet(0.1, 0.1, 0.1, 1.0));
 	a[0]->SetModelPosition(XMVectorSet(1, 1, 1, 1.0f));
-	a[0]->HasAlpha = false;
+	a[0]->HasAlpha = true;
 	a[0]->UseTextures = true;
 	m_Scene->AddSceneActor(a[0],m_D3DDevice);
 
@@ -211,6 +219,7 @@ void GraphicsEngine::PrepareTW()
 	m_GUI->AddVariableXMfloat("Skydome center color: ", m_Scene->GetSkyDome()->m_centerColor);
 	m_GUI->AddVariableXMfloat("Skydome apex color: ", m_Scene->GetSkyDome()->m_apexColor);
 	m_GUI->AddVariableXMfloat("Camera RO Pos: ", m_Scene->GetCamera()->CameraPositionXF);
+	m_GUI->AddVariableFloat("Sun diameter: ", m_Scene->dirLight.lightProperties.size);
 
 	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 

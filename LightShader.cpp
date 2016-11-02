@@ -30,45 +30,6 @@ bool LightShader::Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* p
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
 
-	/*
-	// Compile the vertex shader code.
-	result = D3DCompileFromFile(vsFilename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "LightVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-		&vertexShaderBuffer, &errorMessage);
-	if (FAILED(result))
-	{
-		// If the shader failed to compile it should have writen something to the error message.
-		if (errorMessage)
-		{
-			OutputErrorMessage(errorMessage, NULL, vsFilename);
-		}
-		// If there was nothing in the error message then it simply could not find the shader file itself.
-		else
-		{
-			MessageBox(NULL, vsFilename, L"Missing Shader File", MB_OK);
-		}
-
-		return false;
-	}
-
-	// Compile the pixel shader code.
-	result = D3DCompileFromFile(psFilename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "LightPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-		&pixelShaderBuffer, &errorMessage);
-	if (FAILED(result))
-	{
-		// If the shader failed to compile it should have writen something to the error message.
-		if (errorMessage)
-		{
-			OutputErrorMessage(errorMessage, NULL, psFilename);
-		}
-		// If there was nothing in the error message then it simply could not find the file itself.
-		else
-		{
-			MessageBox(NULL, psFilename, L"Missing Shader File", MB_OK);
-		}
-
-		return false;
-	}
-	*/
 
 	vertexShaderBuffer = CDeviceClass::CompileShader(vsFilename, VertexShader, "LightVertexShader");
 	pixelShaderBuffer = CDeviceClass::CompileShader(psFilename, PixelShader, "LightPixelShader");
@@ -252,6 +213,11 @@ void LightShader::UpdateCameraPosition(CDeviceClass * devclass, XMVECTOR cp)
 
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	devclass->GetDevCon()->VSSetConstantBuffers(bufferNumber, 1, &m_cameraBuffer);
+}
+
+void LightShader::UpdateTextureByIndex(CDeviceClass * devclass, ID3D11ShaderResourceView * tex, int index)
+{
+	devclass->GetDevCon()->PSSetShaderResources(index, 1, &tex);
 }
 
 void LightShader::UpdateShadowMap(CDeviceClass * devclass, ID3D11ShaderResourceView* shadowmap)

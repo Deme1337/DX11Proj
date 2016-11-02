@@ -7,10 +7,19 @@ Texture2D roughnessTexture : register(t4);
 
 Texture2D shadowMapTexture : register(t5);
 
+Texture2D irradianceTexture : register(t6);
 
 SamplerState SampleTypePoint : register(s0);
 SamplerComparisonState SampleTypeShadow : register(s1);
 
+//test anistotropic
+SamplerState SamplerAnisotropic
+{
+	Filter = ANISOTROPIC;
+	MaxAnisotropy = 16;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
 
 cbuffer LightBuffer
 {
@@ -130,7 +139,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float3 lightDir;
 	float lightIntensity;
 	float4 outputColor;
-	float4 ambientLight = 0.2;
+	float4 ambientLight = 0.4;
 	float4 specularColor;
 
 
@@ -182,10 +191,13 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
 	float3 DiffuseLight;
 	float4 specularLight;
+
 	
+	//float4 irradiance = irradianceTexture.Sample(SamplerAnisotropic, normals, 0);
+
 	DiffuseLight = colors * lightColor;
 
-
+	
 
 	specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f)*specularColor.r;
 
@@ -196,22 +208,23 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 		PointLightVal += PointLightCalculation(PointLightPosition[i], PointLightColor[i], colors, normals, specularColor.r, a, positionTex, viewDirection);
 	}
 
+	output.color = ambientLight;
 
 	if (length(lightColor.xyz) > 0.01f)
 	{
-		output.color = saturate(lightIntensity * (float4(DiffuseLight, 1.0)* shadow));
+		output.color = saturate( lightIntensity * (float4(DiffuseLight, 1.0)* shadow));
 	}
-
+	
 
 
 	
 	output.color += PointLightVal;
 
-	output.color += ambientLight;
 
-	if (shadow > 0.4 && length(lightColor.xyz) > 0.01f)
+
+	if (length(output.color) > 0.95f)
 	{
-		output.specular = saturate(lightIntensity * (float4(DiffuseLight, 1.0) + specularLight)) * 0.4;
+		output.specular = saturate(lightIntensity * (float4(DiffuseLight, 1.0) * 0.2 + specularLight));
 		output.specular.w = 1.0;
 	}
 	

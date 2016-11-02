@@ -4,6 +4,7 @@
 #define SKYDOME_H
 
 #include "DeviceClass.h"
+#include "TextureTA.h"
 using namespace std;
 
 class CSkydome
@@ -19,6 +20,8 @@ private:
 	struct VertexType
 	{
 		XMFLOAT3 position;
+		XMFLOAT2 uv;
+		XMFLOAT3 normal;
 	};
 
 public:
@@ -27,9 +30,10 @@ public:
 	~CSkydome();
 
 	bool Initialize(ID3D11Device*);
+	void LoadTexture(CDeviceClass *devclass, char* path);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
-
+	CTextureTA* textureSD;
 	int GetIndexCount();
 	XMFLOAT4 GetApexColor();
 	XMFLOAT4 GetCenterColor();
@@ -49,6 +53,7 @@ private:
 	ModelType* m_model;
 	int m_vertexCount, m_indexCount;
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
+
 	
 };
 

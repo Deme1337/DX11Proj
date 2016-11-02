@@ -31,13 +31,18 @@ public:
 
 	float Exposure = 0.0f;
 
-	bool Initialize(ID3D11Device*, HWND);
+	bool Initialize(CDeviceClass *devclass, HWND);
 	void Shutdown();
 	void SetSpecularHighLights(ID3D11DeviceContext* devcon, ID3D11ShaderResourceView* tex);
 	bool Render(ID3D11DeviceContext*, int, XMMATRIX&, XMMATRIX&, XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT2 swh);
 	void RenderShader(ID3D11DeviceContext*, int);
+
+	void RenderShaderBlurV(ID3D11DeviceContext*, int);
+	void RenderShaderBlurH(ID3D11DeviceContext*, int);
+	void RenderShaderBloom(ID3D11DeviceContext*, int);
+	void RenderShaderCombine(ID3D11DeviceContext*, int);
 private:
-	bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
+	bool InitializeShader(CDeviceClass *devclass, HWND, WCHAR*, WCHAR*);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
@@ -47,6 +52,12 @@ private:
 private:
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
+
+	ID3D11PixelShader* m_pixelShaderBloom;
+	ID3D11PixelShader* m_pixelShaderBlurV;
+	ID3D11PixelShader* m_pixelShaderBlurH;
+
+
 	ID3D11InputLayout* m_layout;
 	ID3D11Buffer* m_matrixBuffer;
 	ID3D11Buffer* m_PostProcess;

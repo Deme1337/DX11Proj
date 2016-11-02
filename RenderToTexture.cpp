@@ -136,12 +136,13 @@ bool CRenderToTexture::Initialize(CDeviceClass* devclass, int textureWidth, int 
 	depthBufferDesc.MipLevels = 1;
 	depthBufferDesc.ArraySize = 1;
 	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthBufferDesc.SampleDesc.Count = samplecount;
+	depthBufferDesc.SampleDesc.Count = 1;
 	depthBufferDesc.SampleDesc.Quality = 0;
 	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depthBufferDesc.CPUAccessFlags = 0;
 	depthBufferDesc.MiscFlags = 0;
+
 
 	// Create the texture for the depth buffer using the filled out description.
 	result = devclass->GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
@@ -155,17 +156,9 @@ bool CRenderToTexture::Initialize(CDeviceClass* devclass, int textureWidth, int 
 
 	// Set up the depth stencil view description.
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-	if (samplecount > 1)
-	{
-		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-		depthStencilViewDesc.Texture2D.MipSlice = 1;
-	}
-	else
-	{
-		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		depthStencilViewDesc.Texture2D.MipSlice = 0;
-	}
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+	
 	
 	
 
@@ -245,7 +238,7 @@ void CRenderToTexture::ClearRenderTarget(ID3D11DeviceContext* deviceContext, flo
 	}
 
 	// Clear the depth buffer.
-	//deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	return;
 }

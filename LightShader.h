@@ -49,6 +49,7 @@ public:
 	bool Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* psFilename);
 
 	void UpdateCameraPosition(CDeviceClass * devclass, XMVECTOR cp);
+	void UpdateTextureByIndex(CDeviceClass* devclass, ID3D11ShaderResourceView* tex, int index);
 	void UpdateShadowMap(CDeviceClass* devclass, ID3D11ShaderResourceView* shadowmap);
 	void UpdateShaderParameters(CDeviceClass *devclass, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix,
 		ID3D11ShaderResourceView* colorTexture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* specularTexture, 

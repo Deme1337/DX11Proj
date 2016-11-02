@@ -49,6 +49,12 @@ bool CSkydome::Initialize(ID3D11Device* device)
 	return true;
 }
 
+void CSkydome::LoadTexture(CDeviceClass *devclass, char * path)
+{
+	textureSD = new CTextureTA();
+	textureSD->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(),path);
+}
+
 
 void CSkydome::Shutdown()
 {
@@ -189,6 +195,8 @@ bool CSkydome::InitializeBuffers(ID3D11Device* device)
 	for (i = 0; i<m_vertexCount; i++)
 	{
 		vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
+		vertices[i].uv = XMFLOAT2(m_model[i].tu, m_model[i].tv);
+		vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
 		indices[i] = i;
 	}
 

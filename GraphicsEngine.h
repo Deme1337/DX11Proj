@@ -22,7 +22,7 @@ public:
 	void Release();
 
 	void UpdateWindow(int x, int y);
-
+	bool _vSyncEnabled = true;
 private:
 
 	void SaveScene();

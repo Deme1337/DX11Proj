@@ -21,7 +21,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	m_DeferredBuffer = new DeferredBuffersClass();
 	
-	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth * 1.3, sceneheight*1.3, 10, 0.1, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth, sceneheight, 100.0, 0.1, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 
 	m_DeferredShader = new DeferredShader();
@@ -41,21 +41,31 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	postProcessTexture = new CRenderToTexture();
 
-	postProcessTexture->Initialize(DevClass, scenewidth, sceneheight, 10.0, 0.1f, 1);
+	postProcessTexture->Initialize(DevClass, scenewidth, sceneheight, 100.0, 0.1f, 1);
 
+
+	postProcessor = new PostProcessor();
+
+	postProcessor->InitializePostProcessor(DevClass, scenewidth, sceneheight);
+
+
+	irradianceMap = new CTextureTA();
+
+	irradianceMap->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\Irradiance.dds");
 
 
 	textureShader = new CTextureRenderShader();
 
-	textureShader->Initialize(DevClass->GetDevice(), hWnd);
+	textureShader->Initialize(DevClass, hWnd);
 	textureShader->Exposure = 5.5;
 
 	//Lights and shadow map rt
 	dirLight.lightProperties.Position = XMFLOAT4(300.0f, 1500.0f, -400.0f, 1.0f);
 	dirLight.CalcLightViewMatrix();
 	dirLight.CalcProjectionMatrix();
-	dirLight.lightProperties.Color = XMFLOAT4(1, 0.95871, 0.84518, 1.0f);
+	dirLight.lightProperties.Color = XMFLOAT4(1, 1, 1, 1.0f);
 	dirLight.lightProjectionF = XMFLOAT4(4000.0f, 500.0f, 500.0f, 1.0f);
+	dirLight.lightProperties.size = 56; //very tricky to get right.. Gotta fix shader sometime
 
 	shadowMap = new ShadowMapRenderTarget();
 	
@@ -72,6 +82,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	m_SkyDome->Initialize(DevClass->GetDevice());
 	
+	m_SkyDome->LoadTexture(DevClass, "Textures\\clouds2.jpg");
 
 	m_SkyDomeShader = new CSkyDomeShader();
 
@@ -85,7 +96,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	for (size_t i = 0; i < POINT_LIGHT_COUNT; i++)
 	{
 		PointLight p = PointLight();
-		p.lightProperties.Position = XMFLOAT4(50 * i, 10, i * 20, 1.0f);
+		p.lightProperties.Position = XMFLOAT4(50 * std::sin(i), 10, std::sin(i) * 30, 1.0f);
 		pointLights.push_back(p);
 	}
 
@@ -158,20 +169,20 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 		DevClass->TurnZBufferOff();
 
 		m_SkyDome->Render(DevClass->GetDevCon());
-
+		m_SkyDomeShader->SetSkyDomeTexture(DevClass->GetDevCon(), m_SkyDome->textureSD->GetTexture(), 0);
 		if (!m_SkyDomeShader->Update(DevClass->GetDevCon(), m_SkyDome->GetIndexCount(),
-			worldSphere, view, projection, m_SkyDome->GetApexColor(), m_SkyDome->GetCenterColor(), dirLight))
+			worldSphere, view, projection, m_SkyDome->GetApexColor(), m_SkyDome->GetCenterColor(), dirLight, m_Camera))
 		{
 			MessageBox(NULL, L"Error skydome rendering", L"ERROR", MB_OK);
 		}
 	}
-	DevClass->TurnCullingOn();
+	DevClass->TurnCullingOff();
 	DevClass->TurnZBufferOn();
 
 	projection = DevClass->GetProjectionMatrix();
 	view = m_Camera->GetCameraView();
 
-	DevClass->TurnCullingOn();
+	DevClass->TurnCullingOff();
 	DevClass->TurnZBufferOn();
 
 	TimeVar time2 = timeNow();
@@ -222,7 +233,7 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 	
 	m_LightShader->UpdateShadowMap(DevClass, shadowMap->GetShaderResourceView());
-	
+	m_LightShader->UpdateTextureByIndex(DevClass, irradianceMap->GetTexture(), 6);
 	//Settings to show all textures passed 
 	if (Setting == 0)
 	{
@@ -261,42 +272,22 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 
 	DevClass->ResetViewPort();
 
-
-	//Postprocess 
+	// Post process the outputs of light shader
 	if (ApplyPostProcess)
 	{
+		postProcessor->SetPostProcessInputs(postProcessTexture->GetShaderResourceView(0), postProcessTexture->GetShaderResourceView(1), m_Window, BlurSigma);
 
-		DevClass->Begin();
-		DevClass->SetBackBufferRenderTarget();
-
-		m_Window->UpdateWindow(DevClass->GetDevCon(), viewPortOffSet, 0);
-		m_Window->Render(DevClass->GetDevCon());
-
-
-		worldMatrix = XMMatrixIdentity();
-		orthoMatrix = DevClass->GetOrthoMatrix();
-		baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
-		
+		//Check shadowmap
 		if (Setting == 5)
 		{
-			textureShader->Exposure = BlurSigma;
-			textureShader->SetSpecularHighLights(DevClass->GetDevCon(), nullptr);
-
-			textureShader->Render(DevClass->GetDevCon(), m_Window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, shadowMap->GetShaderResourceView(), XMFLOAT2(_sceneWidth, _sceneHeight));
-			textureShader->RenderShader(DevClass->GetDevCon(), m_Window->m_indexCount);
+			postProcessor->SetPostProcessInputs(shadowMap->GetShaderResourceView(), nullptr, m_Window, BlurSigma);
 		}
-		else
-		{
-			textureShader->Exposure = BlurSigma;
-			textureShader->SetSpecularHighLights(DevClass->GetDevCon(), postProcessTexture->GetShaderResourceView(1));
-
-			textureShader->Render(DevClass->GetDevCon(), m_Window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, postProcessTexture->GetShaderResourceView(0), XMFLOAT2(_sceneWidth, _sceneHeight));
-			textureShader->RenderShader(DevClass->GetDevCon(), m_Window->m_indexCount);
-		}
-	
+		
+		DevClass->Begin();
+		DevClass->SetBackBufferRenderTarget();
+		
+		postProcessor->PostProcess(m_Window);
 	}
-
-
 
 }
 
@@ -326,6 +317,7 @@ void SceneClass::Release()
 	m_Camera->~FreeCamera();
 	m_SkyDome->Shutdown();
 	m_SkyDomeShader->Shutdown();
+	postProcessor->Release();
 }
 
 void SceneClass::HandleSceneInput()

@@ -1,10 +1,20 @@
+Texture2D skyDomeTexture : register(t0);
 
+SamplerState SamplerLinear
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = CLAMP;
+	AddressV = CLAMP;
+
+};
 
 cbuffer ColorBuffer
 {
 	float4 apexColor;
 	float4 centerColor;
 	float4 sunPosition;
+	float4 cameraPosition;
+	float sunSize;
 };
 
 
@@ -13,6 +23,8 @@ struct PixelInputType
 	float4 position : SV_POSITION;
 	float4 domePosition : TEXCOORD0;
 	float4 sunPosition : TEXCOORD1;
+	float2 texCoord : TEXCOORD2;
+	float4 normals : TEXCOORD3;
 };
 
 struct PixelOutputType
@@ -24,6 +36,8 @@ struct PixelOutputType
 	float4 roughness : SV_Target4;
 };
 
+
+
 //TODO:: Add sun for this shader for sunlike effect to the sky
 PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 {
@@ -34,6 +48,7 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	float sunDiameter = 1.0f;
 	float pixDist;
 	float4 sunPosition1 = sunPosition;
+	float4 SkyTexture = skyDomeTexture.Sample(SamplerLinear, input.texCoord);
 
 	sunPosition1 = normalize(sunPosition1);
 	// Determine the position on the sky dome where this pixel is located.
@@ -42,7 +57,7 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	width  = input.domePosition.x;
 	// The value ranges from -1.0f to +1.0f so change it to only positive values.
 
-
+	
 	
 	if (height < 0.0)
 	{
@@ -53,21 +68,21 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 		width = 0.0f;
 	}
 
-	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
-	outputColor = lerp(centerColor, apexColor, height);
 
-		//Draw sun 
-	/*
-	float3 dir = normalize(input.domePosition);
-	float cosSunAngle = dot(dir, normalize(input.sunPosition));
-	if (cosSunAngle >= 0.892f)
-	{
-		float lum = (1 + 2 * cosSunAngle) / 3;
-		float4 sunColor = float4(lum,lum,lum, 1.0f);
-		outputColor 
-	}
-	*/
-	output.color = outputColor*1.5;
+	
+	float SunSize = sunSize;
+	
+	float sunTheta = max(0.0,dot(normalize(input.domePosition), sunPosition1));
+
+	float3 sun = max(sunTheta - (1.0 - (SunSize / 1000)), 0.0) * float3(1.0f, 1.0f, 1.0f) * 200;
+	float3 sunAtmosphere1 = max(sunTheta - (1.0 - (SunSize*2) / 1000.0), 0.0)  *float3(1.0f, 1.0f, 1.0f) * 41;
+
+	float3 sunAtmosphere = max(sunTheta - (1.0 - (SunSize * 20) / 1000.0), 0.0)  *float3(1.0f, 1.0f, 1.0f);
+
+	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
+	outputColor = lerp(centerColor, apexColor , height);
+	
+	output.color = outputColor + float4(sun + sunAtmosphere + sunAtmosphere1, 1.0);
 	output.normal = float4(1.0f, 1.0f, 1.0f, 0.5f);
 	output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	output.position = input.domePosition;

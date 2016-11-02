@@ -17,6 +17,7 @@
 #include "DepthShader.h"
 #include "Skydome.h"
 #include "SkyDomeShader.h"
+#include "PostProcessor.h"
 
 #include <vector>
 
@@ -46,7 +47,7 @@ public:
 	std::vector<PointLight> pointLights;
 
 	 
-	float BlurSigma = 11.0f;
+	float BlurSigma = 5.0f;
 	DirectionalLight dirLight;
 	
 	CSkydome* GetSkyDome() { return this->m_SkyDome; }
@@ -82,9 +83,10 @@ private:
 	bool ApplyPostProcess = true;
 	int _sceneWidth, _sceneHeight;	
 
-
+	PostProcessor* postProcessor;
 	CRenderToTexture* postProcessTexture;
-
+	
+	CTextureTA* irradianceMap;
 };
 
 

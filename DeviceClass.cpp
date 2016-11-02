@@ -39,6 +39,8 @@ bool CDeviceClass::InitDeviceAndSwapChain(HWND hWnd, HINSTANCE hInst, int width,
 	unsigned int numModes, i, numerator, denominator;
 	float fieldOfView, screenAspect;
 
+	this->_mainWindow = hWnd;
+
 	numModes = 0;
 
 	// Create a DirectX graphics interface factory.
@@ -153,8 +155,16 @@ bool CDeviceClass::InitDeviceAndSwapChain(HWND hWnd, HINSTANCE hInst, int width,
 
 
 	// Set the refresh rate of the back buffer.
-	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	if (vSyncEnabled)
+	{
+		swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
+		swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
+	}
+	else
+	{
+		swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	}
 
 
 	// Set the usage of the back buffer.
@@ -600,7 +610,7 @@ ID3D10Blob * CDeviceClass::CompileShader(WCHAR* fileName, ShaderCompilation sc, 
 	if (sc == VertexShader)
 	{
 		// Compile the vertex shader code.
-		result = D3DCompileFromFile(fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "LightVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+		result = D3DCompileFromFile(fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entrypoint, "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 			&shaderBuffer, &errorMessage);
 		if (FAILED(result))
 		{
@@ -621,7 +631,7 @@ ID3D10Blob * CDeviceClass::CompileShader(WCHAR* fileName, ShaderCompilation sc, 
 	if (sc == PixelShader)
 	{
 		// Compile the pixel shader code.
-		result = D3DCompileFromFile(fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "LightPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+		result = D3DCompileFromFile(fileName, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entrypoint, "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
 			&shaderBuffer, &errorMessage);
 		if (FAILED(result))
 		{

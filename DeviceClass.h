@@ -50,7 +50,7 @@ public:
 	XMMATRIX GetProjectionMatrix() { return this->projectionMatrix; }
 	XMMATRIX GetOrthoMatrix() { return this->orthoMatrix; }
 	XMMATRIX projectionMatrix, orthoMatrix;
-
+	HWND _mainWindow;
 
 private:
 	HWND mainWindow;
@@ -102,7 +102,7 @@ private:
 
 public:
 	bool fullscreen = false;
-
+	bool vSyncEnabled = true;
 	std::string GetGPU();
 
 	ID3D11Texture2D *GetBackBufferTexture() { return pBackBuffer; }

@@ -71,13 +71,13 @@ void CSkyDomeShader::Shutdown()
 
 
 bool CSkyDomeShader::Update(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
-	XMMATRIX &projectionMatrix, XMFLOAT4 &apexColor, XMFLOAT4 &centerColor, DirectionalLight &dlight)
+	XMMATRIX &projectionMatrix, XMFLOAT4 &apexColor, XMFLOAT4 &centerColor, DirectionalLight &dlight, FreeCamera* cam)
 {
 	bool result;
 
 
 	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, apexColor, centerColor, dlight);
+	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, apexColor, centerColor, dlight, cam);
 	if (!result)
 	{
 		return false;
@@ -89,6 +89,11 @@ bool CSkyDomeShader::Update(ID3D11DeviceContext* deviceContext, int indexCount, 
 	return true;
 }
 
+void CSkyDomeShader::SetSkyDomeTexture(ID3D11DeviceContext* devcon, ID3D11ShaderResourceView * tex, int index)
+{
+	devcon->PSSetShaderResources(index, 1, &tex);
+}
+
 
 bool CSkyDomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
@@ -96,7 +101,7 @@ bool CSkyDomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vs
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
 	ID3D10Blob* pixelShaderBuffer;
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[1];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc;
 	D3D11_BUFFER_DESC colorBufferDesc;
@@ -167,6 +172,22 @@ bool CSkyDomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vs
 	polygonLayout[0].AlignedByteOffset = 0;
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[0].InstanceDataStepRate = 0;
+
+	polygonLayout[1].SemanticName = "TEXCOORD";
+	polygonLayout[1].SemanticIndex = 0;
+	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	polygonLayout[1].InputSlot = 0;
+	polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[1].InstanceDataStepRate = 0;
+
+	polygonLayout[2].SemanticName = "NORMAL";
+	polygonLayout[2].SemanticIndex = 0;
+	polygonLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	polygonLayout[2].InputSlot = 0;
+	polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[2].InstanceDataStepRate = 0;
 
 	// Get a count of the elements in the layout.
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
@@ -298,7 +319,7 @@ void CSkyDomeShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwn
 
 
 bool CSkyDomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
-	XMMATRIX &projectionMatrix, XMFLOAT4 &apexColor, XMFLOAT4 &centerColor, DirectionalLight &dlight)
+	XMMATRIX &projectionMatrix, XMFLOAT4 &apexColor, XMFLOAT4 &centerColor, DirectionalLight &dlight, FreeCamera* cam)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -351,6 +372,8 @@ bool CSkyDomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMM
 	dataPtr2->apexColor = apexColor;
 	dataPtr2->centerColor = centerColor;
 	dataPtr2->sunPosition = XMLoadFloat4(&dlight.lightProperties.Position);
+	dataPtr2->cameraPosition = cam->GetCameraPosition();
+	dataPtr2->sunSize = dlight.lightProperties.size;
 	// Unlock the color constant buffer.
 	deviceContext->Unmap(m_colorBuffer, 0);
 

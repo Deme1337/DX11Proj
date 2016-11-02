@@ -22,6 +22,7 @@ private:
 	{
 		XMFLOAT4 Position = XMFLOAT4(1.0, 1.0, 1.0, 1.0); 
 		XMFLOAT4 Color = XMFLOAT4(1.0, 1.0, 1.0, 1.0); 
+		float  size = 120.0f;
 	};
 
 

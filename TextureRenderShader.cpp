@@ -25,13 +25,13 @@ CTextureRenderShader::~CTextureRenderShader()
 }
 
 
-bool CTextureRenderShader::Initialize(ID3D11Device* device, HWND hwnd)
+bool CTextureRenderShader::Initialize(CDeviceClass *devclass, HWND hwnd)
 {
 	bool result;
 
 
 	// Initialize the vertex and pixel shaders.
-	result = InitializeShader(device, hwnd, L"TextureVS.hlsl", L"TexturePS.hlsl");
+	result = InitializeShader(devclass, hwnd, L"TextureVS.hlsl", L"TexturePS.hlsl");
 	if (!result)
 	{
 		return false;
@@ -73,12 +73,13 @@ bool CTextureRenderShader::Render(ID3D11DeviceContext* deviceContext, int indexC
 }
 
 
-bool CTextureRenderShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+
+bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
-	ID3D10Blob* pixelShaderBuffer;
+	ID3D10Blob* pixelShaderBuffer; ID3D10Blob* pixelShaderBufferBlurV; ID3D10Blob* pixelShaderBufferBlurH; ID3D10Blob* pixelShaderBufferBloom;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements;
 	D3D11_BUFFER_DESC matrixBufferDesc, postProcessBufferDesc;
@@ -90,53 +91,42 @@ bool CTextureRenderShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
 
-	// Compile the vertex shader code.
-	result = D3DCompileFromFile(vsFilename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "TextureVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-		&vertexShaderBuffer, &errorMessage);
-	if (FAILED(result))
-	{
-		// If the shader failed to compile it should have writen something to the error message.
-		if (errorMessage)
-		{
-			OutputShaderErrorMessage(errorMessage, hwnd, vsFilename);
-		}
-		// If there was nothing in the error message then it simply could not find the shader file itself.
-		else
-		{
-			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
-		}
-
-		return false;
-	}
-
-	// Compile the pixel shader code.
-	result = D3DCompileFromFile(psFilename, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "TexturePixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-		&pixelShaderBuffer, &errorMessage);
-	if (FAILED(result))
-	{
-		// If the shader failed to compile it should have writen something to the error message.
-		if (errorMessage)
-		{
-			OutputShaderErrorMessage(errorMessage, hwnd, psFilename);
-		}
-		// If there was  nothing in the error message then it simply could not find the file itself.
-		else
-		{
-			MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
-		}
-
-		return false;
-	}
+	pixelShaderBuffer	   = CDeviceClass::CompileShader(psFilename, PixelShader, "Combine");
+	pixelShaderBufferBlurV = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurVertical");
+	pixelShaderBufferBlurH = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurHorizontal");
+	pixelShaderBufferBloom = CDeviceClass::CompileShader(psFilename, PixelShader, "BloomColors");
+	vertexShaderBuffer     = CDeviceClass::CompileShader(vsFilename, VertexShader, "TextureVertexShader");
 
 	// Create the vertex shader from the buffer.
-	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
+	result = devclass->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Create the pixel shader from the buffer.
-	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
+	result = devclass->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//blur vertical shader
+	result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferBlurV->GetBufferPointer(), pixelShaderBufferBlurV->GetBufferSize(), NULL, &m_pixelShaderBlurV);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//blur horizontal shader
+	result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferBlurH->GetBufferPointer(), pixelShaderBufferBlurH->GetBufferSize(), NULL, &m_pixelShaderBlurH);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	//bloom shader
+	result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferBloom->GetBufferPointer(), pixelShaderBufferBloom->GetBufferSize(), NULL, &m_pixelShaderBloom);
 	if (FAILED(result))
 	{
 		return false;
@@ -164,7 +154,7 @@ bool CTextureRenderShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 	numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
 
 	// Create the vertex input layout.
-	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(),
+	result = devclass->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(),
 		&m_layout);
 	if (FAILED(result))
 	{
@@ -178,6 +168,10 @@ bool CTextureRenderShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 	pixelShaderBuffer->Release();
 	pixelShaderBuffer = 0;
 
+	SafeRelease(pixelShaderBufferBloom);
+	SafeRelease(pixelShaderBufferBlurH);
+	SafeRelease(pixelShaderBufferBlurV);
+
 	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
@@ -187,7 +181,7 @@ bool CTextureRenderShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 	matrixBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+	result = devclass->GetDevice()->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
 	if (FAILED(result))
 	{
 		return false;
@@ -202,7 +196,7 @@ bool CTextureRenderShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 	postProcessBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&postProcessBufferDesc, NULL, &m_PostProcess);
+	result = devclass->GetDevice()->CreateBuffer(&postProcessBufferDesc, NULL, &m_PostProcess);
 	if (FAILED(result))
 	{
 		return false;
@@ -224,7 +218,7 @@ bool CTextureRenderShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// Create the texture sampler state.
-	result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
+	result = devclass->GetDevice()->CreateSamplerState(&samplerDesc, &m_sampleState);
 	if (FAILED(result))
 	{
 		return false;
@@ -236,40 +230,15 @@ bool CTextureRenderShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 
 void CTextureRenderShader::ShutdownShader()
 {
-	// Release the sampler state.
-	if (m_sampleState)
-	{
-		m_sampleState->Release();
-		m_sampleState = 0;
-	}
-
-	// Release the matrix constant buffer.
-	if (m_matrixBuffer)
-	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
-	}
-
-	// Release the layout.
-	if (m_layout)
-	{
-		m_layout->Release();
-		m_layout = 0;
-	}
-
-	// Release the pixel shader.
-	if (m_pixelShader)
-	{
-		m_pixelShader->Release();
-		m_pixelShader = 0;
-	}
-
-	// Release the vertex shader.
-	if (m_vertexShader)
-	{
-		m_vertexShader->Release();
-		m_vertexShader = 0;
-	}
+	
+	SafeRelease(m_sampleState);
+	SafeRelease(m_matrixBuffer);
+	SafeRelease(m_layout);
+	SafeRelease(m_pixelShader);
+	SafeRelease(m_vertexShader);
+	SafeRelease(m_pixelShaderBloom);
+	SafeRelease(m_pixelShaderBlurV);
+	SafeRelease(m_pixelShaderBlurH);
 
 	return;
 }
@@ -381,6 +350,79 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 
 
 void CTextureRenderShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+{
+	// Set the vertex input layout.
+	deviceContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
+	deviceContext->PSSetShader(m_pixelShader, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
+
+	// Render the triangle.
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+
+	return;
+}
+
+
+void CTextureRenderShader::RenderShaderBlurV(ID3D11DeviceContext* deviceContext, int indexCount)
+{
+	// Set the vertex input layout.
+	deviceContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
+	deviceContext->PSSetShader(m_pixelShaderBlurV, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
+
+	// Render the triangle.
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+
+	return;
+}
+
+void CTextureRenderShader::RenderShaderBlurH(ID3D11DeviceContext* deviceContext, int indexCount)
+{
+	// Set the vertex input layout.
+	deviceContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
+	deviceContext->PSSetShader(m_pixelShaderBlurH, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
+
+	// Render the triangle.
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+
+	return;
+}
+
+void CTextureRenderShader::RenderShaderBloom(ID3D11DeviceContext* deviceContext, int indexCount)
+{
+	// Set the vertex input layout.
+	deviceContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
+	deviceContext->PSSetShader(m_pixelShaderBloom, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
+
+	// Render the triangle.
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+
+	return;
+}
+
+void CTextureRenderShader::RenderShaderCombine(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	// Set the vertex input layout.
 	deviceContext->IASetInputLayout(m_layout);
