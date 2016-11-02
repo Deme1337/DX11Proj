@@ -22,8 +22,7 @@ private:
 	};
 
 
-	//Holder for meshes
-	Model *actorMeshes;
+
 	
 
 
@@ -38,6 +37,9 @@ public:
 	bool HasAlpha = false;
 	std::string ObjectTransmissionString();
 	std::string ActorPath;
+
+	//Holder for meshes
+	Model *actorMeshes;
 
 	Actor(const char* modelpath,CDeviceClass *devclass);
 	~Actor();

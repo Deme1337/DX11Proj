@@ -29,7 +29,7 @@ void CAntUI::LoadModel(CAntUI *clientData)
 	
 	std::string Path = "";
 	OpenFileDialog* ofd = new OpenFileDialog();
-
+	ofd->Owner = clientData->mainWindow;
 	if (ofd->ShowDialog() && ofd->FileName != nullptr)
 	{
 		std::wstring p(ofd->FileName);
@@ -96,7 +96,7 @@ void CAntUI::LoadScene(CAntUI * clientData)
 
 	std::string Path = "";
 	OpenFileDialog* ofd = new OpenFileDialog();
-
+	ofd->Owner = clientData->mainWindow;
 	if (ofd->ShowDialog() && ofd->FileName != nullptr)
 	{
 		std::wstring p(ofd->FileName);
@@ -190,7 +190,7 @@ bool CAntUI::InitializeTW(CDeviceClass *devclass, int width, int height,SceneCla
 	
 
 
-	TwDefine(" Main label = 'Scene Parameters' position = '1400 10' size='400 300'");
+	TwDefine(" Main label = 'Scene Parameters' position = '1200 10' size='600 300'");
 
 
 	loaderBar = TwNewBar("Loader");
