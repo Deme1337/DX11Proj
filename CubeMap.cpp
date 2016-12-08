@@ -41,3 +41,7 @@ CubeMap::CubeMap(CDeviceClass * devclass, int mips, int size)
 CubeMap::~CubeMap()
 {
 }
+
+void CubeMap::RenderCubeMap(CDeviceClass * devclass)
+{
+}

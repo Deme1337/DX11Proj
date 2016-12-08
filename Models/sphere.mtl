@@ -8,7 +8,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd    SphereSteel\\DefaultMaterial_Base_Color.png
-map_Bump  SphereSteel\\DefaultMaterial_Normal.png
-map_Ks	  SphereSteel\\DefaultMaterial_Metallic.png
-map_Ns 	  SphereSteel\\DefaultMaterial_Roughness.png
+map_Kd    baseMetal\\albedo.png
+map_Bump  baseMetal\\normal.png
+map_Ks	  baseMetal\\metallic1.png
+map_Ns 	  baseMetal\\roughness.png

@@ -30,11 +30,7 @@ public:
 
 private:
 
-	struct Material
-	{
-		float SpecularIntensity = 35.0f;
-
-	};
+	
 	
 
 	//Converts aiVector to XMVECTOR

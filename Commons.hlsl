@@ -149,14 +149,16 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 	return visibility;
 }
 /*-----------------------------------DISNEY STUFF------------------------------------------*/
-float PI = 3.14159265359;
-#define NDF_GGX 1
+static const float PI = 3.14159265359;
+#define SPECULAR 0
+#define METALLIC 1
+#define NDF_BECKMANN 1
 #define FRESNEL_SCHLICK 1
 #define GEOMETRIC_SMITH_SCHLICK_GGX 1
 #define DISNEY_BRDF 1
 
 #define g_Roughness              0.0f
-#define g_Metallic               0.0f
+//#define g_Metallic               0.0f
 #define g_OverrideAlbedo         0.0f
 #define g_OverrideNormal         0.0f
 #define g_OverrideMetallic       0.0f
@@ -167,14 +169,7 @@ float PI = 3.14159265359;
 #define g_ReflectionIntensity    0.0f
 
 
-#define g_Subsurface            0.0f
-#define g_Specular              0.0f
-#define g_SpecularTint          0.0f
-#define g_Anisotropic           0.0f
-#define g_Sheen                 0.0f
-#define g_SheenTint             0.0f
-#define g_Clearcoat             0.0f
-#define g_ClearcoatGloss        0.0f
+
 
 float3 Diffuse(float3 pAlbedo)
 {
@@ -441,13 +436,44 @@ float3 ComputeLight(float3 albedoColor, float3 specularColor, float3 normal, flo
 	return lightColor * NdL * (cDiff * (1.0f - cSpec) + cSpec);
 }
 
-
-// From Disney's BRDF explorer: https://github.com/wdas/brdf
-float3 DisneyBRDF(float3 baseColor, out float3 specularColor, float3 normal, float roughness, float3 lightDir, float3 viewDir, float3 X, float3 Y, out float3 diffuse)
+cbuffer DisneyParam : register(b2)
 {
+	float4 subspectintani;
+	float4 sheentintcleargloss;
+
+};
+// From Disney's BRDF explorer: https://github.com/wdas/brdf
+float3 DisneyBRDF(float3 baseColor, out float3 specularColor, float3 normal, float roughness, float3 lightDir, float3 viewDir, float3 X, float3 Y, out float3 diffuse, float2 tex)
+{
+	float g_Subsurface = 0.0f;
+	float g_Specular = 0.0f;
+	float g_SpecularTint = 0.0f;
+	float g_Anisotropic = 0.0f;
+	float g_Sheen = 0.0f;
+	float g_SheenTint = 0.0f;
+	float g_Clearcoat = 0.0f;
+	float g_ClearcoatGloss = 0.0f;
+	float g_Metallic = specularTexture.Sample(SampleTypePoint, tex).g;
+
+	g_Subsurface   = subspectintani.x;
+	g_Specular     = subspectintani.y;
+	g_SpecularTint = subspectintani.z;
+	g_Anisotropic  = subspectintani.w;
+
+	g_Sheen = sheentintcleargloss.x;
+	g_SheenTint = sheentintcleargloss.y;
+	g_Clearcoat = sheentintcleargloss.z;
+	g_ClearcoatGloss = sheentintcleargloss.w;
+
 	// Compute some useful values.
 	float NdL = saturate(dot(normal, lightDir));
 	float NdV = saturate(dot(normal, viewDir));
+
+	
+	if (NdL < 0 || NdV < 0)
+	{
+		return float3(0.0f, 0.0f, 0.0f);
+	}
 
 	float3 h = normalize(lightDir + viewDir);
 	float NdH = saturate(dot(normal, h));

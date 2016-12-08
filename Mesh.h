@@ -29,6 +29,11 @@ struct Texture
 	CTextureTA *tex;
 	std::string type;
 	aiString path;
+
+	XMFLOAT4 DiffuseColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	float metallic = 0.03f;
+	float Roughness = 1.0f;
+
 };
 
 

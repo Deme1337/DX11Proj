@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <io.h>
 #include <fcntl.h>
+#include "imgui-master\imgui.h"
+#include "imgui-master\imgui_impl_dx11.h"
 #include <iostream>
 
 
@@ -101,6 +103,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			m_Engine->UpdateEngine(fps, frameTime);
 			
 		}
+		else if(GetActiveWindow() != hWnd)
+		{
+			ShowWindow(hWnd, SW_MINIMIZE);
+		}
 		
     }
 
@@ -147,9 +153,37 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
 //
+
+bool enterFullscreen(HWND hwnd, int fullscreenWidth, int fullscreenHeight, int colourBits, int refreshRate) {
+	DEVMODE fullscreenSettings;
+	bool isChangeSuccessful;
+	RECT windowBoundary;
+
+	EnumDisplaySettings(NULL, 0, &fullscreenSettings);
+	fullscreenSettings.dmPelsWidth = fullscreenWidth;
+	fullscreenSettings.dmPelsHeight = fullscreenHeight;
+	fullscreenSettings.dmBitsPerPel = colourBits;
+	fullscreenSettings.dmDisplayFrequency = refreshRate;
+	fullscreenSettings.dmFields = DM_PELSWIDTH |
+		DM_PELSHEIGHT |
+		DM_BITSPERPEL |
+		DM_DISPLAYFREQUENCY;
+
+	SetWindowLongPtr(hwnd, GWL_EXSTYLE, WS_EX_APPWINDOW);
+	SetWindowLongPtr(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+	SetWindowPos(hwnd,HWND_TOP, 0, 0, fullscreenWidth, fullscreenHeight, SWP_SHOWWINDOW);
+	isChangeSuccessful = ChangeDisplaySettings(&fullscreenSettings, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL;
+	ShowWindow(hwnd, SW_MAXIMIZE);
+
+	return isChangeSuccessful;
+}
+
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
+
+
+
 
    hWnd = CreateWindow(szWindowClass, szTitle,WS_OVERLAPPEDWINDOW| WS_POPUP | WS_VISIBLE, 0, 0, 1920, 1080, NULL, NULL, hInstance, NULL);
 
@@ -158,12 +192,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
+   
+
    m_Engine = new GraphicsEngine();
    m_Engine->_vSyncEnabled = true;
    m_Engine->InitializeEngine(hWnd, hInst);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
+
+   bool winres = enterFullscreen(hWnd, 1920, 1080, 32, 60);
 
    return TRUE;
 }
@@ -185,6 +223,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		return 0;
 	}
+	
+	if (ImGui_ImplDX11_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
 
     switch (message)
     {

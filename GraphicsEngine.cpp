@@ -3,9 +3,11 @@
 #include "Timer.h"
 #include <string>
 #include <time.h>
+#include <Psapi.h>
 #include <thread>
+#include <sstream>
 #include <future>
-
+#include "imgui-master\imgui_impl_dx11.h"
 
 
 GraphicsEngine::GraphicsEngine()
@@ -24,7 +26,7 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 {
 	m_D3DDevice = new CDeviceClass();
 	m_Scene = new SceneClass();
-	FullScreen = true;
+	FullScreen = false;
 	m_D3DDevice->SetAntiAliasing(_sampleCount);
 	m_D3DDevice->fullscreen = FullScreen;
 	
@@ -33,6 +35,7 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 	if (!FullScreen)
 	{
 		this->GetHwndSize(hWnd, wwidth, wheight);
+		m_Scene->viewPortOffSet = -420;
 	}
 	else
 	{
@@ -54,6 +57,12 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 	m_GUI = new CAntUI();
 	m_GUI->mainWindow = hWnd;
 	m_GUI->InitializeTW(m_D3DDevice, wwidth, wheight, m_Scene);
+
+	//IMGUI test
+	{
+		ImGui_ImplDX11_Init(hWnd, m_D3DDevice->GetDevice(), m_D3DDevice->GetDevCon());
+		ImVec4 clear_col = ImColor(114, 144, 154);
+	}
 	
 	m_Scene->InitializeScene(m_D3DDevice,wwidth,wheight, hWnd);
 
@@ -73,8 +82,35 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 {
 	
+	//Imgui rendering
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui::SliderFloat("Blur sigma", &m_Scene->BlurSigma, 0.0f, 50.0f);
+		if (m_Scene->m_Actors.size() > 0 && m_Scene->m_Actors[ObjectSelectedIndex] != nullptr)
+		{
+			ImGui::SliderFloat("Actor roughness", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.roughness, -1.0f, 1.0f);
+			ImGui::SliderFloat("Metallic", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.metallic, 0.0f, 1.0f);
+			ImGui::InputFloat("Texture padding", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.texOffset, -20.0f, 20.0f);
+		}
+
+		ImGui::SliderFloat("Subsurface",&m_Scene->subspectintani.x, 0.0f, 1.0f);
+		ImGui::SliderFloat("specular",&m_Scene->subspectintani.y, 0.0f, 1.0f);
+		ImGui::SliderFloat("specularTint", &m_Scene->subspectintani.z, 0.0f, 1.0f);
+		ImGui::SliderFloat("anisotropic", &m_Scene->subspectintani.w, 0.0f, 1.0f);
+		ImGui::SliderFloat("sheen", &m_Scene->sheentintcleargloss.x, 0.0f, 1.0f);
+		ImGui::SliderFloat("sheenTint", &m_Scene->sheentintcleargloss.y, 0.0f, 1.0f);
+		ImGui::SliderFloat("clearcoat", &m_Scene->sheentintcleargloss.z, 0.0f, 1.0f);
+		ImGui::SliderFloat("clearcoatGloss",&m_Scene->sheentintcleargloss.w, 0.0f, 1.0f);
+
+		//Debugging only
+		//ImGui::SliderInt("Screen offset", &m_Scene->viewPortOffSet, -1000, 1000);
+
+	}
+	
 	m_D3DDevice->Begin();
 	m_D3DDevice->AlphaBlendingOff();
+
+
 
 	TimeVar shadowTime = timeNow();
 	m_Scene->ShadowPass(m_D3DDevice);
@@ -142,13 +178,28 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 
 	SceneInitTime = "Deferred rt: " + std::to_string(m_Scene->GeoBenchMarks[0] * pow(10, -6)) + " : Mesh: " + std::to_string(m_Scene->GeoBenchMarks[1] * pow(10, -6)) + " : Mesh shader: " + std::to_string(m_Scene->GeoBenchMarks[2] * pow(10, -6));
 
+	std::string opt1 = "Press p to take a screen shot";
+
+	std::string memoryUsage = "";
+
+	DWORDLONG memUsage = GetTotalMemory() / 1024 / 1024;
+	std::ostringstream memStream;
+	memStream << memUsage;
+	memoryUsage = memStream.str() + " mb";
+
 	textContext.Print(5, 15, vpofs.c_str());
 	textContext.Print(5, 35, GPUinfo.c_str());
 	textContext.Print(5, 55, SceneInitTime.c_str());
-
+	textContext.Print(5, 75, memoryUsage.c_str());
 
 
 	textContext.Render();
+
+	//Imgui rendering
+	{
+		ImGui::Render();
+	}
+
 
 	if (_vSyncEnabled)
 	{
@@ -172,6 +223,15 @@ void GraphicsEngine::Release()
 void GraphicsEngine::UpdateWindow(int x, int y)
 {
 	m_D3DDevice->UpdateViewPort(x, y);
+}
+
+SIZE_T GraphicsEngine::GetTotalMemory()
+{
+	PROCESS_MEMORY_COUNTERS pmc;
+	GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
+	SIZE_T virtualMemUsedByMe = pmc.WorkingSetSize;
+
+	return virtualMemUsedByMe;
 }
 
 void GraphicsEngine::SaveScene()
@@ -200,8 +260,10 @@ void GraphicsEngine::PrepareScene()
 	a[0]->SetModelSize(XMVectorSet(0.1, 0.1, 0.1, 1.0));
 	a[0]->SetModelPosition(XMVectorSet(1, 1, 1, 1.0f));
 	a[0]->HasAlpha = true;
+	a[0]->actorMatrix.roughness = 0.80f;
 	a[0]->UseTextures = true;
 	m_Scene->AddSceneActor(a[0],m_D3DDevice);
+
 
 }
 
@@ -214,6 +276,7 @@ void GraphicsEngine::PrepareTW()
 	m_GUI->AddVariableXMfloat("Position: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.position);
 	m_GUI->AddVariableXMfloat("Rotation: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.rotation);
 	m_GUI->AddVariableXMfloat("Scale: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.size);
+	m_GUI->AddVariableXMfloat("Color: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.objColor);
 	m_GUI->AddVariableBoolean("Alpha cull: ", m_Scene->m_Actors[ObjectSelectedIndex]->HasAlpha);
 	m_GUI->AddVariableBoolean("Use textures: ", m_Scene->m_Actors[ObjectSelectedIndex]->UseTextures);
 	
@@ -221,7 +284,7 @@ void GraphicsEngine::PrepareTW()
 	m_GUI->AddVariableXMfloat("Skydome apex color: ", m_Scene->GetSkyDome()->m_apexColor);
 	m_GUI->AddVariableXMfloat("Camera RO Pos: ", m_Scene->GetCamera()->CameraPositionXF);
 	m_GUI->AddVariableFloat("Sun diameter: ", m_Scene->dirLight.lightProperties.size);
-
+	m_GUI->AddVariableFloat("GlobalAmbient: ", m_Scene->dirLight.lightProperties.globalAmbient);
 	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 
 	m_GUI->AddDirectionalLight(m_Scene->dirLight);

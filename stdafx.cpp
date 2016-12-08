@@ -27,6 +27,12 @@ int Keys::onekey(int iKey)
 
 
 
+
+float lerp(float a, float b, float c)
+{
+	return a + c * (b - a);
+}
+
 // wide char to multi byte:
 std::string ws2s(const std::wstring& wstr)
 {
@@ -94,4 +100,16 @@ std::vector<std::string> split(const std::string &s, char delim) {
 	std::vector<std::string> elems;
 	split(s, delim, elems);
 	return elems;
+}
+
+
+const std::string currentDateTime() {
+	time_t     now = time(0);
+	struct tm  tstruct;
+	char       buf[80];
+	tstruct = *localtime(&now);
+	
+	strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+
+	return buf;
 }

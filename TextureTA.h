@@ -2,11 +2,9 @@
 
 #ifndef TATEX_H
 #define TATEX_H
-
-#include <d3d11.h>
 #include <stdio.h>
 
-
+#include "DeviceClass.h"
 
 class CTextureTA
 {
@@ -20,6 +18,13 @@ private:
 		unsigned char data2;
 	};
 
+private:
+	unsigned char* textureData;
+	ID3D11Texture2D* m_texture;
+
+	ID3D11ShaderResourceView* srvCubeMap = 0;
+	ID3D11Texture2D* srcTex[6];
+
 public:
 	CTextureTA();
 	CTextureTA(const CTextureTA&);
@@ -29,16 +34,19 @@ public:
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
 	//Loads texture using free image library
 	bool LoadFreeImage(ID3D11Device*, ID3D11DeviceContext*, const char*);
+	bool LoadCubeMap(ID3D11Device* dev, ID3D11DeviceContext* devcon, std::vector<std::string> images);
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTexture();
 	ID3D11ShaderResourceView* m_textureView;
+	ID3D11ShaderResourceView* cubeGetTexture() { return this->srvCubeMap; }
+
+
 private:
 	bool LoadTarga(char*, int&, int&);
 
-private:
-	unsigned char* textureData;
-	ID3D11Texture2D* m_texture;
+
 };
+
 
 #endif

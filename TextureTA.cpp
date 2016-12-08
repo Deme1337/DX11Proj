@@ -140,6 +140,86 @@ bool CTextureTA::LoadFreeImage(ID3D11Device* device, ID3D11DeviceContext* device
 	
 }
 
+bool CTextureTA::LoadCubeMap(ID3D11Device * dev, ID3D11DeviceContext * devcon, std::vector<std::string> images)
+{
+	CTextureTA* tex[6];
+	for (size_t i = 0; i < 6; i++)
+	{
+		tex[i] = new CTextureTA();
+		if (!tex[i]->LoadFreeImage(dev, devcon, images[i].c_str()))
+		{
+			MessageBox(NULL, L"Texture path incorrect", L"ERROR", MB_OK);
+			return false;
+		}
+		srcTex[i] = tex[i]->m_texture;
+
+	}
+
+	
+
+	D3D11_TEXTURE2D_DESC texElementDesc;
+	((ID3D11Texture2D*)srcTex[0])->GetDesc(&texElementDesc);
+	
+	for (int i = 0; i < 6; i++)
+	{
+		tex[i]->Shutdown();
+	}
+	
+
+
+	D3D11_TEXTURE2D_DESC texArrayDesc;
+	texArrayDesc.Width = texElementDesc.Width;
+	texArrayDesc.Height = texElementDesc.Height;
+	texArrayDesc.MipLevels = texElementDesc.MipLevels;
+	texArrayDesc.ArraySize = 6;
+	texArrayDesc.Format = texElementDesc.Format;
+	texArrayDesc.SampleDesc.Count = 1;
+	texArrayDesc.SampleDesc.Quality = 0;
+	texArrayDesc.Usage = D3D11_USAGE_DEFAULT;
+	texArrayDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	texArrayDesc.CPUAccessFlags = 0;
+	texArrayDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+	ID3D11Texture2D* texArray = 0;
+	if (FAILED(dev->CreateTexture2D(&texArrayDesc, 0, &texArray)))
+		return false;
+
+	// Copy individual texture elements into texture array.
+	D3D11_BOX sourceRegion;
+
+	//Here i copy the mip map levels of the textures
+	for (UINT x = 0; x < 6; x++)
+	{
+		for (UINT mipLevel = 0; mipLevel < texArrayDesc.MipLevels; mipLevel++)
+		{
+			sourceRegion.left = 0;
+			sourceRegion.right = (texArrayDesc.Width >> mipLevel);
+			sourceRegion.top = 0;
+			sourceRegion.bottom = (texArrayDesc.Height >> mipLevel);
+			sourceRegion.front = 0;
+			sourceRegion.back = 1;
+
+			//test for overflow
+			if (sourceRegion.bottom == 0 || sourceRegion.right == 0)
+				break;
+
+			devcon->CopySubresourceRegion(texArray, D3D11CalcSubresource(mipLevel, x, texArrayDesc.MipLevels), 0, 0, 0, srcTex[x], mipLevel, &sourceRegion);
+		}
+	}
+
+	// Create a resource view to the texture array.
+	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
+	viewDesc.Format = texArrayDesc.Format;
+	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	viewDesc.TextureCube.MostDetailedMip = 0;
+	viewDesc.TextureCube.MipLevels = texArrayDesc.MipLevels;
+
+	if (FAILED(dev->CreateShaderResourceView(texArray, &viewDesc, &srvCubeMap)))
+		return false;
+
+	return true;
+}
+
 bool CTextureTA::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
 {
 	bool result;
@@ -228,6 +308,12 @@ void CTextureTA::Shutdown()
 	if (textureData)
 	{
 		textureData = 0;
+	}
+
+	if (srvCubeMap != nullptr)
+	{
+		srvCubeMap->Release();
+		srvCubeMap = 0;
 	}
 
 	return;

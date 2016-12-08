@@ -18,12 +18,16 @@ private:
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX projection;
+		float texOffSet;
 		int HasAlpha;
 	};
 
 	struct ObjectData
 	{
+		XMFLOAT4 objColor;
 		int UseTextures;
+		float roughnessOffset;
+		float metallic;
 	};
 	
 
@@ -31,7 +35,7 @@ public:
 	DeferredShader();
 	~DeferredShader();
 
-	void SetObjectData(CDeviceClass * devclass, int useTex);
+	void SetObjectData(CDeviceClass * devclass, XMFLOAT4 data, XMFLOAT4 objcolor);
 
 	bool Initialize(CDeviceClass* devclass, WCHAR* vsFilename, WCHAR* psFilename);
 	void UpdateTexture(CDeviceClass * devclass, ID3D11ShaderResourceView* texture);
@@ -39,7 +43,7 @@ public:
 	void UpdateTextureSpecular(CDeviceClass * devclass, ID3D11ShaderResourceView* texture);
 	void UpdateTextureRough(CDeviceClass * devclass, ID3D11ShaderResourceView* texture);
 
-	void UpdateShader(CDeviceClass* devclass, XMMATRIX& world, XMMATRIX& view, XMMATRIX& projection, bool HasAlpha);
+	void UpdateShader(CDeviceClass* devclass, XMMATRIX& world, XMMATRIX& view, XMMATRIX& projection, bool HasAlpha, float texoffset);
 
 	void RenderShader(CDeviceClass* devclass, int indexCount);
 	

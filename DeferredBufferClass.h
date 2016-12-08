@@ -6,7 +6,7 @@
 
 #include "DeviceClass.h"
 
-const int BUFFER_COUNT = 5;
+const int BUFFER_COUNT = 7;
 
 class DeferredBuffersClass
 {

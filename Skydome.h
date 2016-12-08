@@ -34,6 +34,7 @@ public:
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 	CTextureTA* textureSD;
+	CTextureTA* textureSDcube;
 	int GetIndexCount();
 	XMFLOAT4 GetApexColor();
 	XMFLOAT4 GetCenterColor();

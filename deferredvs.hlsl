@@ -4,6 +4,7 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
+    float texOffSet;
 	int HasAlpha;
 };
 
@@ -47,7 +48,7 @@ PixelInputType DeferredVertexShader(VertexInputType input)
     
 	// Store the texture coordinates for the pixel shader.
 	float2 newTex = input.tex;
-    output.tex = newTex;
+    output.tex = newTex * texOffSet;
     
 	// Calculate the normal vector against the world matrix only.
     output.normal = mul(input.normal, (float3x3)worldMatrix);

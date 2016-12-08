@@ -37,12 +37,12 @@ void CAntUI::LoadModel(CAntUI *clientData)
 
 		Actor* a = new Actor(Path.c_str(), clientData->m_D3DClass);
 		MainScene->AddSceneActor(a,clientData->m_D3DClass);
-		clientData->m_D3DClass->SetFullScreen();
+		
 	}
 
 	else
 	{
-		clientData->m_D3DClass->SetFullScreen();
+		
 		return;
 	}
 	
@@ -108,7 +108,7 @@ void CAntUI::LoadScene(CAntUI * clientData)
 		{
 			lines.push_back(line);
 		}
-
+		
 		clientData->MainScene->m_Actors.clear();
 
 		for (size_t i = 0; i < lines.size(); i++)
@@ -133,12 +133,12 @@ void CAntUI::LoadScene(CAntUI * clientData)
 
 
 
-		clientData->m_D3DClass->SetFullScreen();
+		
 	}
 
 	else
 	{
-		clientData->m_D3DClass->SetFullScreen();
+		
 		return;
 	}
 

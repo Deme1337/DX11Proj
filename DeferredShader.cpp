@@ -220,7 +220,7 @@ void DeferredShader::UpdateTextureRough(CDeviceClass * devclass, ID3D11ShaderRes
 	devclass->GetDevCon()->PSSetShaderResources(3, 1, &texture);
 }
 
-void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMATRIX & view, XMMATRIX & projection, bool HasAlpha)
+void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMATRIX & view, XMMATRIX & projection, bool HasAlpha, float texoffset)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -247,6 +247,7 @@ void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMA
 	dataPtr->world = world;
 	dataPtr->view = XMMatrixMultiply(projection, view);
 	dataPtr->HasAlpha = HasAlpha;
+	dataPtr->texOffSet = texoffset;
 	//dataPtr->projection = projection;
 
 	// Unlock the constant buffer.
@@ -260,7 +261,7 @@ void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMA
 
 }
 
-void DeferredShader::SetObjectData(CDeviceClass * devclass, int useTex)
+void DeferredShader::SetObjectData(CDeviceClass * devclass, XMFLOAT4 data, XMFLOAT4 objcolor)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -277,7 +278,10 @@ void DeferredShader::SetObjectData(CDeviceClass * devclass, int useTex)
 
 	dataPtr = (ObjectData*)mappedResource.pData;
 
-	dataPtr->UseTextures = useTex;
+	dataPtr->UseTextures = data.x;
+	dataPtr->roughnessOffset = data.y;
+	dataPtr->metallic = data.z;
+	dataPtr->objColor = objcolor;
 
 	devclass->GetDevCon()->Unmap(m_ObjDataBuffer, 0);
 

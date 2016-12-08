@@ -109,8 +109,9 @@ void Actor::RenderModel(CDeviceClass * devclass, DeferredShader* defshader)
 		defshader->UpdateTextureBump(devclass, bump->GetTexture());
 	}
 
+
 	
-	defshader->SetObjectData(devclass, UseTextures);
+	defshader->SetObjectData(devclass, XMFLOAT4(this->UseTextures, this->actorMatrix.roughness, this->actorMatrix.metallic,0),actorMatrix.objColor);
 	for (size_t i = 0; i < actorMeshes->meshes.size(); ++i)
 	{
 

@@ -35,7 +35,8 @@ public:
 
 	void AddSceneActor(Actor* a, CDeviceClass* devc);
 
-
+	XMFLOAT4 subspectintani = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	XMFLOAT4 sheentintcleargloss = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	void Release();	
 	double GeoBenchMarks[4];
@@ -47,7 +48,7 @@ public:
 	std::vector<PointLight> pointLights;
 
 	 
-	float BlurSigma = 5.0f;
+	float BlurSigma = 15.0f;
 	DirectionalLight dirLight;
 	
 	CSkydome* GetSkyDome() { return this->m_SkyDome; }
@@ -86,7 +87,10 @@ private:
 	PostProcessor* postProcessor;
 	CRenderToTexture* postProcessTexture;
 	
+	CTextureTA* environmentMap;
 	CTextureTA* irradianceMap;
+	CTextureTA* areaTexture;
+	CTextureTA* edgeTexture;
 };
 
 

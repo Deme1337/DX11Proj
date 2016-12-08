@@ -8,6 +8,7 @@
 
 #include "DeviceClass.h"
 #include "Lights.h"
+#include "DeferredBufferClass.h"
 
 class LightShader
 {
@@ -27,6 +28,13 @@ private:
 		XMVECTOR LightColor;
 		XMMATRIX lightViewMatrix;
 		XMMATRIX lightProjectionMatrix;
+		float GlobalAmbient;
+	};
+
+	struct DisneyParam
+	{
+		XMFLOAT4 subspectintani;
+		XMFLOAT4 sheentintcleargloss;
 	};
 
 public:
@@ -48,12 +56,17 @@ public:
 
 	bool Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* psFilename);
 
+	void UpdateDisneyBuffer(CDeviceClass* devclass, XMFLOAT4 f1, XMFLOAT4 f2);
 	void UpdateCameraPosition(CDeviceClass * devclass, XMVECTOR cp);
 	void UpdateTextureByIndex(CDeviceClass* devclass, ID3D11ShaderResourceView* tex, int index);
 	void UpdateShadowMap(CDeviceClass* devclass, ID3D11ShaderResourceView* shadowmap);
 	void UpdateShaderParameters(CDeviceClass *devclass, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix,
 		ID3D11ShaderResourceView* colorTexture, ID3D11ShaderResourceView* normalTexture, ID3D11ShaderResourceView* specularTexture, 
-		ID3D11ShaderResourceView* positionTexture, ID3D11ShaderResourceView* roughnessTexture, DirectionalLight dlight, std::vector<PointLight> plights);
+		ID3D11ShaderResourceView* positionTexture, ID3D11ShaderResourceView* roughnessTexture, ID3D11ShaderResourceView* tangentTexture, ID3D11ShaderResourceView* binormalTexture,
+		DirectionalLight dlight, std::vector<PointLight> plights);
+
+	void UpdateShaderParameters(CDeviceClass *devclass, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix, XMMATRIX& projectionMatrix,
+		DeferredBuffersClass* defBuf, DirectionalLight dlight, std::vector<PointLight> plights);
 	void Release();
 
 	void Update(CDeviceClass *devclass, int indexCount);
@@ -70,6 +83,7 @@ private:
 	ID3D11Buffer* m_lightBuffer;
 	ID3D11Buffer* m_PointLightBuffer;
 	ID3D11Buffer* m_cameraBuffer;
+	ID3D11Buffer* m_disneyBuffer;
 };
 
 #endif

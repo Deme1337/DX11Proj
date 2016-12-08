@@ -46,8 +46,10 @@ public:
 
 	void Release();
 
-private:
 	CDeviceClass* m_D3DClass;
+
+private:
+	
 	int _width, _height;
 	std::ofstream SaveFile;
 	std::string ModelPathLoad;

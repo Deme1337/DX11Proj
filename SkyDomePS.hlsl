@@ -1,4 +1,5 @@
 Texture2D skyDomeTexture : register(t0);
+TextureCube skyDomeTextureCube : register(t1);
 
 SamplerState SamplerLinear
 {
@@ -48,7 +49,7 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	float sunDiameter = 1.0f;
 	float pixDist;
 	float4 sunPosition1 = sunPosition;
-	float4 SkyTexture = skyDomeTexture.Sample(SamplerLinear, input.texCoord);
+	float4 SkyTexture = skyDomeTextureCube.Sample(SamplerLinear, -input.normals.xyz);
 
 	sunPosition1 = normalize(sunPosition1);
 	// Determine the position on the sky dome where this pixel is located.
@@ -74,15 +75,15 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	
 	float sunTheta = max(0.0,dot(normalize(input.domePosition), sunPosition1));
 
-	float3 sun = max(sunTheta - (1.0 - (SunSize / 1000)), 0.0) * float3(1.0f, 1.0f, 1.0f) * 200;
-	float3 sunAtmosphere1 = max(sunTheta - (1.0 - (SunSize*2) / 1000.0), 0.0)  *float3(1.0f, 1.0f, 1.0f) * 41;
+	float3 sun = max(sunTheta - (1.0 - (SunSize / 1000)), 0.0) * float3(1.0f, 1.0f, 1.0f) * 511;
+	float3 sunAtmosphere1 = max(sunTheta - (1.0 - (SunSize * 2) / 1000.0), 0.0)  *float3(1.0f, 1.0f, 1.0f) * 25;
 
-	float3 sunAtmosphere = max(sunTheta - (1.0 - (SunSize * 20) / 1000.0), 0.0)  *float3(1.0f, 1.0f, 1.0f);
+	float3 sunAtmosphere = max(sunTheta - (1.0 - (SunSize * 50) / 1000.0), 0.0)  *float3(1.0f, 1.0f, 1.0f);
 
 	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
 	outputColor = lerp(centerColor, apexColor , height);
 	
-	output.color = outputColor + float4(sun + sunAtmosphere + sunAtmosphere1, 1.0);
+	output.color = SkyTexture + outputColor + float4(sun + sunAtmosphere1, 1.0);
 	output.normal = float4(1.0f, 1.0f, 1.0f, 0.5f);
 	output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	output.position = input.domePosition;

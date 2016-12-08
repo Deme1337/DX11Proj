@@ -11,6 +11,7 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
+	matrix projectionV;
 };
 
 
@@ -27,8 +28,14 @@ struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
+	matrix projection : TEXCOORD1;
 };
 
+
+#define SMAA_RT_METRICS float4(1.0 / 1920.0, 1.0 / 1080.0, 1920.0, 1080.0)
+#define SMAA_HLSL_4
+#define SMAA_PRESET_ULTRA
+#include "SMAA.hlsl"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Vertex Shader
@@ -45,7 +52,7 @@ PixelInputType TextureVertexShader(VertexInputType input)
 	output.position = mul(input.position, worldMatrix);
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
-
+	output.projection = projectionV;
 	// Store the texture coordinates for the pixel shader.
 	output.tex = input.tex;
 

@@ -6,7 +6,9 @@
 #include "DeviceClass.h"
 #include "OrthoWindow.h"
 #include "RenderTarget.h"
+#include "DeferredBufferClass.h"
 #include "TextureRenderShader.h"
+#include "TextureTA.h"
 
 class PostProcessor
 {
@@ -21,6 +23,11 @@ public:
 
 	void PostProcess(COrthoWindow* window);
 
+
+	ID3D11ShaderResourceView* CreateSSAO(CDeviceClass* devclass, COrthoWindow* window, ID3D11ShaderResourceView* pos, ID3D11ShaderResourceView* normal);
+
+	void DebugGBufferTextures(DeferredBuffersClass* buf, CDeviceClass *devclass, COrthoWindow* window);
+
 	void Release();
 
 private:
@@ -31,7 +38,11 @@ private:
 	RenderTarget* blurV;
 	RenderTarget* blurH;
 	RenderTarget* combine;
+	RenderTarget* SSAO;
 
+	void GenerateSSAOSamples();
+
+	std::vector<XMVECTOR> ssaoKernel;
 	CTextureRenderShader* rtShader;
 
 	XMMATRIX worldMatrix;
@@ -39,6 +50,8 @@ private:
 	XMMATRIX baseViewMatrix;
 
 	ID3D11ShaderResourceView* color;
+
+	CTextureTA *ssaoRand;
 
 	int viewPortOffset = 0;
 

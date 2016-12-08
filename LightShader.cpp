@@ -24,6 +24,7 @@ bool LightShader::Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* p
 	D3D11_BUFFER_DESC lightBufferDesc;
 	D3D11_BUFFER_DESC pointLightBufferDesc;
 	D3D11_BUFFER_DESC cameraBufferDesc;
+	D3D11_BUFFER_DESC disneyBufferDesc;
 
 	// Initialize the pointers this function will use to null.
 	errorMessage = 0;
@@ -187,10 +188,49 @@ bool LightShader::Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* p
 	{
 		return false;
 	}
+
+
+	disneyBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	disneyBufferDesc.ByteWidth = sizeof(DisneyParam);
+	disneyBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	disneyBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	disneyBufferDesc.MiscFlags = 0;
+	disneyBufferDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the pixel shader constant buffer from within this class.
+	result = devclass->GetDevice()->CreateBuffer(&disneyBufferDesc, NULL, &m_disneyBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
 	return true;
 }
 
 
+
+void LightShader::UpdateDisneyBuffer(CDeviceClass * devclass, XMFLOAT4 f1, XMFLOAT4 f2)
+{
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	unsigned int bufferNumber;
+	DisneyParam* dataPtr;
+
+	result = devclass->GetDevCon()->Map(m_disneyBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	// Get a pointer to the data in the constant buffer.
+	dataPtr = (DisneyParam*)mappedResource.pData;
+	dataPtr->sheentintcleargloss = f2;
+	dataPtr->subspectintani = f1;
+
+
+	// Unlock the constant buffer.
+	devclass->GetDevCon()->Unmap(m_disneyBuffer, 0);
+
+	// Set the position of the light constant buffer in the pixel shader.
+	bufferNumber = 2;
+
+	// Finally set the light constant buffer in the pixel shader with the updated values.
+	devclass->GetDevCon()->PSSetConstantBuffers(bufferNumber, 1, &m_disneyBuffer);
+}
 
 void LightShader::UpdateCameraPosition(CDeviceClass * devclass, XMVECTOR cp)
 {
@@ -222,13 +262,13 @@ void LightShader::UpdateTextureByIndex(CDeviceClass * devclass, ID3D11ShaderReso
 
 void LightShader::UpdateShadowMap(CDeviceClass * devclass, ID3D11ShaderResourceView* shadowmap)
 {
-	devclass->GetDevCon()->PSSetShaderResources(5, 1, &shadowmap);
+	devclass->GetDevCon()->PSSetShaderResources(7, 1, &shadowmap);
 }
 
 void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & worldMatrix, XMMATRIX & viewMatrix, XMMATRIX & projectionMatrix,
 	ID3D11ShaderResourceView * colorTexture, ID3D11ShaderResourceView * normalTexture,
 	ID3D11ShaderResourceView* specularTexture,  ID3D11ShaderResourceView* positionTexture, 
-	ID3D11ShaderResourceView* roughnessTexture, DirectionalLight dlight, std::vector<PointLight> plights)
+	ID3D11ShaderResourceView* roughnessTexture, ID3D11ShaderResourceView* tangentTexture, ID3D11ShaderResourceView* binormalTexture, DirectionalLight dlight, std::vector<PointLight> plights)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -274,6 +314,8 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	devclass->GetDevCon()->PSSetShaderResources(2, 1, &specularTexture);
 	devclass->GetDevCon()->PSSetShaderResources(3, 1, &positionTexture);
 	devclass->GetDevCon()->PSSetShaderResources(4, 1, &roughnessTexture);
+	devclass->GetDevCon()->PSSetShaderResources(5, 1, &tangentTexture);
+	devclass->GetDevCon()->PSSetShaderResources(6, 1, &binormalTexture);
 
 	// Lock the light constant buffer so it can be written to.
 	result = devclass->GetDevCon()->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -292,6 +334,7 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	dataPtr2->LightColor	= col;
 	dataPtr2->lightViewMatrix = XMMatrixTranspose(dlight.GetLightViewMatrix());
 	dataPtr2->lightProjectionMatrix = XMMatrixTranspose(dlight.GetLightProjectionMatrix());
+	dataPtr2->GlobalAmbient = dlight.lightProperties.globalAmbient;
 
 	// Unlock the constant buffer.
 	devclass->GetDevCon()->Unmap(m_lightBuffer, 0);
@@ -331,6 +374,122 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	// Finally set the light constant buffer in the pixel shader with the updated values.
 	devclass->GetDevCon()->PSSetConstantBuffers(bufferNumber, 1, &m_PointLightBuffer);
 	
+}
+
+void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & worldMatrix, XMMATRIX & viewMatrix, XMMATRIX & projectionMatrix, DeferredBuffersClass*  defBuf, DirectionalLight dlight, std::vector<PointLight> plights)
+{
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	unsigned int bufferNumber;
+	MatrixBuffer* dataPtr;
+	LightBuffer* dataPtr2;
+	PointLightBuffer* dataPtr3;
+
+	// Transpose the matrices to prepare them for the shader.
+	worldMatrix = XMMatrixTranspose(worldMatrix);
+	viewMatrix = XMMatrixTranspose(viewMatrix);
+	projectionMatrix = XMMatrixTranspose(projectionMatrix);
+
+
+
+	// Lock the constant buffer so it can be written to.
+	result = devclass->GetDevCon()->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr = (MatrixBuffer*)mappedResource.pData;
+
+	// Copy the matrices into the constant buffer.
+	dataPtr->world = worldMatrix;
+	dataPtr->view = viewMatrix;
+	dataPtr->projection = projectionMatrix;
+
+	// Unlock the constant buffer.
+	devclass->GetDevCon()->Unmap(m_matrixBuffer, 0);
+
+	// Set the position of the constant buffer in the vertex shader.
+	bufferNumber = 0;
+
+	// Now set the constant buffer in the vertex shader with the updated values.
+	devclass->GetDevCon()->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+
+	ID3D11ShaderResourceView* tempCol   = defBuf->GetShaderResourceView(0);
+	ID3D11ShaderResourceView* tempNorm  = defBuf->GetShaderResourceView(1);
+	ID3D11ShaderResourceView* tempSpec  = defBuf->GetShaderResourceView(2);
+	ID3D11ShaderResourceView* tempPos   = defBuf->GetShaderResourceView(3);
+	ID3D11ShaderResourceView* tempRough = defBuf->GetShaderResourceView(4);
+
+	// Set shader texture resources in the pixel shader.
+	devclass->GetDevCon()->PSSetShaderResources(0, 1, &tempCol);
+	devclass->GetDevCon()->PSSetShaderResources(1, 1, &tempNorm);
+	devclass->GetDevCon()->PSSetShaderResources(2, 1, &tempSpec);
+	devclass->GetDevCon()->PSSetShaderResources(3, 1, &tempPos);
+	devclass->GetDevCon()->PSSetShaderResources(4, 1, &tempRough);
+
+	SafeRelease(tempCol);
+	SafeRelease(tempNorm);
+	SafeRelease(tempSpec);
+	SafeRelease(tempPos);
+	SafeRelease(tempRough);
+	// Lock the light constant buffer so it can be written to.
+	result = devclass->GetDevCon()->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr2 = (LightBuffer*)mappedResource.pData;
+
+	// Copy the lighting variables into the constant buffer.
+	XMVECTOR pos = XMLoadFloat4(&dlight.lightProperties.Position);
+	XMVECTOR col = XMLoadFloat4(&dlight.lightProperties.Color);
+	dataPtr2->LightPosition = -XMVector4Normalize(pos);
+	dataPtr2->LightColor = col;
+	dataPtr2->lightViewMatrix = XMMatrixTranspose(dlight.GetLightViewMatrix());
+	dataPtr2->lightProjectionMatrix = XMMatrixTranspose(dlight.GetLightProjectionMatrix());
+	dataPtr2->GlobalAmbient = dlight.lightProperties.globalAmbient;
+
+	// Unlock the constant buffer.
+	devclass->GetDevCon()->Unmap(m_lightBuffer, 0);
+
+	// Set the position of the light constant buffer in the pixel shader.
+	bufferNumber = 0;
+
+	// Finally set the light constant buffer in the pixel shader with the updated values.
+	devclass->GetDevCon()->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
+
+
+
+	//Lock pointlight constantbuffer
+	result = devclass->GetDevCon()->Map(m_PointLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result))
+	{
+		return;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr3 = (PointLightBuffer*)mappedResource.pData;
+
+	// Copy the lighting variables into the constant buffer.
+	for (size_t i = 0; i < POINT_LIGHTS; i++)
+	{
+		dataPtr3->PointLightColor[i] = XMLoadFloat4(&plights[i].lightProperties.Color);
+		dataPtr3->PointLightPosition[i] = XMLoadFloat4(&plights[i].lightProperties.Position);
+	}
+
+
+	// Unlock the constant buffer.
+	devclass->GetDevCon()->Unmap(m_PointLightBuffer, 0);
+
+	// Set the position of the light constant buffer in the pixel shader.
+	bufferNumber = 1;
+
+	// Finally set the light constant buffer in the pixel shader with the updated values.
+	devclass->GetDevCon()->PSSetConstantBuffers(bufferNumber, 1, &m_PointLightBuffer);
 }
 
 void LightShader::Release()

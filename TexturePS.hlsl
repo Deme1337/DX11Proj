@@ -2,6 +2,9 @@
 Texture2D shaderTexture : register(t0);
 Texture2D specHighTex   : register(t1);
 
+Texture2D areaTexture   : register(t2);
+Texture2D positionTex   : register(t3);
+Texture2D normalTex     : register(t4);
 
 SamplerState SampleType;
 
@@ -9,12 +12,14 @@ struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
+	matrix projection : TEXCOORD1;
 };
 
 cbuffer PostProcessData : register(b0)
 {
 	float2 screenWH;
 	float expa;
+	float4 ssaoKernel[64];
 };
 
 // Calculates the gaussian blur weight for a given distance and sigmas
@@ -23,7 +28,15 @@ float CalcGaussianWeight(int sampleDist, float sigma)
 	float g = 1.0f / sqrt(2.0f * 3.14159 * sigma * sigma);
 	return (g * exp(-(sampleDist * sampleDist) / (2 * sigma * sigma)));
 }
+
+
+
 #include "FXAA_TEST.hlsl"
+#define SMAA_RT_METRICS float4(1.0 / 1920.0, 1.0 / 1080.0, 1920.0, 1080.0)
+#define SMAA_HLSL_4
+#define SMAA_PRESET_ULTRA
+#include "SMAA.hlsl"
+
 // Performs a gaussian blur in one direction
 float4 Blur(PixelInputType input, Texture2D shaderTexture, float2 texScale, float sigma, bool nrmlize)
 {
@@ -33,7 +46,7 @@ float4 Blur(PixelInputType input, Texture2D shaderTexture, float2 texScale, floa
 	float4 color = 0;
 	float weightSum = 0.0f;
 	
-	for (int i = -15; i < 15; i++)
+	for (int i = -7; i < 7; i++)
 	{
 
 		float weight = CalcGaussianWeight(i, sigma);
@@ -128,9 +141,10 @@ float4 Threshold(float2 texcoord)
 // Initial pass for bloom
 float4 Bloom(PixelInputType input)
 {
-	float4 reds   = specHighTex.GatherRed(  SampleType, input.tex);
-	float4 greens = specHighTex.GatherGreen(SampleType, input.tex);
-	float4 blues  = specHighTex.GatherBlue( SampleType, input.tex);
+	
+	float4 reds   = specHighTex.GatherRed(  SampleType, input.tex,int2(1,1));
+	float4 greens = specHighTex.GatherGreen(SampleType, input.tex, int2(1, 1));
+	float4 blues = specHighTex.GatherBlue(SampleType, input.tex, int2(1, 1));
 
 	float3 result = 0.0f;
 
@@ -202,6 +216,10 @@ float4 BloomColors(PixelInputType input) : SV_TARGET
 	return Bloom(input);
 }
 
+float4 ReturnTexture(PixelInputType input) : SV_TARGET
+{
+	return shaderTexture.Sample(SampleType, input.tex);
+}
 
 float4 Combine(PixelInputType input) : SV_TARGET
 {
@@ -221,3 +239,44 @@ float4 Combine(PixelInputType input) : SV_TARGET
 
 	return textureColor + ToneMap(textureColor1);
 }
+
+
+//http://www.learnopengl.com/#!Advanced-Lighting/SSAO changed to hlsl
+float4 SSAO(PixelInputType input) : SV_TARGET
+{
+	float3 position = positionTex.Sample(SampleType, input.tex).xyz;
+	float3 normal = normalTex.Sample(SampleType, input.tex).xyz;
+	float3 randomF = areaTexture.Sample(SampleType, input.tex).xyz;
+
+	float3 tangent = normalize(randomF - normal * dot(randomF, normal));
+	float3 bitangent = cross(normal, tangent);
+
+	float occlusion = 0.0f;
+
+	float radius = 100.0f;
+	
+	float2 noiseScale = float2(screenWH.x / 4.0f, screenWH.y / 4.0f);
+
+	for (int i = 0; i < 64; i++)
+	{
+		float3 sample = tangent * bitangent * normal *  ssaoKernel[i].xyz;
+		sample = position + sample * radius;
+
+		float4 offset = float4(sample, 1.0f);
+
+		offset = mul(input.projection, offset);
+		offset.xyz /= offset.w; // perspective divide
+		offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
+		
+		float sampleDepth = -positionTex.Sample(SampleType, offset.xy).w;
+
+
+		float rangeCheck = smoothstep(0.0f, 1.0f, radius / abs(position.z  - sampleDepth + 0.000005));
+
+		occlusion += (sampleDepth >= sample.z ? 1.0f : 0.0f) * rangeCheck;
+	}
+
+	occlusion = 1.0f - (occlusion / 64);
+
+	return occlusion;
+}					  

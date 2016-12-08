@@ -18,15 +18,23 @@
 #include <tchar.h>
 #include <iostream>
 #include "Input.h"
+
 // TODO: reference additional headers your program requires here
 
 typedef uint32_t uint32;
 typedef uint8_t uint8;
 
 
+//error messagebox
+#define MBERROR(MSGs, CAPT, WINDOW) \
+(\
+	(MessageBox(WINDOW, MSGs, CAPT, MB_OK))\
+)
 
-
-
+/*
+float XMLength(XMFLOAT3 v);
+XMFLOAT3 Normalize(XMFLOAT3 xf);
+*/
 
 enum ShaderCompilation
 {
@@ -35,7 +43,7 @@ enum ShaderCompilation
 };
 
 
-
+float lerp(float a, float b, float c);
 
 namespace Keys
 {
@@ -218,3 +226,5 @@ public:
 
 void split(const std::string &s, char delim, std::vector<std::string> &elems);
 std::vector<std::string> split(const std::string &s, char delim);
+
+const std::string currentDateTime();

@@ -23,7 +23,10 @@ public:
 
 	void UpdateWindow(int x, int y);
 	bool _vSyncEnabled = true;
+
 private:
+
+	SIZE_T GetTotalMemory();
 
 	void SaveScene();
 
@@ -35,6 +38,8 @@ private:
 
 	SceneClass* m_Scene;
 	CAntUI* m_GUI;
+
+	const char** actorListNames;
 
 	std::string GPUinfo;
 

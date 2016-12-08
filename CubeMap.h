@@ -26,6 +26,8 @@ public:
 
 	CubeMapFace* surfaces[6];
 
+	void RenderCubeMap(CDeviceClass* devclass);
+
 };
 
 #endif

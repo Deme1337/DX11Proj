@@ -49,6 +49,12 @@ void CTextureRenderShader::Shutdown()
 	return;
 }
 
+void CTextureRenderShader::UpdateTextureIndex(ID3D11DeviceContext * devcon, ID3D11ShaderResourceView * tex, int index)
+{
+	// Set shader texture resource in the pixel shader.
+	devcon->PSSetShaderResources(index, 1, &tex);
+}
+
 void CTextureRenderShader::SetSpecularHighLights(ID3D11DeviceContext* devcon,ID3D11ShaderResourceView * tex)
 {
 	// Set shader texture resource in the pixel shader.
@@ -63,7 +69,8 @@ bool CTextureRenderShader::Render(ID3D11DeviceContext* deviceContext, int indexC
 
 
 	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, swh);
+	std::vector<XMVECTOR> nullvec;
+	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, swh,nullvec);
 	if (!result)
 	{
 		return false;
@@ -78,24 +85,41 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
-	ID3D10Blob* vertexShaderBuffer;
-	ID3D10Blob* pixelShaderBuffer; ID3D10Blob* pixelShaderBufferBlurV; ID3D10Blob* pixelShaderBufferBlurH; ID3D10Blob* pixelShaderBufferBloom;
+	ID3D10Blob* vertexShaderBuffer; ID3D10Blob* vertexShaderBufferSMAAED; ID3D10Blob* vertexShaderBufferSMAAEC; ID3D10Blob* vertexShaderBufferSMAAE;
+	ID3D10Blob* pixelShaderBuffer; ID3D10Blob* pixelShaderBufferBlurV; ID3D10Blob* pixelShaderBufferBlurH; ID3D10Blob* pixelShaderBufferBloom; ID3D10Blob* pixelShaderBufferColor;
+	ID3D10Blob* pixelshaderBufferSSAO;
+	ID3D10Blob* pixelShaderBufferSMAAED; ID3D10Blob* pixelShaderBufferSMAAEC; ID3D10Blob* pixelShaderBufferSMAAE;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
-	unsigned int numElements;
+	unsigned int numElements; 
 	D3D11_BUFFER_DESC matrixBufferDesc, postProcessBufferDesc;
 	D3D11_SAMPLER_DESC samplerDesc;
 
+	this->devclass = devclass;
 
 	// Initialize the pointers this function will use to null.
 	errorMessage = 0;
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
 
+	pixelShaderBufferColor = CDeviceClass::CompileShader(psFilename, PixelShader, "ReturnTexture");
+	pixelshaderBufferSSAO  = CDeviceClass::CompileShader(psFilename, PixelShader, "SSAO");
 	pixelShaderBuffer	   = CDeviceClass::CompileShader(psFilename, PixelShader, "Combine");
 	pixelShaderBufferBlurV = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurVertical");
 	pixelShaderBufferBlurH = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurHorizontal");
 	pixelShaderBufferBloom = CDeviceClass::CompileShader(psFilename, PixelShader, "BloomColors");
 	vertexShaderBuffer     = CDeviceClass::CompileShader(vsFilename, VertexShader, "TextureVertexShader");
+
+#ifdef SMAA_1
+
+	vertexShaderBufferSMAAE  = CDeviceClass::CompileShader(vsFilename, VertexShader, "SMAAEdgeDetectionVS1");
+	vertexShaderBufferSMAAED = CDeviceClass::CompileShader(vsFilename, VertexShader, "SMAABlendingWeightCalculationVS1");
+	vertexShaderBufferSMAAEC = CDeviceClass::CompileShader(vsFilename, VertexShader, "SMAANeighborhoodBlendingVS1");
+
+	pixelShaderBufferSMAAE  = CDeviceClass::CompileShader(psFilename, PixelShader, "SMAALumaEdgeDetectionPS");
+	pixelShaderBufferSMAAED = CDeviceClass::CompileShader(psFilename, PixelShader, "SMAAColorEdgeDetectionPS");
+	pixelShaderBufferSMAAEC = CDeviceClass::CompileShader(psFilename, PixelShader, "SMAADepthEdgeDetectionPS");
+
+#endif
 
 	// Create the vertex shader from the buffer.
 	result = devclass->GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
@@ -104,8 +128,38 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 		return false;
 	}
 
+#ifdef SMAA_1
+	//Smaa vertex shader
+	{
+		result = devclass->GetDevice()->CreateVertexShader(vertexShaderBufferSMAAE->GetBufferPointer(), vertexShaderBufferSMAAE->GetBufferSize(), NULL, &m_SMAALumaEdgeVS);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		result = devclass->GetDevice()->CreateVertexShader(vertexShaderBufferSMAAEC->GetBufferPointer(), vertexShaderBufferSMAAEC->GetBufferSize(), NULL, &m_SMAAColorEdgeVS);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		result = devclass->GetDevice()->CreateVertexShader(vertexShaderBufferSMAAED->GetBufferPointer(), vertexShaderBufferSMAAED->GetBufferSize(), NULL, &m_SMAAColorEdgeVS);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+#endif
+
 	// Create the pixel shader from the buffer.
 	result = devclass->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Create the pixel shader from the buffer.
+	result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferColor->GetBufferPointer(), pixelShaderBufferColor->GetBufferSize(), NULL, &m_pixelShaderColor);
 	if (FAILED(result))
 	{
 		return false;
@@ -132,8 +186,43 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 		return false;
 	}
 
+	// SSAO
+	result = devclass->GetDevice()->CreatePixelShader(pixelshaderBufferSSAO->GetBufferPointer(), pixelshaderBufferSSAO->GetBufferSize(), NULL, &m_pixelShaderSSAO);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+#ifdef SMAA_1
+	//SMAA Pixel Shaders
+	{
+		//Smaa luma edge detection
+		result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferSMAAE, pixelShaderBufferSMAAE->GetBufferSize(), NULL, &m_SMAALumaEdgePS);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+
+
+		//Smaa ColorEdgeDetectionPS
+		result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferSMAAEC->GetBufferPointer(), pixelShaderBufferSMAAEC->GetBufferSize(), NULL, &m_SMAAColorEdgePS);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		//SMaa DepthEdgeDetectionPS
+		result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferSMAAED->GetBufferPointer(), pixelShaderBufferSMAAED->GetBufferSize(), NULL, &m_SMAALumaEdgePS);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+#endif
+
+
 	// Create the vertex input layout description.
-	// This setup needs to match the VertexType stucture in the ModelClass and in the shader.
 	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
 	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -161,6 +250,35 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 		return false;
 	}
 
+#ifdef SMAA_1
+	//Smaa Vertex shaders input layout
+	{
+		// Create the vertex input layout.
+		result = devclass->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBufferSMAAE->GetBufferPointer(), vertexShaderBufferSMAAE->GetBufferSize(),
+			&m_layout);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Create the vertex input layout.
+		result = devclass->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBufferSMAAEC->GetBufferPointer(), vertexShaderBufferSMAAEC->GetBufferSize(),
+			&m_layout);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Create the vertex input layout.
+		result = devclass->GetDevice()->CreateInputLayout(polygonLayout, numElements, vertexShaderBufferSMAAED->GetBufferPointer(), vertexShaderBufferSMAAED->GetBufferSize(),
+			&m_layout);
+		if (FAILED(result))
+		{
+			return false;
+		}
+	}
+
+#endif
 	// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
 	vertexShaderBuffer->Release();
 	vertexShaderBuffer = 0;
@@ -171,6 +289,17 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 	SafeRelease(pixelShaderBufferBloom);
 	SafeRelease(pixelShaderBufferBlurH);
 	SafeRelease(pixelShaderBufferBlurV);
+	SafeRelease(pixelShaderBufferColor);
+
+#ifdef SMAA_1
+	SafeRelease(pixelShaderBufferSMAAE);
+	SafeRelease(pixelShaderBufferSMAAEC);
+	SafeRelease(pixelShaderBufferSMAAED);
+
+	SafeRelease(vertexShaderBufferSMAAE);
+	SafeRelease(vertexShaderBufferSMAAEC);
+	SafeRelease(vertexShaderBufferSMAAED);
+#endif
 
 	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
 	matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -240,6 +369,13 @@ void CTextureRenderShader::ShutdownShader()
 	SafeRelease(m_pixelShaderBlurV);
 	SafeRelease(m_pixelShaderBlurH);
 
+	SafeRelease(m_SMAAColorEdgePS);
+	SafeRelease(m_SMAAColorEdgePS);
+	SafeRelease(m_SMAALumaEdgePS);
+	SafeRelease(m_SMAALumaEdgeVS);
+	SafeRelease(m_SMAADepthEdgePS);
+	SafeRelease(m_SMAADepthEdgeVS);
+
 	return;
 }
 
@@ -281,7 +417,7 @@ void CTextureRenderShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HW
 
 
 bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix,
-	XMMATRIX& projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT2 swh)
+	XMMATRIX& projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT2 swh, std::vector<XMVECTOR> ssaoSampl)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -293,6 +429,7 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 	worldMatrix = XMMatrixTranspose(worldMatrix);
 	viewMatrix = XMMatrixTranspose(viewMatrix);
 	projectionMatrix = XMMatrixTranspose(projectionMatrix);
+	XMMATRIX projVV = XMMatrixTranspose(devclass->GetProjectionMatrix());
 
 	// Lock the constant buffer so it can be written to.
 	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -308,7 +445,7 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 	dataPtr->world = worldMatrix;
 	dataPtr->view = viewMatrix;
 	dataPtr->projection = projectionMatrix;
-
+	dataPtr->projV = projVV;
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_matrixBuffer, 0);
 
@@ -331,6 +468,12 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 	// Copy the matrices into the constant buffer.
 	dataPtr1->expa = Exposure;
 	dataPtr1->screenWH = swh;
+
+	
+	for (size_t i = 0; i < ssaoSampl.size(); i++)
+	{
+		dataPtr1->ssaoSampl[i] = ssaoSampl[i];
+	}
 
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_PostProcess, 0);
@@ -438,4 +581,41 @@ void CTextureRenderShader::RenderShaderCombine(ID3D11DeviceContext* deviceContex
 	deviceContext->DrawIndexed(indexCount, 0, 0);
 
 	return;
+}
+
+void CTextureRenderShader::RenderShaderColor(ID3D11DeviceContext* deviceContext, int indexCount)
+{
+	// Set the vertex input layout.
+	deviceContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
+	deviceContext->PSSetShader(m_pixelShaderColor, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
+
+	// Render the triangle.
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+
+	return;
+}
+
+
+
+void CTextureRenderShader::PPSSAO(ID3D11DeviceContext* deviceContext, int indexCount)
+{
+	// Set the vertex input layout.
+	deviceContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
+	deviceContext->PSSetShader(m_pixelShaderSSAO, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
+
+	// Render the triangle.
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+
 }

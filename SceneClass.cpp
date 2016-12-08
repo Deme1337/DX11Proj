@@ -48,6 +48,44 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	postProcessor->InitializePostProcessor(DevClass, scenewidth, sceneheight);
 
+	std::vector<std::string> images;
+	//Environment map textures
+	{
+		
+		std::string im1 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayBack2048.png";
+		std::string im2 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayDown2048.png";
+		std::string im3 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayFront2048.png";
+		std::string im4 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayLeft2048.png";
+		std::string im5 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayRight2048.png";
+		std::string im6 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayUp2048.png";
+
+		//Need to write order down
+		images.push_back(im4);
+		images.push_back(im5);
+		images.push_back(im2);
+		images.push_back(im6);
+		images.push_back(im3);
+		images.push_back(im1);
+
+	}
+
+	environmentMap = new CTextureTA();
+
+	//environmentMap->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\env1.jpg");
+	environmentMap->LoadCubeMap(DevClass->GetDevice(), DevClass->GetDevCon(), images);
+
+	irradianceMap = new CTextureTA();
+
+	irradianceMap->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\Irradiance.dds");
+
+	areaTexture = new CTextureTA();
+
+	areaTexture->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\AreaTexDX10.dds");
+
+	edgeTexture = new CTextureTA();
+
+	edgeTexture->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\SearchTex.dds");
+
 
 	irradianceMap = new CTextureTA();
 
@@ -57,15 +95,15 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	textureShader = new CTextureRenderShader();
 
 	textureShader->Initialize(DevClass, hWnd);
-	textureShader->Exposure = 5.5;
+	textureShader->Exposure = 22.0;
 
 	//Lights and shadow map rt
-	dirLight.lightProperties.Position = XMFLOAT4(300.0f, 1500.0f, -400.0f, 1.0f);
+	dirLight.lightProperties.Position = XMFLOAT4(300.0f, 2200.0f, -400.0f, 1.0f);
 	dirLight.CalcLightViewMatrix();
 	dirLight.CalcProjectionMatrix();
-	dirLight.lightProperties.Color = XMFLOAT4(1, 1, 1, 1.0f);
-	dirLight.lightProjectionF = XMFLOAT4(4000.0f, 500.0f, 500.0f, 1.0f);
-	dirLight.lightProperties.size = 56; //very tricky to get right.. Gotta fix shader sometime
+	dirLight.lightProperties.Color = XMFLOAT4(0.5, 0.5, 0.5, 1.0f);
+	dirLight.lightProjectionF = XMFLOAT4(5000.0f, 700.0f, 700.0f, 1.0f);
+	dirLight.lightProperties.size = 29; //very tricky to get right.. Gotta fix shader sometime
 
 	shadowMap = new ShadowMapRenderTarget();
 	
@@ -82,7 +120,8 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	m_SkyDome->Initialize(DevClass->GetDevice());
 	
-	m_SkyDome->LoadTexture(DevClass, "Textures\\clouds2.jpg");
+	m_SkyDome->LoadTexture(DevClass, "Textures\\sunsetpier.jpg");
+	m_SkyDome->textureSDcube = environmentMap;
 
 	m_SkyDomeShader = new CSkyDomeShader();
 
@@ -153,7 +192,7 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	TimeVar time1 = timeNow();
 	m_DeferredBuffer->SetRenderTargets(DevClass->GetDevCon());
 	m_DeferredBuffer->ClearRenderTargets(DevClass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
-	m_DeferredShader->SetObjectData(DevClass, 1);
+
 	GeoBenchMarks[0] = duration(timeNow() - time1);
 
 	
@@ -169,7 +208,8 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 		DevClass->TurnZBufferOff();
 
 		m_SkyDome->Render(DevClass->GetDevCon());
-		m_SkyDomeShader->SetSkyDomeTexture(DevClass->GetDevCon(), m_SkyDome->textureSD->GetTexture(), 0);
+		//m_SkyDomeShader->SetSkyDomeTexture(DevClass->GetDevCon(), m_SkyDome->textureSD->GetTexture(), 0);
+		m_SkyDomeShader->SetSkyDomeTexture(DevClass->GetDevCon(), environmentMap->cubeGetTexture(), 1);
 		if (!m_SkyDomeShader->Update(DevClass->GetDevCon(), m_SkyDome->GetIndexCount(),
 			worldSphere, view, projection, m_SkyDome->GetApexColor(), m_SkyDome->GetCenterColor(), dirLight, m_Camera))
 		{
@@ -190,7 +230,7 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	{
 
 		TimeVar time3 = timeNow();
-		m_DeferredShader->UpdateShader(DevClass, m_Actors[i]->modelMatrix, view, projection, m_Actors[i]->HasAlpha);
+		m_DeferredShader->UpdateShader(DevClass, m_Actors[i]->modelMatrix, view, projection, m_Actors[i]->HasAlpha, m_Actors[i]->actorMatrix.texOffset);
 		double geo2New = duration(timeNow() - time3);
 		GeoBenchMarks[2] = geo2New;
 		
@@ -217,6 +257,9 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 
 	DevClass->TurnZBufferOff();
 	m_Window->UpdateWindow(DevClass->GetDevCon(), viewPortOffSet, 0);
+
+	//ID3D11ShaderResourceView* ssaoRes = postProcessor->CreateSSAO(DevClass, m_Window, m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(2));
+
 	DevClass->ResetViewPort();
 	if (ApplyPostProcess)
 	{
@@ -232,37 +275,40 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	orthoMatrix = DevClass->GetOrthoMatrix();
 	baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 	
+	
+	m_LightShader->UpdateDisneyBuffer(DevClass, subspectintani, sheentintcleargloss);
 	m_LightShader->UpdateShadowMap(DevClass, shadowMap->GetShaderResourceView());
-	m_LightShader->UpdateTextureByIndex(DevClass, irradianceMap->GetTexture(), 6);
+	m_LightShader->UpdateTextureByIndex(DevClass, environmentMap->cubeGetTexture(), 8);
+	m_LightShader->UpdateTextureByIndex(DevClass, irradianceMap->GetTexture(),9);
+//	m_LightShader->UpdateTextureByIndex(DevClass, ssaoRes, 10);
 	//Settings to show all textures passed 
 	if (Setting == 0)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(0), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3),m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
-
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(0), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3),m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
 	}
 	if (Setting == 1)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
 	}
 
 	if (Setting == 2)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
 	}
 
 	if (Setting == 3)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
 	}
 
 	if (Setting == 4)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(6), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
 	}
 	
 
@@ -282,13 +328,17 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		{
 			postProcessor->SetPostProcessInputs(shadowMap->GetShaderResourceView(), nullptr, m_Window, BlurSigma);
 		}
-		
+		//if (Setting == 8)
+		//{
+		//	postProcessor->SetPostProcessInputs(ssaoRes, nullptr, m_Window, BlurSigma);
+		//}
 		DevClass->Begin();
 		DevClass->SetBackBufferRenderTarget();
 		
 		postProcessor->PostProcess(m_Window);
 	}
 
+	
 }
 
 void SceneClass::AddSceneActor(Actor * a, CDeviceClass* devc)
@@ -318,6 +368,8 @@ void SceneClass::Release()
 	m_SkyDome->Shutdown();
 	m_SkyDomeShader->Shutdown();
 	postProcessor->Release();
+	irradianceMap->Shutdown();
+	environmentMap->Shutdown();
 }
 
 void SceneClass::HandleSceneInput()
@@ -369,6 +421,11 @@ void SceneClass::HandleSceneInput()
 	if (Keys::key(VKEY_G))
 	{
 		Setting = 5;
+	}
+
+	if (Keys::key(VKEY_B))
+	{
+		Setting = 8;
 	}
 
 }

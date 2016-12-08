@@ -10,6 +10,7 @@
 #include "LightShader.h"
 #include "DeferredBufferClass.h"
 #include "DepthShader.h"
+#include "Material.h"
 
 class Actor
 {
@@ -19,6 +20,10 @@ private:
 		XMFLOAT4 position = XMFLOAT4(0.0, 0.0, 0.0, 1.0);
 		XMFLOAT4 rotation = XMFLOAT4(0.0, 0.0, 0.0, 1.0);
 		XMFLOAT4 size	  = XMFLOAT4(1.0, 1.0, 1.0, 1.0);
+		XMFLOAT4 objColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		float texOffset = 1.0f;
+		float roughness = 0;
+		float metallic = 0.003f;
 	};
 
 
@@ -33,6 +38,9 @@ private:
 	CTextureTA* bump;
 
 public:
+
+	Material *objectMaterial;
+
 	bool UseTextures = true;
 	bool HasAlpha = false;
 	std::string ObjectTransmissionString();
