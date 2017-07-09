@@ -551,7 +551,7 @@ void CDeviceClass::OutputErrorMessageD(ID3D10Blob * errorMessage, HWND hWnd, WCH
 	bufferSize = errorMessage->GetBufferSize();
 
 	// Open a file to write the error message to.
-	fout.open("shader-error.txt");
+	fout.open("shader-error.txt", 'a');
 
 	// Write out the error message.
 	for (i = 0; i<bufferSize; i++)

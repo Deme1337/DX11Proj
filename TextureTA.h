@@ -41,6 +41,7 @@ public:
 	ID3D11ShaderResourceView* m_textureView;
 	ID3D11ShaderResourceView* cubeGetTexture() { return this->srvCubeMap; }
 
+	std::string textureName;
 
 private:
 	bool LoadTarga(char*, int&, int&);

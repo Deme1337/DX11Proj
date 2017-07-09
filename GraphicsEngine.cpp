@@ -7,8 +7,38 @@
 #include <thread>
 #include <sstream>
 #include <future>
+
+
 #include "imgui-master\imgui_impl_dx11.h"
 
+
+
+
+namespace ImGui
+{
+	static auto vector_getter = [](void* vec, int idx, const char** out_text)
+	{
+		auto& vector = *static_cast<std::vector<std::string>*>(vec);
+		if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
+		*out_text = vector.at(idx).c_str();
+		return true;
+	};
+
+	bool Combo1(const char* label, int* currIndex, std::vector<std::string>& values)
+	{
+		if (values.empty()) { return false; }
+		return Combo(label, currIndex, vector_getter,
+			static_cast<void*>(&values), values.size());
+	}
+
+
+	bool ListBox(const char* label, int* currIndex, std::vector<std::string>& values)
+	{
+		if (values.empty()) { return false; }
+		return ListBox(label, currIndex, vector_getter,
+			static_cast<void*>(&values), values.size());
+	}
+}
 
 GraphicsEngine::GraphicsEngine()
 {
@@ -24,11 +54,14 @@ GraphicsEngine::~GraphicsEngine()
 //Parameters: hWnd is the handle to the main window
 void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 {
+
 	m_D3DDevice = new CDeviceClass();
 	m_Scene = new SceneClass();
 	FullScreen = false;
 	m_D3DDevice->SetAntiAliasing(_sampleCount);
 	m_D3DDevice->fullscreen = FullScreen;
+
+	this->mainWindow = hWnd;
 	
 	int wwidth, wheight;
 
@@ -82,33 +115,54 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 {
 	
+
+	
+	m_D3DDevice->Begin();
+	m_D3DDevice->AlphaBlendingOff();
+
+
 	//Imgui rendering
 	{
 		ImGui_ImplDX11_NewFrame();
+		ImGui::Begin("Tools");
+		ImGui::SetWindowSize(ImVec2(350, 500));
 		ImGui::SliderFloat("Blur sigma", &m_Scene->BlurSigma, 0.0f, 50.0f);
+
+		ImGui::Separator();
+
+		//Just to keep index bound in actorlist size
+		if (ObjectSelectedIndex >= m_Scene->m_Actors.size())
+		{
+			ObjectSelectedIndex = 0;
+		}
+
 		if (m_Scene->m_Actors.size() > 0 && m_Scene->m_Actors[ObjectSelectedIndex] != nullptr)
 		{
+			ImGui::Text(m_Scene->m_Actors[ObjectSelectedIndex]->actorFile.c_str());
 			ImGui::SliderFloat("Actor roughness", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.roughness, -1.0f, 1.0f);
 			ImGui::SliderFloat("Metallic", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.metallic, 0.0f, 1.0f);
 			ImGui::InputFloat("Texture padding", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.texOffset, -20.0f, 20.0f);
 		}
 
-		ImGui::SliderFloat("Subsurface",&m_Scene->subspectintani.x, 0.0f, 1.0f);
-		ImGui::SliderFloat("specular",&m_Scene->subspectintani.y, 0.0f, 1.0f);
+		ImGui::SliderFloat("Subsurface", &m_Scene->subspectintani.x, 0.0f, 1.0f);
+		ImGui::SliderFloat("specular", &m_Scene->subspectintani.y, 0.0f, 1.0f);
 		ImGui::SliderFloat("specularTint", &m_Scene->subspectintani.z, 0.0f, 1.0f);
 		ImGui::SliderFloat("anisotropic", &m_Scene->subspectintani.w, 0.0f, 1.0f);
 		ImGui::SliderFloat("sheen", &m_Scene->sheentintcleargloss.x, 0.0f, 1.0f);
 		ImGui::SliderFloat("sheenTint", &m_Scene->sheentintcleargloss.y, 0.0f, 1.0f);
 		ImGui::SliderFloat("clearcoat", &m_Scene->sheentintcleargloss.z, 0.0f, 1.0f);
-		ImGui::SliderFloat("clearcoatGloss",&m_Scene->sheentintcleargloss.w, 0.0f, 1.0f);
+		ImGui::SliderFloat("clearcoatGloss", &m_Scene->sheentintcleargloss.w, 0.0f, 1.0f);
+
+		ImGui::End();
+
+		SetImgui();
+
+	
 
 		//Debugging only
 		//ImGui::SliderInt("Screen offset", &m_Scene->viewPortOffSet, -1000, 1000);
 
 	}
-	
-	m_D3DDevice->Begin();
-	m_D3DDevice->AlphaBlendingOff();
 
 
 
@@ -193,13 +247,21 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 	textContext.Print(5, 75, memoryUsage.c_str());
 
 
-	textContext.Render();
+
+
+
+
 
 	//Imgui rendering
 	{
 		ImGui::Render();
 	}
 
+
+	textContext.Render();
+
+	
+	
 
 	if (_vSyncEnabled)
 	{
@@ -217,12 +279,99 @@ void GraphicsEngine::Release()
 	m_GUI->Release();
 	GuiMessager.Release();
 	m_D3DDevice->Release();
+	ImGui::Shutdown();
 	m_Scene->Release();
+	for (size_t i = 0; i < materiallist.size(); i++)
+	{
+		materiallist[i]->ReleaseMaterial();
+	}
+	
 }
 
 void GraphicsEngine::UpdateWindow(int x, int y)
 {
 	m_D3DDevice->UpdateViewPort(x, y);
+}
+
+void GraphicsEngine::SetImgui()
+{
+	ImGui::SetNextWindowSize(ImVec2(350, 300));
+	ImGui::SetNextWindowPos(ImVec2(10, 710));
+	ImGui::Begin("Materials");
+
+	if (ImGui::Button("Create new Material"))
+	{
+		Material *mat = new Material();
+		materiallist.push_back(mat);
+		materialNames.clear();
+		for (size_t i = 0; i < materiallist.size(); i++)
+		{
+			materialNames.push_back(materiallist[i]->matname);
+		}
+	}
+
+
+	if (materiallist.size() > 0)
+	{
+		
+		ImGui::Combo1("Materials", &materialIndex, materialNames);
+	
+		
+		
+
+		if (ImGui::Button("Create albedo"))
+		{
+			LoadMaterialTexture("albedo");
+		}
+		if (materiallist[materialIndex]->GetTexture("albedo") != nullptr)
+		{
+			ImGui::Text(materiallist[materialIndex]->GetTexture("albedo")->textureName.c_str());
+		}
+
+		if (ImGui::Button("Create metallic/spec"))
+		{
+			LoadMaterialTexture("specular");
+		}
+		if (materiallist[materialIndex]->GetTexture("specular") != nullptr)
+		{
+			ImGui::Text(materiallist[materialIndex]->GetTexture("specular")->textureName.c_str());
+		}
+
+		if (ImGui::Button("Create normal"))
+		{
+			LoadMaterialTexture("normal");
+		}
+		if (materiallist[materialIndex]->GetTexture("normal") != nullptr)
+		{
+			ImGui::Text(materiallist[materialIndex]->GetTexture("normal")->textureName.c_str());
+		}
+
+		if (ImGui::Button("Create roughness"))
+		{
+			LoadMaterialTexture("roughness");
+		}
+		if (materiallist[materialIndex]->GetTexture("roughness") != nullptr)
+		{
+			ImGui::Text(materiallist[materialIndex]->GetTexture("roughness")->textureName.c_str());
+			
+		}
+
+
+		if (ImGui::Button("Set material") )
+		{
+			m_Scene->m_Actors[ObjectSelectedIndex]->SetMaterial(materiallist[materialIndex]);
+		}
+
+		if (ImGui::Button("UnSet material"))
+		{
+			m_Scene->m_Actors[ObjectSelectedIndex]->UnsetMaterial();
+		}
+
+	}
+
+
+	
+	ImGui::End();
 }
 
 SIZE_T GraphicsEngine::GetTotalMemory()
@@ -232,6 +381,32 @@ SIZE_T GraphicsEngine::GetTotalMemory()
 	SIZE_T virtualMemUsedByMe = pmc.WorkingSetSize;
 
 	return virtualMemUsedByMe;
+}
+
+
+void GraphicsEngine::LoadMaterialTexture(const char* type)
+{
+	OpenFileDialog* ofd = new OpenFileDialog();
+	
+	ofd->Owner = this->mainWindow;
+	if (ofd->ShowDialog() && ofd->FileName != nullptr)
+	{
+		std::string Path;
+		std::wstring p(ofd->FileName);
+		Path = ws2s(p);
+		
+		materiallist[materialIndex]->LoadTexture(m_D3DDevice, Path.c_str(), type);
+	}
+
+	else
+	{
+
+		return;
+	}
+
+
+	ofd = nullptr;
+	delete ofd;
 }
 
 void GraphicsEngine::SaveScene()
@@ -265,13 +440,16 @@ void GraphicsEngine::PrepareScene()
 	m_Scene->AddSceneActor(a[0],m_D3DDevice);
 
 
+	m_Scene->BlurSigma = 0.0f;
+
+
 }
 
 void GraphicsEngine::PrepareTW()
 {
 	TwRemoveAllVars(m_GUI->testBar);
 	m_GUI->SelectedIndex = ObjectSelectedIndex;
-	m_GUI->AddVariableString("Model: ", m_Scene->m_Actors[ObjectSelectedIndex]->ActorPath);
+	m_GUI->AddVariableString("Model: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorFile);
 
 	m_GUI->AddVariableXMfloat("Position: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.position);
 	m_GUI->AddVariableXMfloat("Rotation: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.rotation);
@@ -283,7 +461,9 @@ void GraphicsEngine::PrepareTW()
 	m_GUI->AddVariableXMfloat("Skydome center color: ", m_Scene->GetSkyDome()->m_centerColor);
 	m_GUI->AddVariableXMfloat("Skydome apex color: ", m_Scene->GetSkyDome()->m_apexColor);
 	m_GUI->AddVariableXMfloat("Camera RO Pos: ", m_Scene->GetCamera()->CameraPositionXF);
-	m_GUI->AddVariableFloat("Sun diameter: ", m_Scene->dirLight.lightProperties.size);
+	m_GUI->AddVariableFloat("Sun Pow: ", m_Scene->dirLight.lightProperties.sunPower);
+	m_GUI->AddVariableFloat("Sun scale1: ", m_Scene->dirLight.lightProperties.scale1);
+	m_GUI->AddVariableFloat("Sun scale2: ", m_Scene->dirLight.lightProperties.scale2);
 	m_GUI->AddVariableFloat("GlobalAmbient: ", m_Scene->dirLight.lightProperties.globalAmbient);
 	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 

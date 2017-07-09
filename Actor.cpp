@@ -27,13 +27,33 @@ Actor::Actor(const char * modelpath, CDeviceClass *devclass)
 	this->devclass = devclass;
 	actorMeshes = new Model(modelpath,devclass);
 
+
+
 	this->ActorPath = std::string(modelpath);
+	this->actorFile = SplitPath(this->ActorPath, { '\\' }).back();
+
+}
 
 
+Actor::Actor(Model *m, CDeviceClass* devclass)
+{
+	this->devclass = devclass;
+	actorMeshes = m;
+
+	this->ActorPath = m->path_;
+	this->actorFile = SplitPath(this->ActorPath, { '\\' }).back();
 }
 
 Actor::~Actor()
 {
+}
+
+void Actor::SetMeshUseCustomMaterial()
+{
+	for (size_t i = 0; i < actorMeshes->meshes.size(); i++)
+	{
+		actorMeshes->meshes[i].UseMeshMaterials = false;
+	}
 }
 
 inline void Actor::UpdateMatrix()
@@ -61,6 +81,22 @@ void Actor::SetModelSize(XMVECTOR r)
 {
 	XMStoreFloat4(&actorMatrix.size, r);
 	UpdateMatrix();
+}
+
+void Actor::SetMaterial(Material * m)
+{
+	this->objectMaterial = m;
+	useMaterial = true;
+	SetMeshUseCustomMaterial();
+}
+
+void Actor::UnsetMaterial()
+{
+	useMaterial = false;
+	for (size_t i = 0; i < actorMeshes->meshes.size(); i++)
+	{
+		actorMeshes->meshes[i].UseMeshMaterials = true;
+	}
 }
 
 void Actor::SetDiffuseTexture(char * path)
@@ -102,11 +138,24 @@ void Actor::RenderModel(CDeviceClass * devclass, DeferredShader* defshader)
 	UpdateMatrix();
 
 
-	if (diffuse != nullptr || specular != nullptr || bump != nullptr)
+	if (useMaterial)
 	{
-		defshader->UpdateTexture(devclass, diffuse->GetTexture());
-		defshader->UpdateTextureSpecular(devclass, specular->GetTexture());
-		defshader->UpdateTextureBump(devclass, bump->GetTexture());
+		if (objectMaterial->GetTexture("albedo") != nullptr)
+		{
+			defshader->UpdateTexture(devclass, objectMaterial->GetTexture("albedo")->GetTexture());
+		}
+		if (objectMaterial->GetTexture("specular") != nullptr)
+		{
+			defshader->UpdateTextureSpecular(devclass, objectMaterial->GetTexture("specular")->GetTexture());
+		}
+		if (objectMaterial->GetTexture("normal") != nullptr)
+		{
+			defshader->UpdateTextureBump(devclass, objectMaterial->GetTexture("normal")->GetTexture());
+		}
+		if (objectMaterial->GetTexture("roughness") != nullptr)
+		{
+			defshader->UpdateTextureRough(devclass, objectMaterial->GetTexture("roughness")->GetTexture());
+		}
 	}
 
 
@@ -118,6 +167,15 @@ void Actor::RenderModel(CDeviceClass * devclass, DeferredShader* defshader)
 		actorMeshes->meshes[i].DrawMeshGeometry(defshader);
 		
 	}
+
+	if (useMaterial)
+	{
+		defshader->UpdateTexture(devclass, nullptr);
+		defshader->UpdateTextureSpecular(devclass, nullptr);
+		defshader->UpdateTextureBump(devclass, nullptr);
+		defshader->UpdateTextureRough(devclass, nullptr);
+	}
+
 }
 
 void Actor::Release()

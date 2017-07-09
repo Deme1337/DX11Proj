@@ -2,9 +2,15 @@
 Texture2D shaderTexture : register(t0);
 Texture2D specHighTex   : register(t1);
 
-Texture2D areaTexture   : register(t2);
+Texture2D areaTexture : register(t2);
 Texture2D positionTex   : register(t3);
 Texture2D normalTex     : register(t4);
+
+Texture2D searchTex : register(t5);
+Texture2D edgesTex : register(t6);
+Texture2D blendTex : register(t7);
+
+Texture2D smaaReadyTex : register(t8);
 
 SamplerState SampleType;
 
@@ -36,6 +42,55 @@ float CalcGaussianWeight(int sampleDist, float sigma)
 #define SMAA_HLSL_4
 #define SMAA_PRESET_ULTRA
 #include "SMAA.hlsl"
+
+
+/*===SMAA PIXEL INPUTS===*/
+struct SmaaPSInputType1
+{
+    float4 position : SV_POSITION;
+    float2 texcoord : TEXCOORD0;
+    float4 offset[3] : TEXCOORD1;
+};
+
+struct SmaaPSInputType2
+{
+    float4 position : SV_POSITION;
+    float2 texcoord : TEXCOORD0;
+    float2 pixcoord : TEXCOORD1;
+    float4 subsampleIndices : TEXCOORD2;
+    float4 offset[3] : TEXCOORD3;
+
+};
+
+struct SmaaPSInputType3
+{
+    float4 position : SV_POSITION;
+    float2 texcoord : TEXCOORD0;
+    float4 offset : TEXCOORD1;
+};
+
+
+
+float2 SmaaPSStage1(SmaaPSInputType1 input) : SV_TARGET
+{
+    return SMAALumaEdgeDetectionPS(input.texcoord, input.offset, shaderTexture);
+}
+
+float4 SmaaPSStage2(SmaaPSInputType2 input) : SV_TARGET
+{
+    
+    return SMAABlendingWeightCalculationPS(input.texcoord, input.pixcoord, input.offset, edgesTex, areaTexture, searchTex, float4(1.0f,1.0f,1.0f,1.0f));
+}
+
+float4 SmaaPSStage3(SmaaPSInputType3 input) : SV_TARGET
+{
+    return SMAANeighborhoodBlendingPS(input.texcoord, input.offset, shaderTexture, blendTex);
+}
+
+
+
+
+
 
 // Performs a gaussian blur in one direction
 float4 Blur(PixelInputType input, Texture2D shaderTexture, float2 texScale, float sigma, bool nrmlize)
@@ -221,6 +276,7 @@ float4 ReturnTexture(PixelInputType input) : SV_TARGET
 	return shaderTexture.Sample(SampleType, input.tex);
 }
 
+
 float4 Combine(PixelInputType input) : SV_TARGET
 {
 	float2 TexPos = input.tex;
@@ -229,9 +285,9 @@ float4 Combine(PixelInputType input) : SV_TARGET
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
 	FxaaTex fColors;
 	fColors.smpl = SampleType;
-	fColors.tex = shaderTexture;
+	fColors.tex = smaaReadyTex;
 	textureColor = float4(FxaaPixelShader(TexPos, fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
-
+    
 	//
 	fColors.tex = specHighTex;
 	textureColor1 = float4(FxaaPixelShader(TexPos, fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
@@ -240,6 +296,33 @@ float4 Combine(PixelInputType input) : SV_TARGET
 	return textureColor + ToneMap(textureColor1);
 }
 
+
+/*
+float4 Combine(PixelInputType input) : SV_TARGET
+{
+
+    //return blendTex.Sample(SampleType, input.tex);
+    //return areaTexture.Sample(SampleType, input.tex);
+    //return searchTex.Sample(SampleType, input.tex);
+    //return edgesTex.Sample(SampleType, input.tex);
+    return smaaReadyTex.Sample(SampleType, input.tex);
+}
+*/
+
+float4 ToneMapPass(PixelInputType input) : SV_Target
+{
+    
+
+    float2 TexPos = input.tex;
+
+    float4 texColor = 0.0f;
+
+    texColor = ToneMap(shaderTexture.Sample(SampleType, TexPos));
+
+
+    return texColor;
+
+}
 
 //http://www.learnopengl.com/#!Advanced-Lighting/SSAO changed to hlsl
 float4 SSAO(PixelInputType input) : SV_TARGET

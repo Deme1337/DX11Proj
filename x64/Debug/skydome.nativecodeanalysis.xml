@@ -4,14 +4,14 @@
     <SFA>
       <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
       <FILENAME>skydome.cpp</FILENAME>
-      <LINE>192</LINE>
+      <LINE>200</LINE>
       <COLUMN>13</COLUMN>
     </SFA>
     <DEFECTCODE>6386</DEFECTCODE>
     <DESCRIPTION>Buffer overrun while writing to 'indices':  the writable size is 'm_indexCount*4' bytes, but '8' bytes might be written.</DESCRIPTION>
     <FUNCTION>CSkydome::InitializeBuffers</FUNCTION>
     <DECORATED>?InitializeBuffers@CSkydome@@AEAA_NPEAUID3D11Device@@@Z</DECORATED>
-    <FUNCLINE>164</FUNCLINE>
+    <FUNCLINE>170</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -21,61 +21,61 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>166</LINE>
+        <LINE>172</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>167</LINE>
+        <LINE>173</LINE>
         <COLUMN>16</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>168</LINE>
+        <LINE>174</LINE>
         <COLUMN>19</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>168</LINE>
+        <LINE>174</LINE>
         <COLUMN>37</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>169</LINE>
+        <LINE>175</LINE>
         <COLUMN>24</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>169</LINE>
+        <LINE>175</LINE>
         <COLUMN>36</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>170</LINE>
+        <LINE>176</LINE>
         <COLUMN>9</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>171</LINE>
+        <LINE>177</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>175</LINE>
+        <LINE>181</LINE>
         <COLUMN>10</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>176</LINE>
+        <LINE>182</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -87,13 +87,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>182</LINE>
+        <LINE>188</LINE>
         <COLUMN>9</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>183</LINE>
+        <LINE>189</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -105,13 +105,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>189</LINE>
+        <LINE>195</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>189</LINE>
+        <LINE>195</LINE>
         <COLUMN>14</COLUMN>
         <KEYEVENT>
           <ID>3</ID>
@@ -123,19 +123,31 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>191</LINE>
+        <LINE>197</LINE>
         <COLUMN>23</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>192</LINE>
+        <LINE>198</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>skydome.cpp</FILENAME>
+        <LINE>199</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>skydome.cpp</FILENAME>
+        <LINE>200</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>189</LINE>
+        <LINE>195</LINE>
         <COLUMN>31</COLUMN>
         <KEYEVENT>
           <ID>4</ID>
@@ -147,7 +159,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>189</LINE>
+        <LINE>195</LINE>
         <COLUMN>14</COLUMN>
         <KEYEVENT>
           <ID>5</ID>
@@ -159,7 +171,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>191</LINE>
+        <LINE>197</LINE>
         <COLUMN>23</COLUMN>
         <KEYEVENT>
           <ID>6</ID>
@@ -171,10 +183,34 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>192</LINE>
-        <COLUMN>13</COLUMN>
+        <LINE>198</LINE>
+        <COLUMN>17</COLUMN>
         <KEYEVENT>
           <ID>7</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'i' is an Output from 'DirectX::XMFLOAT2::{ctor}' (declared at c:\program files (x86)\windows kits\8.1\include\um\directxmath.h:454)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>skydome.cpp</FILENAME>
+        <LINE>199</LINE>
+        <COLUMN>21</COLUMN>
+        <KEYEVENT>
+          <ID>8</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'i' is an Output from 'DirectX::XMFLOAT3::{ctor}' (declared at c:\program files (x86)\windows kits\8.1\include\um\directxmath.h:506)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>skydome.cpp</FILENAME>
+        <LINE>200</LINE>
+        <COLUMN>13</COLUMN>
+        <KEYEVENT>
+          <ID>9</ID>
           <KIND>usage</KIND>
           <IMPORTANCE>Essential</IMPORTANCE>
           <MESSAGE>Invalid write to 'indices[1]', (writable range is 0 to 0)</MESSAGE>

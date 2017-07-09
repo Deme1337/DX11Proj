@@ -10,7 +10,7 @@
     <DEFECTCODE>6215</DEFECTCODE>
     <DESCRIPTION>Cast between semantically different integer types:  a Boolean type to HRESULT.</DESCRIPTION>
     <FUNCTION>`anonymous-namespace'::CreateTextureView</FUNCTION>
-    <DECORATED>?CreateTextureView@?A0xd3194049@@YAPEAUID3D11ShaderResourceView@@PEAUID3D11Device@@PEAUID3D11DeviceContext@@@Z</DECORATED>
+    <DECORATED>?CreateTextureView@?A0xa41e70df@@YAPEAUID3D11ShaderResourceView@@PEAUID3D11Device@@PEAUID3D11DeviceContext@@@Z</DECORATED>
     <FUNCLINE>254</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
@@ -24,7 +24,7 @@
     <DEFECTCODE>6230</DEFECTCODE>
     <DESCRIPTION>Implicit cast between semantically different integer types:  using HRESULT in a Boolean context.</DESCRIPTION>
     <FUNCTION>`anonymous-namespace'::CreateTextureView</FUNCTION>
-    <DECORATED>?CreateTextureView@?A0xd3194049@@YAPEAUID3D11ShaderResourceView@@PEAUID3D11Device@@PEAUID3D11DeviceContext@@@Z</DECORATED>
+    <DECORATED>?CreateTextureView@?A0xa41e70df@@YAPEAUID3D11ShaderResourceView@@PEAUID3D11Device@@PEAUID3D11DeviceContext@@@Z</DECORATED>
     <FUNCLINE>254</FUNCLINE>
     <PATH></PATH>
   </DEFECT>

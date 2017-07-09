@@ -48,7 +48,7 @@ public:
 	std::vector<PointLight> pointLights;
 
 	 
-	float BlurSigma = 15.0f;
+	float BlurSigma = 19.0f;
 	DirectionalLight dirLight;
 	
 	CSkydome* GetSkyDome() { return this->m_SkyDome; }
@@ -90,7 +90,7 @@ private:
 	CTextureTA* environmentMap;
 	CTextureTA* irradianceMap;
 	CTextureTA* areaTexture;
-	CTextureTA* edgeTexture;
+	CTextureTA* searchTexture;
 };
 
 

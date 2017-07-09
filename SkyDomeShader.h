@@ -35,6 +35,9 @@ private:
 		XMVECTOR sunPosition;
 		XMVECTOR cameraPosition;
 		float sunSize;
+		float sunPower;
+		float scale1;
+		float scale2;
 	};
 
 public:

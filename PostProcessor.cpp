@@ -17,6 +17,7 @@ bool PostProcessor::InitializePostProcessor(CDeviceClass * devclass, int windoww
 	_height = windowheight;
 	this->devclass = devclass;
 
+
 	bloom = new RenderTarget();
 	if (!bloom->Initialize(devclass, windowwidth/2, windowheight/2, 10.0, 0.1, 0, DXGI_FORMAT_R16G16B16A16_FLOAT))
 	{
@@ -58,6 +59,31 @@ bool PostProcessor::InitializePostProcessor(CDeviceClass * devclass, int windoww
 		MessageBox(devclass->_mainWindow, L"Cannot init rt shader", L"ERROR", MB_OK);
 		return false;
 	}
+
+
+	edgesTex = new RenderTarget();
+	//DXGI_FORMAT_R8G8B8A8_UNORM
+	if (!edgesTex->Initialize(devclass, windowwidth, windowheight, 10.0, 0.1, 0, DXGI_FORMAT_R8G8B8A8_UNORM))
+	{
+		MessageBox(devclass->_mainWindow, L"Cannot init edgetex rt", L"ERROR", MB_OK);
+		return false;
+	}
+
+	blendTex = new RenderTarget();
+	if (!blendTex->Initialize(devclass, windowwidth, windowheight, 10.0, 0.1, 0, DXGI_FORMAT_R8G8B8A8_UNORM))
+	{
+		MessageBox(devclass->_mainWindow, L"Cannot init blend tex rt", L"ERROR", MB_OK);
+		return false;
+	}
+
+	smaaResultTex = new RenderTarget();
+	if (!smaaResultTex->Initialize(devclass, windowwidth, windowheight, 10.0, 0.1, 0, DXGI_FORMAT_R16G16B16A16_FLOAT))
+	{
+		MessageBox(devclass->_mainWindow, L"Cannot init blurh rt", L"ERROR", MB_OK);
+		return false;
+	}
+	
+
 
 	//generate random samples for ssao
 	this->ssaoRand = new CTextureTA();
@@ -130,18 +156,91 @@ void PostProcessor::SetPostProcessInputs(ID3D11ShaderResourceView* color, ID3D11
 	
 }
 
-void PostProcessor::PostProcess(COrthoWindow* window)
+ID3D11ShaderResourceView * PostProcessor::SmaaProcess(ID3D11ShaderResourceView * input, COrthoWindow * window, ID3D11ShaderResourceView* areaTex, ID3D11ShaderResourceView* searchTex, RenderTarget* blurred)
+{
+
+
+	/*EDGE DETECTION PHASE*/
+	{
+		devclass->ResetViewPort();
+		edgesTex->ClearRenderTarget(devclass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
+		edgesTex->SetRenderTarget(devclass->GetDevCon());
+
+		UpdatePostProcessorMatrices();
+		window->Render(devclass->GetDevCon());
+
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), input, 0);
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, input, XMFLOAT2(_width, _height));
+		rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_SMAALumaEdgeVS, rtShader->m_SMAALumaEdgePS);
+	}
+
+	/*BLENDING WEIGHTS*/
+	{
+		devclass->ResetViewPort();
+		blendTex->ClearRenderTarget(devclass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
+		blendTex->SetRenderTarget(devclass->GetDevCon());
+
+		UpdatePostProcessorMatrices();
+		window->Render(devclass->GetDevCon());
+
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), input, 0);
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), edgesTex->GetShaderResourceView(0), 6);
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), areaTex, 2);
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), searchTex, 5);
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, input, XMFLOAT2(_width, _height));
+		rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_SmaaBlendingWeightVS, rtShader->m_SMAABlendingWeightPS);
+	}
+
+	/*BLENDING WEIGHTS*/
+	{
+		devclass->ResetViewPort();
+		smaaResultTex->ClearRenderTarget(devclass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
+		smaaResultTex->SetRenderTarget(devclass->GetDevCon());
+
+		UpdatePostProcessorMatrices();
+		window->Render(devclass->GetDevCon());
+
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), input, 0);
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), blendTex->GetShaderResourceView(0), 7);
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), areaTex, 2);
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), searchTex, 5);
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, input, XMFLOAT2(_width, _height));
+		rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_SMAANeighborhoodBlendVS, rtShader->m_SMAANeighborhoodBlendPS);
+	}
+
+	
+	return smaaResultTex->GetShaderResourceView(0);
+}
+
+void PostProcessor::PostProcess(COrthoWindow* window, ID3D11ShaderResourceView* colors)
 {
 	//Final result
+
 	
 	devclass->ResetViewPort();
 	UpdatePostProcessorMatrices();
 	window->Render(devclass->GetDevCon());
 
-	rtShader->SetSpecularHighLights(devclass->GetDevCon(), blurH->GetShaderResourceView(0));
+	if(useSmaa) rtShader->UpdateTextureIndex(devclass->GetDevCon(), colors, 8);
+	else rtShader->UpdateTextureIndex(devclass->GetDevCon(), blurV->GetShaderResourceView(0), 8);
+	
+	rtShader->SetSpecularHighLights(devclass->GetDevCon(), blurV->GetShaderResourceView(0));
 	rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, this->color, XMFLOAT2(_width, _height));
 	rtShader->RenderShader(devclass->GetDevCon(), window->m_indexCount);
+
 	
+}
+
+ID3D11ShaderResourceView* PostProcessor::prepareSmaa(COrthoWindow * window, ID3D11ShaderResourceView * color, ID3D11ShaderResourceView * light, ID3D11ShaderResourceView * areaTex, ID3D11ShaderResourceView * searchTex)
+{
+	if (useSmaa)
+	{
+		return SmaaProcess(color, window, areaTex, searchTex, blurV);
+	}
+	else // If not smaa then return param color
+	{
+		return color;
+	}
 }
 
 ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, COrthoWindow * window, ID3D11ShaderResourceView * pos, ID3D11ShaderResourceView * normal)
@@ -199,6 +298,10 @@ void PostProcessor::Release()
 	bloom->Shutdown();
 	blurH->Shutdown();
 	blurV->Shutdown();
+	blendTex->Shutdown();
+	edgesTex->Shutdown();
+	smaaResultTex->Shutdown();
+
 	combine->Shutdown();
 	SSAO->Shutdown();
 	rtShader->Shutdown();

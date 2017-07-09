@@ -3,7 +3,7 @@
 
 using namespace std;
 
-
+#define SMAA_1 
 
 CTextureRenderShader::CTextureRenderShader()
 {
@@ -87,7 +87,7 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer; ID3D10Blob* vertexShaderBufferSMAAED; ID3D10Blob* vertexShaderBufferSMAAEC; ID3D10Blob* vertexShaderBufferSMAAE;
 	ID3D10Blob* pixelShaderBuffer; ID3D10Blob* pixelShaderBufferBlurV; ID3D10Blob* pixelShaderBufferBlurH; ID3D10Blob* pixelShaderBufferBloom; ID3D10Blob* pixelShaderBufferColor;
-	ID3D10Blob* pixelshaderBufferSSAO;
+	ID3D10Blob* pixelshaderBufferSSAO; ID3D10Blob* pixelShaderBufferToneMap;
 	ID3D10Blob* pixelShaderBufferSMAAED; ID3D10Blob* pixelShaderBufferSMAAEC; ID3D10Blob* pixelShaderBufferSMAAE;
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
 	unsigned int numElements; 
@@ -101,23 +101,24 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 	vertexShaderBuffer = 0;
 	pixelShaderBuffer = 0;
 
-	pixelShaderBufferColor = CDeviceClass::CompileShader(psFilename, PixelShader, "ReturnTexture");
-	pixelshaderBufferSSAO  = CDeviceClass::CompileShader(psFilename, PixelShader, "SSAO");
-	pixelShaderBuffer	   = CDeviceClass::CompileShader(psFilename, PixelShader, "Combine");
-	pixelShaderBufferBlurV = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurVertical");
-	pixelShaderBufferBlurH = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurHorizontal");
-	pixelShaderBufferBloom = CDeviceClass::CompileShader(psFilename, PixelShader, "BloomColors");
-	vertexShaderBuffer     = CDeviceClass::CompileShader(vsFilename, VertexShader, "TextureVertexShader");
+	pixelShaderBufferColor   = CDeviceClass::CompileShader(psFilename, PixelShader, "ReturnTexture");
+	pixelshaderBufferSSAO    = CDeviceClass::CompileShader(psFilename, PixelShader, "SSAO");
+	pixelShaderBuffer	     = CDeviceClass::CompileShader(psFilename, PixelShader, "Combine");
+	pixelShaderBufferBlurV   = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurVertical");
+	pixelShaderBufferBlurH   = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurHorizontal");
+	pixelShaderBufferBloom   = CDeviceClass::CompileShader(psFilename, PixelShader, "BloomColors");
+	vertexShaderBuffer       = CDeviceClass::CompileShader(vsFilename, VertexShader, "TextureVertexShader");
+	pixelShaderBufferToneMap = CDeviceClass::CompileShader(psFilename, PixelShader, "ToneMapPass");
 
 #ifdef SMAA_1
 
-	vertexShaderBufferSMAAE  = CDeviceClass::CompileShader(vsFilename, VertexShader, "SMAAEdgeDetectionVS1");
-	vertexShaderBufferSMAAED = CDeviceClass::CompileShader(vsFilename, VertexShader, "SMAABlendingWeightCalculationVS1");
-	vertexShaderBufferSMAAEC = CDeviceClass::CompileShader(vsFilename, VertexShader, "SMAANeighborhoodBlendingVS1");
+	vertexShaderBufferSMAAE  = CDeviceClass::CompileShader(vsFilename, VertexShader, "SmaaVSStage1");
+	vertexShaderBufferSMAAED = CDeviceClass::CompileShader(vsFilename, VertexShader, "SmaaVSStage2");
+	vertexShaderBufferSMAAEC = CDeviceClass::CompileShader(vsFilename, VertexShader, "SmaaVSStage3");
 
-	pixelShaderBufferSMAAE  = CDeviceClass::CompileShader(psFilename, PixelShader, "SMAALumaEdgeDetectionPS");
-	pixelShaderBufferSMAAED = CDeviceClass::CompileShader(psFilename, PixelShader, "SMAAColorEdgeDetectionPS");
-	pixelShaderBufferSMAAEC = CDeviceClass::CompileShader(psFilename, PixelShader, "SMAADepthEdgeDetectionPS");
+	pixelShaderBufferSMAAE  = CDeviceClass::CompileShader(psFilename, PixelShader, "SmaaPSStage1");
+	pixelShaderBufferSMAAED = CDeviceClass::CompileShader(psFilename, PixelShader, "SmaaPSStage2");
+	pixelShaderBufferSMAAEC = CDeviceClass::CompileShader(psFilename, PixelShader, "SmaaPSStage3");
 
 #endif
 
@@ -137,13 +138,13 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 			return false;
 		}
 
-		result = devclass->GetDevice()->CreateVertexShader(vertexShaderBufferSMAAEC->GetBufferPointer(), vertexShaderBufferSMAAEC->GetBufferSize(), NULL, &m_SMAAColorEdgeVS);
+		result = devclass->GetDevice()->CreateVertexShader(vertexShaderBufferSMAAED->GetBufferPointer(), vertexShaderBufferSMAAED->GetBufferSize(), NULL, &m_SmaaBlendingWeightVS);
 		if (FAILED(result))
 		{
 			return false;
 		}
 
-		result = devclass->GetDevice()->CreateVertexShader(vertexShaderBufferSMAAED->GetBufferPointer(), vertexShaderBufferSMAAED->GetBufferSize(), NULL, &m_SMAAColorEdgeVS);
+		result = devclass->GetDevice()->CreateVertexShader(vertexShaderBufferSMAAEC->GetBufferPointer(), vertexShaderBufferSMAAEC->GetBufferSize(), NULL, &m_SMAANeighborhoodBlendVS);
 		if (FAILED(result))
 		{
 			return false;
@@ -185,7 +186,15 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 	{
 		return false;
 	}
-
+	
+	//Tonemap
+	//bloom shader
+	result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferToneMap->GetBufferPointer(), pixelShaderBufferToneMap->GetBufferSize(), NULL, &m_pixelShaderToneMap);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	
 	// SSAO
 	result = devclass->GetDevice()->CreatePixelShader(pixelshaderBufferSSAO->GetBufferPointer(), pixelshaderBufferSSAO->GetBufferSize(), NULL, &m_pixelShaderSSAO);
 	if (FAILED(result))
@@ -197,7 +206,7 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 	//SMAA Pixel Shaders
 	{
 		//Smaa luma edge detection
-		result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferSMAAE, pixelShaderBufferSMAAE->GetBufferSize(), NULL, &m_SMAALumaEdgePS);
+		result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferSMAAE->GetBufferPointer(), pixelShaderBufferSMAAE->GetBufferSize(), NULL, &m_SMAALumaEdgePS);
 		if (FAILED(result))
 		{
 			return false;
@@ -205,15 +214,15 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 
 
 
-		//Smaa ColorEdgeDetectionPS
-		result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferSMAAEC->GetBufferPointer(), pixelShaderBufferSMAAEC->GetBufferSize(), NULL, &m_SMAAColorEdgePS);
+		//Smaa Blendingweight
+		result = devclass->GetDevice()->CreatePixelShader( pixelShaderBufferSMAAED->GetBufferPointer(), pixelShaderBufferSMAAED->GetBufferSize(), NULL, &m_SMAABlendingWeightPS);
 		if (FAILED(result))
 		{
 			return false;
 		}
 
-		//SMaa DepthEdgeDetectionPS
-		result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferSMAAED->GetBufferPointer(), pixelShaderBufferSMAAED->GetBufferSize(), NULL, &m_SMAALumaEdgePS);
+		//SMaa NeighborhoodBlend
+		result = devclass->GetDevice()->CreatePixelShader(pixelShaderBufferSMAAEC->GetBufferPointer(), pixelShaderBufferSMAAEC->GetBufferSize(), NULL, &m_SMAANeighborhoodBlendPS);
 		if (FAILED(result))
 		{
 			return false;
@@ -369,13 +378,17 @@ void CTextureRenderShader::ShutdownShader()
 	SafeRelease(m_pixelShaderBlurV);
 	SafeRelease(m_pixelShaderBlurH);
 
-	SafeRelease(m_SMAAColorEdgePS);
-	SafeRelease(m_SMAAColorEdgePS);
+	SafeRelease(m_SMAABlendingWeightPS);
+	SafeRelease(m_SmaaBlendingWeightVS);
+
+	SafeRelease(m_SMAANeighborhoodBlendVS);
+	SafeRelease(m_SMAANeighborhoodBlendPS);
+
 	SafeRelease(m_SMAALumaEdgePS);
 	SafeRelease(m_SMAALumaEdgeVS);
-	SafeRelease(m_SMAADepthEdgePS);
-	SafeRelease(m_SMAADepthEdgeVS);
 
+
+	SafeRelease(m_pixelShaderToneMap);
 	return;
 }
 
@@ -511,6 +524,22 @@ void CTextureRenderShader::RenderShader(ID3D11DeviceContext* deviceContext, int 
 }
 
 
+void CTextureRenderShader::RenderWithShaders(ID3D11DeviceContext * deviceContext, int indexCount, ID3D11VertexShader * vs, ID3D11PixelShader * ps)
+{
+	// Set the vertex input layout.
+	deviceContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	deviceContext->VSSetShader(vs, NULL, 0);
+	deviceContext->PSSetShader(ps, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
+
+	// Render the triangle.
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+}
+
 void CTextureRenderShader::RenderShaderBlurV(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	// Set the vertex input layout.
@@ -573,6 +602,24 @@ void CTextureRenderShader::RenderShaderCombine(ID3D11DeviceContext* deviceContex
 	// Set the vertex and pixel shaders that will be used to render this triangle.
 	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
 	deviceContext->PSSetShader(m_pixelShader, NULL, 0);
+
+	// Set the sampler state in the pixel shader.
+	deviceContext->PSSetSamplers(0, 1, &m_sampleState);
+
+	// Render the triangle.
+	deviceContext->DrawIndexed(indexCount, 0, 0);
+
+	return;
+}
+
+void CTextureRenderShader::RenderShaderToneMap(ID3D11DeviceContext* deviceContext, int indexCount)
+{
+	// Set the vertex input layout.
+	deviceContext->IASetInputLayout(m_layout);
+
+	// Set the vertex and pixel shaders that will be used to render this triangle.
+	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
+	deviceContext->PSSetShader(m_pixelShaderToneMap, NULL, 0);
 
 	// Set the sampler state in the pixel shader.
 	deviceContext->PSSetSamplers(0, 1, &m_sampleState);

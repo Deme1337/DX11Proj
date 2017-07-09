@@ -1,15 +1,95 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><DEFECTS><DEFECT>
     <SFA>
       <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+      <FILENAME>cubemapface.cpp</FILENAME>
+      <LINE>25</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>6217</DEFECTCODE>
+    <DESCRIPTION>Implicit cast between semantically different integer types:  testing HRESULT with 'not'.  Consider using SUCCEEDED or FAILED macro instead.</DESCRIPTION>
+    <FUNCTION>CubeMapFace::{ctor}</FUNCTION>
+    <DECORATED>??0CubeMapFace@@QEAA@PEAUID3D11Device@@PEAUID3D11Texture2D@@W4DXGI_FORMAT@@HHH@Z</DECORATED>
+    <FUNCLINE>6</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
       <FILENAME>d3d_template.cpp</FILENAME>
-      <LINE>181</LINE>
+      <LINE>162</LINE>
+      <COLUMN>20</COLUMN>
+    </SFA>
+    <DEFECTCODE>6001</DEFECTCODE>
+    <DESCRIPTION>Using uninitialized memory 'fullscreenSettings'.</DESCRIPTION>
+    <FUNCTION>enterFullscreen</FUNCTION>
+    <DECORATED>?enterFullscreen@@YA_NPEAUHWND__@@HHHH@Z</DECORATED>
+    <FUNCLINE>157</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>d3d_template.cpp</FILENAME>
+        <LINE>158</LINE>
+        <COLUMN>9</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'fullscreenSettings' is not initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>d3d_template.cpp</FILENAME>
+        <LINE>159</LINE>
+        <COLUMN>6</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>d3d_template.cpp</FILENAME>
+        <LINE>160</LINE>
+        <COLUMN>6</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>d3d_template.cpp</FILENAME>
+        <LINE>162</LINE>
+        <COLUMN>20</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'fullscreenSettings' is an In/Out argument to 'EnumDisplaySettingsW' (declared at c:\program files (x86)\windows kits\8.1\include\um\winuser.h:12420)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>d3d_template.cpp</FILENAME>
+        <LINE>162</LINE>
+        <COLUMN>20</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'fullscreenSettings' is used, but may not have been initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+      <FILENAME>d3d_template.cpp</FILENAME>
+      <LINE>219</LINE>
       <COLUMN>24</COLUMN>
     </SFA>
     <DEFECTCODE>6244</DEFECTCODE>
     <DESCRIPTION>Local declaration of 'hWnd' hides previous declaration at line '21' of 'd:\graphics-programming\d3d_template\d3d_template\d3d_template.h'.</DESCRIPTION>
     <FUNCTION>WndProc</FUNCTION>
     <DECORATED>?WndProc@@YA_JPEAUHWND__@@I_K_J@Z</DECORATED>
-    <FUNCLINE>181</FUNCLINE>
+    <FUNCLINE>219</FUNCLINE>
     <PATH>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
@@ -22,7 +102,7 @@
     <SFA>
       <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
       <FILENAME>deviceclass.cpp</FILENAME>
-      <LINE>95</LINE>
+      <LINE>97</LINE>
       <COLUMN>31</COLUMN>
     </SFA>
     <DEFECTCODE>6385</DEFECTCODE>
@@ -178,18 +258,24 @@
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
         <LINE>42</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>44</LINE>
         <COLUMN>10</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>45</LINE>
+        <LINE>47</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>46</LINE>
+        <LINE>48</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -201,13 +287,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>53</LINE>
+        <LINE>55</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>54</LINE>
+        <LINE>56</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -219,13 +305,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>61</LINE>
+        <LINE>63</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>62</LINE>
+        <LINE>64</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>3</ID>
@@ -237,13 +323,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>69</LINE>
+        <LINE>71</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>70</LINE>
+        <LINE>72</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>4</ID>
@@ -255,13 +341,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>77</LINE>
+        <LINE>79</LINE>
         <COLUMN>17</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>78</LINE>
+        <LINE>80</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>5</ID>
@@ -273,7 +359,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>85</LINE>
+        <LINE>87</LINE>
         <COLUMN>8</COLUMN>
         <KEYEVENT>
           <ID>6</ID>
@@ -285,7 +371,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>86</LINE>
+        <LINE>88</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>7</ID>
@@ -297,13 +383,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>93</LINE>
+        <LINE>95</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>93</LINE>
+        <LINE>95</LINE>
         <COLUMN>15</COLUMN>
         <KEYEVENT>
           <ID>8</ID>
@@ -315,7 +401,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>95</LINE>
+        <LINE>97</LINE>
         <COLUMN>31</COLUMN>
         <KEYEVENT>
           <ID>9</ID>
@@ -327,7 +413,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>93</LINE>
+        <LINE>95</LINE>
         <COLUMN>28</COLUMN>
         <KEYEVENT>
           <ID>10</ID>
@@ -339,7 +425,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>93</LINE>
+        <LINE>95</LINE>
         <COLUMN>15</COLUMN>
         <KEYEVENT>
           <ID>11</ID>
@@ -351,7 +437,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>95</LINE>
+        <LINE>97</LINE>
         <COLUMN>31</COLUMN>
         <KEYEVENT>
           <ID>12</ID>
@@ -363,7 +449,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>deviceclass.cpp</FILENAME>
-        <LINE>95</LINE>
+        <LINE>97</LINE>
         <COLUMN>31</COLUMN>
         <KEYEVENT>
           <ID>13</ID>
@@ -376,15 +462,2871 @@
   </DEFECT><DEFECT>
     <SFA>
       <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+      <FILENAME>deviceclass.cpp</FILENAME>
+      <LINE>160</LINE>
+      <COLUMN>49</COLUMN>
+    </SFA>
+    <DEFECTCODE>6001</DEFECTCODE>
+    <DESCRIPTION>Using uninitialized memory 'numerator'.</DESCRIPTION>
+    <FUNCTION>CDeviceClass::InitDeviceAndSwapChain</FUNCTION>
+    <DECORATED>?InitDeviceAndSwapChain@CDeviceClass@@QEAA_NPEAUHWND__@@PEAUHINSTANCE__@@HH@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>19</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>20</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>21</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>22</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>24</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>25</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>26</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>28</LINE>
+        <COLUMN>22</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>29</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>30</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>31</LINE>
+        <COLUMN>22</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>32</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>33</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>34</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>35</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>36</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>38</LINE>
+        <COLUMN>5</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>39</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>39</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>39</LINE>
+        <COLUMN>27</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'numerator' is not initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>39</LINE>
+        <COLUMN>38</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>40</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>40</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>42</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>44</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>47</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>48</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>55</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>56</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>63</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>64</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>71</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>72</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>79</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>80</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>6</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume '!displayModeList' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>87</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>88</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>7</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>95</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>95</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>8</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this loop, (assume 'i&lt;numModes' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>108</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>109</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>9</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>116</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>119</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>120</LINE>
+        <COLUMN>11</COLUMN>
+        <KEYEVENT>
+          <ID>10</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'error!=0' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>128</LINE>
+        <COLUMN>1</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>129</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>132</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>133</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>136</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>137</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>140</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>141</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>144</LINE>
+        <COLUMN>1</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>147</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>150</LINE>
+        <COLUMN>32</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>151</LINE>
+        <COLUMN>33</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>154</LINE>
+        <COLUMN>33</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>158</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>11</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume 'vSyncEnabled')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>160</LINE>
+        <COLUMN>49</COLUMN>
+        <KEYEVENT>
+          <ID>12</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'numerator' is used, but may not have been initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+      <FILENAME>deviceclass.cpp</FILENAME>
+      <LINE>161</LINE>
+      <COLUMN>51</COLUMN>
+    </SFA>
+    <DEFECTCODE>6001</DEFECTCODE>
+    <DESCRIPTION>Using uninitialized memory 'denominator'.</DESCRIPTION>
+    <FUNCTION>CDeviceClass::InitDeviceAndSwapChain</FUNCTION>
+    <DECORATED>?InitDeviceAndSwapChain@CDeviceClass@@QEAA_NPEAUHWND__@@PEAUHINSTANCE__@@HH@Z</DECORATED>
+    <FUNCLINE>17</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>19</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>20</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>21</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>22</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>24</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>25</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>26</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>28</LINE>
+        <COLUMN>22</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>29</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>30</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>31</LINE>
+        <COLUMN>22</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>32</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>33</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>34</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>35</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>36</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>38</LINE>
+        <COLUMN>5</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>39</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>39</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>39</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>39</LINE>
+        <COLUMN>38</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'denominator' is not initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>40</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>40</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>42</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>44</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>47</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>48</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>55</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>56</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>63</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>64</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>71</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>72</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>79</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>80</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>6</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume '!displayModeList' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>87</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>88</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>7</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>95</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>95</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>8</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this loop, (assume 'i&lt;numModes' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>108</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>109</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>9</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'FAILED(result)' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>116</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>119</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>120</LINE>
+        <COLUMN>11</COLUMN>
+        <KEYEVENT>
+          <ID>10</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'error!=0' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>128</LINE>
+        <COLUMN>1</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>129</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>132</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>133</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>136</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>137</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>140</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>141</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>144</LINE>
+        <COLUMN>1</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>147</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>150</LINE>
+        <COLUMN>32</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>151</LINE>
+        <COLUMN>33</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>154</LINE>
+        <COLUMN>33</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>158</LINE>
+        <COLUMN>5</COLUMN>
+        <KEYEVENT>
+          <ID>11</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume 'vSyncEnabled')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>160</LINE>
+        <COLUMN>49</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>deviceclass.cpp</FILENAME>
+        <LINE>161</LINE>
+        <COLUMN>51</COLUMN>
+        <KEYEVENT>
+          <ID>12</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'denominator' is used, but may not have been initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui.cpp</FILENAME>
+      <LINE>2509</LINE>
+      <COLUMN>15</COLUMN>
+    </SFA>
+    <DEFECTCODE>6340</DEFECTCODE>
+    <DESCRIPTION>Mismatch on sign: 'const bool' passed as _Param_(3) when some signed type is required in call to 'fprintf'.</DESCRIPTION>
+    <FUNCTION>SaveSettings</FUNCTION>
+    <DECORATED>?SaveSettings@@YAXXZ</DECORATED>
+    <FUNCLINE>2474</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui.cpp</FILENAME>
+      <LINE>9046</LINE>
+      <COLUMN>26</COLUMN>
+    </SFA>
+    <DEFECTCODE>6031</DEFECTCODE>
+    <DESCRIPTION>Return value ignored: 'sscanf'.</DESCRIPTION>
+    <FUNCTION>ImGui::ColorEdit4</FUNCTION>
+    <DECORATED>?ColorEdit4@ImGui@@YA_NPEBDQEAM_N@Z</DECORATED>
+    <FUNCLINE>8966</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui.cpp</FILENAME>
+      <LINE>9048</LINE>
+      <COLUMN>26</COLUMN>
+    </SFA>
+    <DEFECTCODE>6031</DEFECTCODE>
+    <DESCRIPTION>Return value ignored: 'sscanf'.</DESCRIPTION>
+    <FUNCTION>ImGui::ColorEdit4</FUNCTION>
+    <DECORATED>?ColorEdit4@ImGui@@YA_NPEBDQEAM_N@Z</DECORATED>
+    <FUNCLINE>8966</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui.cpp</FILENAME>
+      <LINE>9069</LINE>
+      <COLUMN>20</COLUMN>
+    </SFA>
+    <DEFECTCODE>6385</DEFECTCODE>
+    <DESCRIPTION>Reading invalid data from 'button_titles':  the readable size is '24' bytes, but 'edit_mode' bytes may be read.</DESCRIPTION>
+    <FUNCTION>ImGui::ColorEdit4</FUNCTION>
+    <DECORATED>?ColorEdit4@ImGui@@YA_NPEBDQEAM_N@Z</DECORATED>
+    <FUNCLINE>8966</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8968</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8969</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8972</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8973</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8974</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8975</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8976</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8978</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8979</LINE>
+        <COLUMN>51</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8982</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8983</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8986</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8988</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8989</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8991</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8992</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8994</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>8995</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9055</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9057</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9058</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9062</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9065</LINE>
+        <COLUMN>33</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'edit_mode' may equal -1</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9067</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9068</LINE>
+        <COLUMN>18</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'button_titles' is an array of 3 elements (24 bytes)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9069</LINE>
+        <COLUMN>20</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'button_titles' is an Output from 'ImGui::ButtonEx' (declared at d:\graphics-programming\d3d_template\d3d_template\imgui-master\imgui_internal.h:735)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui.cpp</FILENAME>
+        <LINE>9069</LINE>
+        <COLUMN>20</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>Invalid read from 'button_titles[-1]', (readable range is 0 to 2)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui_demo.cpp</FILENAME>
+      <LINE>1749</LINE>
+      <COLUMN>32</COLUMN>
+    </SFA>
+    <DEFECTCODE>6011</DEFECTCODE>
+    <DESCRIPTION>Dereferencing NULL pointer 'font-&gt;ConfigData'. </DESCRIPTION>
+    <FUNCTION>ImGui::ShowStyleEditor</FUNCTION>
+    <DECORATED>?ShowStyleEditor@ImGui@@YAXPEAUImGuiStyle@@@Z</DECORATED>
+    <FUNCLINE>1614</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1616</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1619</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1620</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1623</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1630</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1632</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1644</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1665</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1722</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1724</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1724</LINE>
+        <COLUMN>41</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1725</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1726</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1731</LINE>
+        <COLUMN>28</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1732</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1732</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1734</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1735</LINE>
+        <COLUMN>29</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'font-&gt;ConfigData' may be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1736</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1737</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1737</LINE>
+        <COLUMN>53</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1738</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1739</LINE>
+        <COLUMN>23</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1740</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1741</LINE>
+        <COLUMN>31</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this branch, (assume 'TreeNode("Details")')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1743</LINE>
+        <COLUMN>32</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1744</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1744</LINE>
+        <COLUMN>49</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1745</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1746</LINE>
+        <COLUMN>27</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1747</LINE>
+        <COLUMN>25</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1747</LINE>
+        <COLUMN>48</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'config_i&lt;font-&gt;ConfigDataCount')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>1749</LINE>
+        <COLUMN>32</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'font-&gt;ConfigData' is dereferenced, but may still be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui_demo.cpp</FILENAME>
+      <LINE>2102</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>6001</DEFECTCODE>
+    <DESCRIPTION>Using uninitialized memory '*History[](i)'.</DESCRIPTION>
+    <FUNCTION>ExampleAppConsole::{dtor}</FUNCTION>
+    <DECORATED>??1ExampleAppConsole@@QEAA@XZ</DECORATED>
+    <FUNCLINE>2098</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2100</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2101</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2101</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2102</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2101</LINE>
+        <COLUMN>43</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2101</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2102</LINE>
+        <COLUMN>16</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'*History[](i)' is not initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2102</LINE>
+        <COLUMN>16</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'*History[](i)' is used, but may not have been initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui_demo.cpp</FILENAME>
+      <LINE>2108</LINE>
+      <COLUMN>127</COLUMN>
+    </SFA>
+    <DEFECTCODE>6387</DEFECTCODE>
+    <DESCRIPTION>'buff' could be '0':  this does not adhere to the specification for the function 'memcpy'. </DESCRIPTION>
+    <FUNCTION>ExampleAppConsole::Strdup</FUNCTION>
+    <DECORATED>?Strdup@ExampleAppConsole@@SAPEADPEBD@Z</DECORATED>
+    <FUNCLINE>2108</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2108</LINE>
+        <COLUMN>78</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2108</LINE>
+        <COLUMN>105</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'buff' may be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2108</LINE>
+        <COLUMN>127</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'buff' is an In/Out argument to 'memcpy' (declared at c:\program files (x86)\microsoft visual studio 14.0\vc\include\vcruntime_string.h:40)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2108</LINE>
+        <COLUMN>127</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'buff' should not be NULL, because this is not consistent with the SAL annotation on 'memcpy'</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui_demo.cpp</FILENAME>
+      <LINE>2113</LINE>
+      <COLUMN>16</COLUMN>
+    </SFA>
+    <DEFECTCODE>6001</DEFECTCODE>
+    <DESCRIPTION>Using uninitialized memory '*Items[](i)'.</DESCRIPTION>
+    <FUNCTION>ExampleAppConsole::ClearLog</FUNCTION>
+    <DECORATED>?ClearLog@ExampleAppConsole@@QEAAXXZ</DECORATED>
+    <FUNCLINE>2110</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2112</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2112</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2113</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2112</LINE>
+        <COLUMN>41</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2112</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2113</LINE>
+        <COLUMN>16</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'*Items[](i)' is not initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_demo.cpp</FILENAME>
+        <LINE>2113</LINE>
+        <COLUMN>16</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'*Items[](i)' is used, but may not have been initialized</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>stb_rect_pack.h</FILENAME>
+      <LINE>474</LINE>
+      <COLUMN>17</COLUMN>
+    </SFA>
+    <DEFECTCODE>28182</DEFECTCODE>
+    <DESCRIPTION>Dereferencing NULL pointer. 'cur' contains the same NULL value as 'cur-&gt;next' did. See line 475 for an earlier location where this can occur</DESCRIPTION>
+    <FUNCTION>stbrp__skyline_pack_rectangle</FUNCTION>
+    <DECORATED>?stbrp__skyline_pack_rectangle@@YA?AUstbrp__findresult@@PEAUstbrp_context@@HH@Z</DECORATED>
+    <FUNCLINE>420</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>3</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>423</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>424</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>424</LINE>
+        <COLUMN>22</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>430</LINE>
+        <COLUMN>65</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>436</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>437</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>438</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>440</LINE>
+        <COLUMN>22</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>446</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>447</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>449</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>450</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>451</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>458</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>467</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>469</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>473</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>474</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>475</LINE>
+        <COLUMN>6</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>476</LINE>
+        <COLUMN>10</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'cur' may be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>474</LINE>
+        <COLUMN>17</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'cur-&gt;x&lt;context-&gt;width')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>474</LINE>
+        <COLUMN>17</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'cur' is dereferenced, but may still be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>stb_rect_pack.h</FILENAME>
+      <LINE>475</LINE>
+      <COLUMN>6</COLUMN>
+    </SFA>
+    <DEFECTCODE>6011</DEFECTCODE>
+    <DESCRIPTION>Dereferencing NULL pointer 'cur-&gt;next'. </DESCRIPTION>
+    <FUNCTION>stbrp__skyline_pack_rectangle</FUNCTION>
+    <DECORATED>?stbrp__skyline_pack_rectangle@@YA?AUstbrp__findresult@@PEAUstbrp_context@@HH@Z</DECORATED>
+    <FUNCLINE>420</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>423</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>424</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>424</LINE>
+        <COLUMN>22</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>430</LINE>
+        <COLUMN>65</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>436</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>437</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>438</LINE>
+        <COLUMN>11</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>440</LINE>
+        <COLUMN>22</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>446</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>447</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>449</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>450</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>451</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>458</LINE>
+        <COLUMN>20</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'cur-&gt;next' may be NULL (Skip this loop)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>467</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>469</LINE>
+        <COLUMN>14</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'cur-&gt;x&lt;res.x+width' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>473</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>474</LINE>
+        <COLUMN>17</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'cur-&gt;x&lt;context-&gt;width')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>475</LINE>
+        <COLUMN>6</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this loop, (assume '!!((cur-&gt;x&lt;cur-&gt;next-&gt;x))' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_rect_pack.h</FILENAME>
+        <LINE>475</LINE>
+        <COLUMN>6</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'cur-&gt;next' is dereferenced, but may still be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>stb_truetype.h</FILENAME>
+      <LINE>2779</LINE>
+      <COLUMN>15</COLUMN>
+    </SFA>
+    <DEFECTCODE>6385</DEFECTCODE>
+    <DESCRIPTION>Reading invalid data from 'buffer':  the readable size is '_Old_3`kernel_width' bytes, but '3' bytes may be read.</DESCRIPTION>
+    <FUNCTION>stbtt__h_prefilter</FUNCTION>
+    <DECORATED>?stbtt__h_prefilter@@YAXPEAEHHHI@Z</DECORATED>
+    <FUNCLINE>2725</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2727</LINE>
+        <COLUMN>17</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'buffer' is a 8 byte array</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2728</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2729</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2730</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'buffer' is an Output from 'memset' (declared at c:\program files (x86)\microsoft visual studio 14.0\vc\include\vcruntime_string.h:60)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2731</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2731</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'j&lt;h')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2732</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2733</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2734</LINE>
+        <COLUMN>18</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'buffer' is an Output from 'memset' (declared at c:\program files (x86)\microsoft visual studio 14.0\vc\include\vcruntime_string.h:60)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2736</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2739</LINE>
+        <COLUMN>14</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Assume switch ( 'kernel_width' ) resolves to case 2: </MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2740</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2741</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2741</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2742</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2743</LINE>
+        <COLUMN>59</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2744</LINE>
+        <COLUMN>25</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2741</LINE>
+        <COLUMN>35</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2741</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2777</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>6</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'i&lt;w')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2778</LINE>
+        <COLUMN>9</COLUMN>
+        <KEYEVENT>
+          <ID>7</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume '!!((pixels[i]==0))')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2779</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2780</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2777</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2777</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>8</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Continue this loop, (assume 'i&lt;w')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2778</LINE>
+        <COLUMN>9</COLUMN>
+        <KEYEVENT>
+          <ID>9</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Continue this loop, (assume '!!((pixels[i]==0))')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2779</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>10</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>Invalid read from 'buffer[2]', (readable range is 0 to 1)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>stb_truetype.h</FILENAME>
+      <LINE>2841</LINE>
+      <COLUMN>15</COLUMN>
+    </SFA>
+    <DEFECTCODE>6385</DEFECTCODE>
+    <DESCRIPTION>Reading invalid data from 'buffer':  the readable size is '_Old_3`kernel_width' bytes, but '3' bytes may be read.</DESCRIPTION>
+    <FUNCTION>stbtt__v_prefilter</FUNCTION>
+    <DECORATED>?stbtt__v_prefilter@@YAXPEAEHHHI@Z</DECORATED>
+    <FUNCLINE>2787</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2789</LINE>
+        <COLUMN>17</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'buffer' is a 8 byte array</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2790</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2791</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2792</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'buffer' is an Output from 'memset' (declared at c:\program files (x86)\microsoft visual studio 14.0\vc\include\vcruntime_string.h:60)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2793</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2793</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'j&lt;w')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2794</LINE>
+        <COLUMN>10</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2795</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2796</LINE>
+        <COLUMN>18</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'buffer' is an Output from 'memset' (declared at c:\program files (x86)\microsoft visual studio 14.0\vc\include\vcruntime_string.h:60)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2798</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2801</LINE>
+        <COLUMN>14</COLUMN>
+        <KEYEVENT>
+          <ID>5</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Assume switch ( 'kernel_width' ) resolves to case 2: </MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2802</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2803</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2803</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2804</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2805</LINE>
+        <COLUMN>59</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2806</LINE>
+        <COLUMN>41</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2803</LINE>
+        <COLUMN>35</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2803</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2839</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>6</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'i&lt;h')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2840</LINE>
+        <COLUMN>9</COLUMN>
+        <KEYEVENT>
+          <ID>7</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume '&lt;branch condition&gt;')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2841</LINE>
+        <COLUMN>15</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2842</LINE>
+        <COLUMN>35</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2839</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2839</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>8</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Continue this loop, (assume 'i&lt;h')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2840</LINE>
+        <COLUMN>9</COLUMN>
+        <KEYEVENT>
+          <ID>9</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Continue this loop, (assume '&lt;branch condition&gt;')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>stb_truetype.h</FILENAME>
+        <LINE>2841</LINE>
+        <COLUMN>15</COLUMN>
+        <KEYEVENT>
+          <ID>10</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>Invalid read from 'buffer[2]', (readable range is 0 to 1)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui_draw.cpp</FILENAME>
+      <LINE>442</LINE>
+      <COLUMN>46</COLUMN>
+    </SFA>
+    <DEFECTCODE>6255</DEFECTCODE>
+    <DESCRIPTION>_alloca indicates failure by raising a stack overflow exception.  Consider using _malloca instead.</DESCRIPTION>
+    <FUNCTION>ImDrawList::AddPolyline</FUNCTION>
+    <DECORATED>?AddPolyline@ImDrawList@@QEAAXPEBUImVec2@@HI_NM1@Z</DECORATED>
+    <FUNCLINE>417</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui_draw.cpp</FILENAME>
+      <LINE>623</LINE>
+      <COLUMN>46</COLUMN>
+    </SFA>
+    <DEFECTCODE>6255</DEFECTCODE>
+    <DESCRIPTION>_alloca indicates failure by raising a stack overflow exception.  Consider using _malloca instead.</DESCRIPTION>
+    <FUNCTION>ImDrawList::AddConvexPolyFilled</FUNCTION>
+    <DECORATED>?AddConvexPolyFilled@ImDrawList@@QEAAXPEBUImVec2@@HI_N@Z</DECORATED>
+    <FUNCLINE>598</FUNCLINE>
+    <PATH></PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui_draw.cpp</FILENAME>
+      <LINE>630</LINE>
+      <COLUMN>31</COLUMN>
+    </SFA>
+    <DEFECTCODE>6386</DEFECTCODE>
+    <DESCRIPTION>Buffer overrun while writing to 'temp_normals':  the writable size is 'points_count*sizeof(ImVec2)' bytes, but '16' bytes might be written.</DESCRIPTION>
+    <FUNCTION>ImDrawList::AddConvexPolyFilled</FUNCTION>
+    <DECORATED>?AddConvexPolyFilled@ImDrawList@@QEAAXPEBUImVec2@@HI_N@Z</DECORATED>
+    <FUNCLINE>598</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>600</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>601</LINE>
+        <COLUMN>4</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>604</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>607</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>608</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>609</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>610</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>611</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>614</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>615</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>616</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>616</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>623</LINE>
+        <COLUMN>14</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'temp_normals' is a 0 byte array</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>38</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>49</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'i1&lt;points_count')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>626</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>627</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>628</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>629</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>630</LINE>
+        <COLUMN>31</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>Invalid write to 'temp_normals', (outside its writable range)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+      <FILENAME>imgui_draw.cpp</FILENAME>
+      <LINE>637</LINE>
+      <COLUMN>24</COLUMN>
+    </SFA>
+    <DEFECTCODE>6385</DEFECTCODE>
+    <DESCRIPTION>Reading invalid data from 'temp_normals':  the readable size is 'points_count*sizeof(ImVec2)' bytes, but '16' bytes may be read.</DESCRIPTION>
+    <FUNCTION>ImDrawList::AddConvexPolyFilled</FUNCTION>
+    <DECORATED>?AddConvexPolyFilled@ImDrawList@@QEAAXPEBUImVec2@@HI_N@Z</DECORATED>
+    <FUNCLINE>598</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>600</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>601</LINE>
+        <COLUMN>4</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>604</LINE>
+        <COLUMN>8</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>607</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>608</LINE>
+        <COLUMN>20</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>609</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>610</LINE>
+        <COLUMN>18</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>611</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>614</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>615</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>616</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>616</LINE>
+        <COLUMN>26</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>623</LINE>
+        <COLUMN>14</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'temp_normals' is a 0 byte array</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>38</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>49</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>626</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>627</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>628</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>629</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>630</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>631</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>68</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>49</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>626</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>627</LINE>
+        <COLUMN>24</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>628</LINE>
+        <COLUMN>19</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>629</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>630</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>631</LINE>
+        <COLUMN>31</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>68</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>624</LINE>
+        <COLUMN>49</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>634</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>634</LINE>
+        <COLUMN>38</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>634</LINE>
+        <COLUMN>49</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Enter this loop, (assume 'i1&lt;points_count')</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\imgui-master\</FILEPATH>
+        <FILENAME>imgui_draw.cpp</FILENAME>
+        <LINE>637</LINE>
+        <COLUMN>24</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>Invalid read from 'temp_normals', (outside its readable range)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
       <FILENAME>skydome.cpp</FILENAME>
-      <LINE>192</LINE>
+      <LINE>200</LINE>
       <COLUMN>13</COLUMN>
     </SFA>
     <DEFECTCODE>6386</DEFECTCODE>
     <DESCRIPTION>Buffer overrun while writing to 'indices':  the writable size is 'm_indexCount*4' bytes, but '8' bytes might be written.</DESCRIPTION>
     <FUNCTION>CSkydome::InitializeBuffers</FUNCTION>
     <DECORATED>?InitializeBuffers@CSkydome@@AEAA_NPEAUID3D11Device@@@Z</DECORATED>
-    <FUNCLINE>164</FUNCLINE>
+    <FUNCLINE>170</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -394,61 +3336,61 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>166</LINE>
+        <LINE>172</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>167</LINE>
+        <LINE>173</LINE>
         <COLUMN>16</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>168</LINE>
+        <LINE>174</LINE>
         <COLUMN>19</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>168</LINE>
+        <LINE>174</LINE>
         <COLUMN>37</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>169</LINE>
+        <LINE>175</LINE>
         <COLUMN>24</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>169</LINE>
+        <LINE>175</LINE>
         <COLUMN>36</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>170</LINE>
+        <LINE>176</LINE>
         <COLUMN>9</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>171</LINE>
+        <LINE>177</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>175</LINE>
+        <LINE>181</LINE>
         <COLUMN>10</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>176</LINE>
+        <LINE>182</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -460,13 +3402,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>182</LINE>
+        <LINE>188</LINE>
         <COLUMN>9</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>183</LINE>
+        <LINE>189</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -478,13 +3420,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>189</LINE>
+        <LINE>195</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>189</LINE>
+        <LINE>195</LINE>
         <COLUMN>14</COLUMN>
         <KEYEVENT>
           <ID>3</ID>
@@ -496,19 +3438,31 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>191</LINE>
+        <LINE>197</LINE>
         <COLUMN>23</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>192</LINE>
+        <LINE>198</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>skydome.cpp</FILENAME>
+        <LINE>199</LINE>
+        <COLUMN>21</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>skydome.cpp</FILENAME>
+        <LINE>200</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>189</LINE>
+        <LINE>195</LINE>
         <COLUMN>31</COLUMN>
         <KEYEVENT>
           <ID>4</ID>
@@ -520,7 +3474,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>189</LINE>
+        <LINE>195</LINE>
         <COLUMN>14</COLUMN>
         <KEYEVENT>
           <ID>5</ID>
@@ -532,7 +3486,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>191</LINE>
+        <LINE>197</LINE>
         <COLUMN>23</COLUMN>
         <KEYEVENT>
           <ID>6</ID>
@@ -544,10 +3498,34 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>skydome.cpp</FILENAME>
-        <LINE>192</LINE>
-        <COLUMN>13</COLUMN>
+        <LINE>198</LINE>
+        <COLUMN>17</COLUMN>
         <KEYEVENT>
           <ID>7</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'i' is an Output from 'DirectX::XMFLOAT2::{ctor}' (declared at c:\program files (x86)\windows kits\8.1\include\um\directxmath.h:454)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>skydome.cpp</FILENAME>
+        <LINE>199</LINE>
+        <COLUMN>21</COLUMN>
+        <KEYEVENT>
+          <ID>8</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'i' is an Output from 'DirectX::XMFLOAT3::{ctor}' (declared at c:\program files (x86)\windows kits\8.1\include\um\directxmath.h:506)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>skydome.cpp</FILENAME>
+        <LINE>200</LINE>
+        <COLUMN>13</COLUMN>
+        <KEYEVENT>
+          <ID>9</ID>
           <KIND>usage</KIND>
           <IMPORTANCE>Essential</IMPORTANCE>
           <MESSAGE>Invalid write to 'indices[1]', (writable range is 0 to 0)</MESSAGE>
@@ -558,14 +3536,14 @@
     <SFA>
       <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
       <FILENAME>textureta.cpp</FILENAME>
-      <LINE>295</LINE>
+      <LINE>354</LINE>
       <COLUMN>7</COLUMN>
     </SFA>
     <DEFECTCODE>6387</DEFECTCODE>
-    <DESCRIPTION>'filePtr' could be '0':  this does not adhere to the specification for the function 'fclose'. See line 260 for an earlier location where this can occur</DESCRIPTION>
+    <DESCRIPTION>'filePtr' could be '0':  this does not adhere to the specification for the function 'fread'. </DESCRIPTION>
     <FUNCTION>CTextureTA::LoadTarga</FUNCTION>
     <DECORATED>?LoadTarga@CTextureTA@@AEAA_NPEADAEAH1@Z</DECORATED>
-    <FUNCLINE>243</FUNCLINE>
+    <FUNCLINE>337</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -575,73 +3553,73 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>17</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>28</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>35</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>38</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>41</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>246</LINE>
+        <LINE>340</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>247</LINE>
+        <LINE>341</LINE>
         <COLUMN>14</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>248</LINE>
+        <LINE>342</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>249</LINE>
+        <LINE>343</LINE>
         <COLUMN>16</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>253</LINE>
+        <LINE>347</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -653,7 +3631,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>254</LINE>
+        <LINE>348</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -665,7 +3643,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>260</LINE>
+        <LINE>354</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>3</ID>
@@ -677,7 +3655,140 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>261</LINE>
+        <LINE>354</LINE>
+        <COLUMN>7</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'filePtr' should not be NULL, because this is not consistent with the SAL annotation on 'fread'</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT><DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+      <FILENAME>textureta.cpp</FILENAME>
+      <LINE>389</LINE>
+      <COLUMN>7</COLUMN>
+    </SFA>
+    <DEFECTCODE>6387</DEFECTCODE>
+    <DESCRIPTION>'filePtr' could be '0':  this does not adhere to the specification for the function 'fclose'. See line 354 for an earlier location where this can occur</DESCRIPTION>
+    <FUNCTION>CTextureTA::LoadTarga</FUNCTION>
+    <DECORATED>?LoadTarga@CTextureTA@@AEAA_NPEADAEAH1@Z</DECORATED>
+    <FUNCLINE>337</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>5</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>28</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>35</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>38</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>41</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>340</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>341</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>342</LINE>
+        <COLUMN>13</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>343</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>347</LINE>
+        <COLUMN>7</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'filePtr' may be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>348</LINE>
+        <COLUMN>11</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'error!=0' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>354</LINE>
+        <COLUMN>7</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'filePtr' is an In/Out argument to 'fread' (declared at c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h:231)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>355</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>4</ID>
@@ -689,25 +3800,25 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>267</LINE>
+        <LINE>361</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>268</LINE>
+        <LINE>362</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>269</LINE>
+        <LINE>363</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>272</LINE>
+        <LINE>366</LINE>
         <COLUMN>9</COLUMN>
         <KEYEVENT>
           <ID>5</ID>
@@ -719,19 +3830,19 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>278</LINE>
+        <LINE>372</LINE>
         <COLUMN>11</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>281</LINE>
+        <LINE>375</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>282</LINE>
+        <LINE>376</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>6</ID>
@@ -743,7 +3854,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>288</LINE>
+        <LINE>382</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>7</ID>
@@ -755,7 +3866,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>289</LINE>
+        <LINE>383</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>8</ID>
@@ -767,7 +3878,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>295</LINE>
+        <LINE>389</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>9</ID>
@@ -779,7 +3890,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>295</LINE>
+        <LINE>389</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>10</ID>
@@ -793,14 +3904,14 @@
     <SFA>
       <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
       <FILENAME>textureta.cpp</FILENAME>
-      <LINE>319</LINE>
+      <LINE>413</LINE>
       <COLUMN>26</COLUMN>
     </SFA>
     <DEFECTCODE>6386</DEFECTCODE>
     <DESCRIPTION>Buffer overrun while writing to 'textureData':  the writable size is 'imageSize*1' bytes, but '5' bytes might be written.</DESCRIPTION>
     <FUNCTION>CTextureTA::LoadTarga</FUNCTION>
     <DECORATED>?LoadTarga@CTextureTA@@AEAA_NPEADAEAH1@Z</DECORATED>
-    <FUNCLINE>243</FUNCLINE>
+    <FUNCLINE>337</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -810,79 +3921,79 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>17</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>28</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>35</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>38</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>41</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>246</LINE>
+        <LINE>340</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>247</LINE>
+        <LINE>341</LINE>
         <COLUMN>14</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>248</LINE>
+        <LINE>342</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>249</LINE>
+        <LINE>343</LINE>
         <COLUMN>16</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>253</LINE>
+        <LINE>347</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>254</LINE>
+        <LINE>348</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -894,13 +4005,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>260</LINE>
+        <LINE>354</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>261</LINE>
+        <LINE>355</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -912,25 +4023,25 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>267</LINE>
+        <LINE>361</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>268</LINE>
+        <LINE>362</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>269</LINE>
+        <LINE>363</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>272</LINE>
+        <LINE>366</LINE>
         <COLUMN>9</COLUMN>
         <KEYEVENT>
           <ID>3</ID>
@@ -942,19 +4053,19 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>278</LINE>
+        <LINE>372</LINE>
         <COLUMN>11</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>281</LINE>
+        <LINE>375</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>282</LINE>
+        <LINE>376</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>4</ID>
@@ -966,13 +4077,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>288</LINE>
+        <LINE>382</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>289</LINE>
+        <LINE>383</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>5</ID>
@@ -984,13 +4095,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>295</LINE>
+        <LINE>389</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>296</LINE>
+        <LINE>390</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>6</ID>
@@ -1002,13 +4113,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>302</LINE>
+        <LINE>396</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>303</LINE>
+        <LINE>397</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>7</ID>
@@ -1020,25 +4131,25 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>309</LINE>
+        <LINE>403</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>312</LINE>
+        <LINE>406</LINE>
         <COLUMN>3</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>315</LINE>
+        <LINE>409</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>315</LINE>
+        <LINE>409</LINE>
         <COLUMN>14</COLUMN>
         <KEYEVENT>
           <ID>8</ID>
@@ -1050,13 +4161,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>9</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>15</COLUMN>
         <KEYEVENT>
           <ID>9</ID>
@@ -1068,37 +4179,37 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>319</LINE>
+        <LINE>413</LINE>
         <COLUMN>26</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>320</LINE>
+        <LINE>414</LINE>
         <COLUMN>26</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>321</LINE>
+        <LINE>415</LINE>
         <COLUMN>26</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>322</LINE>
+        <LINE>416</LINE>
         <COLUMN>26</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>325</LINE>
+        <LINE>419</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>326</LINE>
+        <LINE>420</LINE>
         <COLUMN>9</COLUMN>
         <KEYEVENT>
           <ID>10</ID>
@@ -1110,13 +4221,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>24</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>15</COLUMN>
         <KEYEVENT>
           <ID>11</ID>
@@ -1128,19 +4239,19 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>330</LINE>
+        <LINE>424</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>315</LINE>
+        <LINE>409</LINE>
         <COLUMN>24</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>315</LINE>
+        <LINE>409</LINE>
         <COLUMN>14</COLUMN>
         <KEYEVENT>
           <ID>12</ID>
@@ -1152,13 +4263,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>9</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>15</COLUMN>
         <KEYEVENT>
           <ID>13</ID>
@@ -1170,146 +4281,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>319</LINE>
+        <LINE>413</LINE>
         <COLUMN>26</COLUMN>
         <KEYEVENT>
           <ID>14</ID>
           <KIND>usage</KIND>
           <IMPORTANCE>Essential</IMPORTANCE>
           <MESSAGE>Invalid write to 'textureData[4]', (writable range is 0 to 3)</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-    </PATH>
-  </DEFECT><DEFECT>
-    <SFA>
-      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-      <FILENAME>textureta.cpp</FILENAME>
-      <LINE>260</LINE>
-      <COLUMN>7</COLUMN>
-    </SFA>
-    <DEFECTCODE>6387</DEFECTCODE>
-    <DESCRIPTION>'filePtr' could be '0':  this does not adhere to the specification for the function 'fread'. </DESCRIPTION>
-    <FUNCTION>CTextureTA::LoadTarga</FUNCTION>
-    <DECORATED>?LoadTarga@CTextureTA@@AEAA_NPEADAEAH1@Z</DECORATED>
-    <FUNCLINE>243</FUNCLINE>
-    <PROBABILITY>1</PROBABILITY>
-    <RANK>4</RANK>
-    <CATEGORY>
-      <RULECATEGORY>mspft</RULECATEGORY>
-    </CATEGORY>
-    <PATH>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>5</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>12</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>17</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>28</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>35</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>38</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>41</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>246</LINE>
-        <COLUMN>7</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>247</LINE>
-        <COLUMN>14</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>248</LINE>
-        <COLUMN>13</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>249</LINE>
-        <COLUMN>16</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>253</LINE>
-        <COLUMN>7</COLUMN>
-        <KEYEVENT>
-          <ID>1</ID>
-          <KIND>declaration</KIND>
-          <IMPORTANCE>Essential</IMPORTANCE>
-          <MESSAGE>'filePtr' may be NULL</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>254</LINE>
-        <COLUMN>11</COLUMN>
-        <KEYEVENT>
-          <ID>2</ID>
-          <KIND>branch</KIND>
-          <IMPORTANCE>Full</IMPORTANCE>
-          <MESSAGE>Skip this branch, (assume 'error!=0' is false)</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>260</LINE>
-        <COLUMN>7</COLUMN>
-        <KEYEVENT>
-          <ID>3</ID>
-          <KIND>declaration</KIND>
-          <IMPORTANCE>Full</IMPORTANCE>
-          <MESSAGE>'filePtr' is an In/Out argument to 'fread' (declared at c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h:231)</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>260</LINE>
-        <COLUMN>7</COLUMN>
-        <KEYEVENT>
-          <ID>4</ID>
-          <KIND>usage</KIND>
-          <IMPORTANCE>Essential</IMPORTANCE>
-          <MESSAGE>'filePtr' should not be NULL, because this is not consistent with the SAL annotation on 'fread'</MESSAGE>
         </KEYEVENT>
       </SFA>
     </PATH>
@@ -1323,7 +4301,7 @@
     <DEFECTCODE>6215</DEFECTCODE>
     <DESCRIPTION>Cast between semantically different integer types:  a Boolean type to HRESULT.</DESCRIPTION>
     <FUNCTION>`anonymous-namespace'::CreateTextureView</FUNCTION>
-    <DECORATED>?CreateTextureView@?A0xd3194049@@YAPEAUID3D11ShaderResourceView@@PEAUID3D11Device@@PEAUID3D11DeviceContext@@@Z</DECORATED>
+    <DECORATED>?CreateTextureView@?A0xa41e70df@@YAPEAUID3D11ShaderResourceView@@PEAUID3D11Device@@PEAUID3D11DeviceContext@@@Z</DECORATED>
     <FUNCLINE>254</FUNCLINE>
     <PATH></PATH>
   </DEFECT><DEFECT>
@@ -1336,7 +4314,7 @@
     <DEFECTCODE>6230</DEFECTCODE>
     <DESCRIPTION>Implicit cast between semantically different integer types:  using HRESULT in a Boolean context.</DESCRIPTION>
     <FUNCTION>`anonymous-namespace'::CreateTextureView</FUNCTION>
-    <DECORATED>?CreateTextureView@?A0xd3194049@@YAPEAUID3D11ShaderResourceView@@PEAUID3D11Device@@PEAUID3D11DeviceContext@@@Z</DECORATED>
+    <DECORATED>?CreateTextureView@?A0xa41e70df@@YAPEAUID3D11ShaderResourceView@@PEAUID3D11Device@@PEAUID3D11DeviceContext@@@Z</DECORATED>
     <FUNCLINE>254</FUNCLINE>
     <PATH></PATH>
   </DEFECT></DEFECTS>

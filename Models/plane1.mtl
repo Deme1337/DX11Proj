@@ -8,7 +8,7 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd  0\\Albedo.tga
-map_Bump 0\\Normal.tga
-map_Ks 	 0\\Metallic.tga
-map_Ns 	 0\\Roughness.tga
+map_Kd    octostone\\octostoneAlbedo.png
+map_Bump  octostone\\octostoneNormalc.png
+map_Ks	  octostone\\octostoneMetallic.png
+map_Ns 	  octostone\\octostoneRoughness2.png

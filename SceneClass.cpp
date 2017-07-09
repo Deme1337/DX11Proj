@@ -21,7 +21,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	m_DeferredBuffer = new DeferredBuffersClass();
 	
-	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth, sceneheight, 100.0, 0.1, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth*1.5, sceneheight * 1.5, 10.0, 0.1, DXGI_FORMAT_R16G16B16A16_FLOAT);
 
 
 	m_DeferredShader = new DeferredShader();
@@ -41,11 +41,11 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	postProcessTexture = new CRenderToTexture();
 
-	postProcessTexture->Initialize(DevClass, scenewidth, sceneheight, 100.0, 0.1f, 1);
+	postProcessTexture->Initialize(DevClass, scenewidth, sceneheight, 10.0, 0.1f, 1);
 
 
 	postProcessor = new PostProcessor();
-
+	postProcessor->useSmaa = true;
 	postProcessor->InitializePostProcessor(DevClass, scenewidth, sceneheight);
 
 	std::vector<std::string> images;
@@ -58,6 +58,14 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 		std::string im4 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayLeft2048.png";
 		std::string im5 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayRight2048.png";
 		std::string im6 = "Textures\\TropicalSunnyDay\\TropicalSunnyDayUp2048.png";
+
+
+		//std::string im1 = "Textures\\yoko\\negz.jpg";
+		//std::string im2 = "Textures\\yoko\\negy.jpg";
+		//std::string im3 = "Textures\\yoko\\posz.jpg";
+		//std::string im4 = "Textures\\yoko\\posx.jpg";
+		//std::string im5 = "Textures\\yoko\\negx.jpg";
+		//std::string im6 = "Textures\\yoko\\posy.jpg";
 
 		//Need to write order down
 		images.push_back(im4);
@@ -82,14 +90,11 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	areaTexture->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\AreaTexDX10.dds");
 
-	edgeTexture = new CTextureTA();
+	searchTexture = new CTextureTA();
 
-	edgeTexture->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\SearchTex.dds");
+	searchTexture->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\SearchTex.dds");
 
 
-	irradianceMap = new CTextureTA();
-
-	irradianceMap->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\Irradiance.dds");
 
 
 	textureShader = new CTextureRenderShader();
@@ -136,6 +141,10 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	{
 		PointLight p = PointLight();
 		p.lightProperties.Position = XMFLOAT4(50 * std::sin(i), 10, std::sin(i) * 30, 1.0f);
+		if (i > 2)
+		{
+			p.lightProperties.Color = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+		}
 		pointLights.push_back(p);
 	}
 
@@ -216,13 +225,12 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 			MessageBox(NULL, L"Error skydome rendering", L"ERROR", MB_OK);
 		}
 	}
-	DevClass->TurnCullingOff();
-	DevClass->TurnZBufferOn();
+
 
 	projection = DevClass->GetProjectionMatrix();
 	view = m_Camera->GetCameraView();
 
-	DevClass->TurnCullingOff();
+	DevClass->TurnCullingOn();
 	DevClass->TurnZBufferOn();
 
 	TimeVar time2 = timeNow();
@@ -332,10 +340,13 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		//{
 		//	postProcessor->SetPostProcessInputs(ssaoRes, nullptr, m_Window, BlurSigma);
 		//}
+
+		ID3D11ShaderResourceView* smaaTexture = postProcessor->prepareSmaa(m_Window, postProcessTexture->GetShaderResourceView(0), postProcessTexture->GetShaderResourceView(1), areaTexture->GetTexture(), searchTexture->GetTexture());
+
 		DevClass->Begin();
 		DevClass->SetBackBufferRenderTarget();
 		
-		postProcessor->PostProcess(m_Window);
+		postProcessor->PostProcess(m_Window, smaaTexture);
 	}
 
 	
@@ -382,14 +393,14 @@ void SceneClass::HandleSceneInput()
 	{
 		ShadowUseFrontCulling = false;
 	}
-	if (Keys::key(VKEY_LEFT_ARROW))
-	{
-		viewPortOffSet += 1.0;
-	}
-	if (Keys::key(VKEY_RIGHT_ARROW))
-	{
-		viewPortOffSet -= 1.0;
-	}
+	//if (Keys::key(VKEY_LEFT_ARROW))
+	//{
+	//	viewPortOffSet += 1.0;
+	//}
+	//if (Keys::key(VKEY_RIGHT_ARROW))
+	//{
+	//	viewPortOffSet -= 1.0;
+	//}
 	if (Keys::key(VKEY_F1))
 	{
 		Setting = 0;

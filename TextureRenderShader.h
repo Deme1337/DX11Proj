@@ -40,13 +40,17 @@ public:
 	bool Render(ID3D11DeviceContext*, int, XMMATRIX&, XMMATRIX&, XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT2 swh);
 
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX&, XMMATRIX&, XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT2 swh, std::vector<XMVECTOR> ssaoSampl);
+
 	void RenderShader(ID3D11DeviceContext*, int);
+
+
+	void RenderWithShaders(ID3D11DeviceContext * deviceContext, int indexCount, ID3D11VertexShader* vs, ID3D11PixelShader* ps);
 
 	void RenderShaderBlurV(ID3D11DeviceContext*, int);
 	void RenderShaderBlurH(ID3D11DeviceContext*, int);
 	void RenderShaderBloom(ID3D11DeviceContext*, int);
 	void RenderShaderCombine(ID3D11DeviceContext*, int);
-
+	void RenderShaderToneMap(ID3D11DeviceContext*, int);
 	void RenderShaderColor(ID3D11DeviceContext*, int);
 
 	void PPSSAO(ID3D11DeviceContext* deviceContext, int indexCount);
@@ -57,11 +61,7 @@ private:
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 	
-
-
-private:
-
-
+public:
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
 
@@ -71,14 +71,20 @@ private:
 	ID3D11PixelShader* m_pixelShaderBloom;
 	ID3D11PixelShader* m_pixelShaderBlurV;
 	ID3D11PixelShader* m_pixelShaderBlurH;
+	ID3D11PixelShader* m_pixelShaderToneMap;
 
 	ID3D11VertexShader* m_SMAALumaEdgeVS;
-	ID3D11VertexShader* m_SMAAColorEdgeVS;
-	ID3D11VertexShader* m_SMAADepthEdgeVS;
+	ID3D11VertexShader* m_SmaaBlendingWeightVS;
+	ID3D11VertexShader* m_SMAANeighborhoodBlendVS;
 
 	ID3D11PixelShader* m_SMAALumaEdgePS;
-	ID3D11PixelShader* m_SMAAColorEdgePS;
-	ID3D11PixelShader* m_SMAADepthEdgePS;
+	ID3D11PixelShader* m_SMAABlendingWeightPS;
+	ID3D11PixelShader* m_SMAANeighborhoodBlendPS;
+
+private:
+
+
+	
 
 	CDeviceClass* devclass;
 	ID3D11InputLayout* m_layout;

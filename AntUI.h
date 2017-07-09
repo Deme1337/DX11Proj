@@ -35,12 +35,12 @@ public:
 	void AddDirectionalLight(DirectionalLight& dlight);
 	void AddPointLights(std::vector<PointLight>& plight);
 	
-	void ShutDownPointLights(CAntUI *clientData);
-	void LoadModel(CAntUI *clientData);
-	void DeleteModel(CAntUI* clientData);
+	void ShutDownPointLights(const CAntUI *clientData);
+	void LoadModel(const CAntUI *clientData);
+	void DeleteModel(const CAntUI* clientData);
 
-	void SaveScene(CAntUI* clientData);
-	void LoadScene(CAntUI* clientData);
+	void SaveScene(const CAntUI* clientData);
+	void LoadScene(const CAntUI* clientData);
 
 	void DrawTW();
 

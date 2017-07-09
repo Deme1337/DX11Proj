@@ -43,6 +43,8 @@ bool LightShader::Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* p
 	}
 
 	// Create the pixel shader from the buffer.
+
+
 	result = devclass->GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
 	if (FAILED(result))
 	{
@@ -330,7 +332,7 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	// Copy the lighting variables into the constant buffer.
 	XMVECTOR pos = XMLoadFloat4(&dlight.lightProperties.Position);
 	XMVECTOR col = XMLoadFloat4(&dlight.lightProperties.Color);
-	dataPtr2->LightPosition = -XMVector4Normalize(pos);
+	dataPtr2->LightPosition = pos;
 	dataPtr2->LightColor	= col;
 	dataPtr2->lightViewMatrix = XMMatrixTranspose(dlight.GetLightViewMatrix());
 	dataPtr2->lightProjectionMatrix = XMMatrixTranspose(dlight.GetLightProjectionMatrix());

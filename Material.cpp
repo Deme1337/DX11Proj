@@ -4,6 +4,8 @@
 
 Material::Material()
 {
+	materialCounter++;
+	matname = "Material" + std::to_string(materialCounter);
 }
 
 
@@ -13,25 +15,26 @@ Material::~Material()
 
 void Material::LoadTexture(CDeviceClass * devclass, const char * path, const char * type)
 {
+	std::string sname = path;
 	if (type == "albedo")
 	{
 		AlbedoTexture = new CTextureTA();
-		AlbedoTexture->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(), path);
+		AlbedoTexture->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(), sname.c_str());
 	}
 	if (type == "specular")
 	{
 		SpecularTexture = new CTextureTA();
-		SpecularTexture->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(), path);
+		SpecularTexture->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(), sname.c_str());
 	}
 	if (type == "roughness")
 	{
 		RoughnessTexture = new CTextureTA();
-		RoughnessTexture->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(), path);
+		RoughnessTexture->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(), sname.c_str());
 	}
 	if (type == "normal")
 	{
 		NormalTexture = new CTextureTA();
-		NormalTexture->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(), path);
+		NormalTexture->LoadFreeImage(devclass->GetDevice(), devclass->GetDevCon(), sname.c_str());
 	}
 }
 

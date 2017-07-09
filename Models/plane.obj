@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 28.03.2014 22:07:52
 
-mtllib plane.mtl
+mtllib plane1.mtl
 
 #
 # object Plane001

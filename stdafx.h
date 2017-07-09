@@ -17,7 +17,12 @@
 #include <memory.h>
 #include <tchar.h>
 #include <iostream>
+#include <set>
+#include <vector>
+
+
 #include "Input.h"
+
 
 // TODO: reference additional headers your program requires here
 
@@ -56,6 +61,15 @@ namespace Keys
 
 // wide char to multi byte:
 std::string ws2s(const std::wstring& wstr);
+
+
+
+
+//get file name from path
+std::vector<std::string> SplitPath(const std::string& str, const std::set<char> delimiters);
+
+
+
 
 
 //Safe release from http://www.3dgep.com/introduction-to-directx-11/#DXGI

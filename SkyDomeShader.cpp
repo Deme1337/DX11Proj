@@ -374,6 +374,9 @@ bool CSkyDomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMM
 	dataPtr2->sunPosition = XMLoadFloat4(&dlight.lightProperties.Position);
 	dataPtr2->cameraPosition = cam->GetCameraPosition();
 	dataPtr2->sunSize = dlight.lightProperties.size;
+	dataPtr2->sunPower = dlight.lightProperties.sunPower;
+	dataPtr2->scale1 = dlight.lightProperties.scale1;
+	dataPtr2->scale1 = dlight.lightProperties.scale2;
 	// Unlock the color constant buffer.
 	deviceContext->Unmap(m_colorBuffer, 0);
 

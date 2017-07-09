@@ -1,0 +1,67 @@
+==SMAA==
+|edgesTex| and |blendTex|.	<-- render targets
+'areaTex' and 'searchTex' <-- precalc
+linear filtering and clamp.
+
+For example:
+ *         #define SMAA_RT_METRICS float4(1.0 / 1280.0, 1.0 / 720.0, 1280.0, 720.0)
+ *         #define SMAA_HLSL_4
+ *         #define SMAA_PRESET_HIGH
+ *         #include "SMAA.h"
+
+1. 
+ *                           |input|------------------·
+ *                              v                     |
+ *                    [ SMAA*EdgeDetection ]          |
+ *                              v                     |
+ *                          |edgesTex|                |
+ *                              v                     |
+ *              [ SMAABlendingWeightCalculation ]     |
+ *                              v                     |
+ *                          |blendTex|                |
+ *                              v                     |
+ *                [ SMAANeighborhoodBlending ] <------·
+ *                              v
+ *                           |output|
+
+Texture2D shaderTexture : register(t0);
+Texture2D specHighTex   : register(t1);
+
+Texture2D areaTexture : register(t2);
+Texture2D positionTex   : register(t3);
+Texture2D normalTex     : register(t4);
+
+Texture2D searchTex : register(t5);
+Texture2D edgesTex : register(t6);
+Texture2D blendTex : register(t7);
+
+
+ VS1. void SMAAEdgeDetectionVS(float2 texcoord, out float4 offset[3])
+ PS1. float2 SMAALumaEdgeDetectionPS(float2 texcoord,float4 offset[3],SMAATexture2D(colorTex)#if SMAA_PREDICATION, SMAATexture2D(predicationTex)#endif) 
+
+ VS2 void SMAABlendingWeightCalculationVS(float2 texcoord, out float2 pixcoord, out float4 offset[3])
+ PS2 float4 SMAABlendingWeightCalculationPS(float2 texcoord,float2 pixcoord,float4 offset[3],SMAATexture2D(edgesTex),SMAATexture2D(areaTex),SMAATexture2D(searchTex),float4 subsampleIndices)
+
+ VS3 void SMAANeighborhoodBlendingVS(float2 texcoord, out float4 offset)
+ PS3 float4 SMAANeighborhoodBlendingPS(float2 texcoord,
+                                  float4 offset,
+                                  SMAATexture2D(colorTex),
+                                  SMAATexture2D(blendTex)
+                                  #if SMAA_REPROJECTION
+                                  , SMAATexture2D(velocityTex)
+                                  #endif
+                                  ) 
+
+PixelInputType SmaaStage1(VertexInputType input)
+PixelInputType SmaaStage2(VertexInputType input)
+PixelInputType SmaaStage3(VertexInputType input)
+
+SmaaPSStage1 jne
+
+	ID3D11VertexShader* m_SMAALumaEdgeVS;
+	ID3D11VertexShader* m_SmaaBlendingWeightVS;
+	ID3D11VertexShader* m_SMAANeighborhoodBlendVS;
+
+	ID3D11PixelShader* m_SMAALumaEdgePS;
+	ID3D11PixelShader* m_SMAABlendingWeightPS;
+	ID3D11PixelShader* m_SMAANeighborhoodBlendPS;

@@ -41,22 +41,31 @@ public:
 
 	Material *objectMaterial;
 
+	bool useMaterial = false;
+
 	bool UseTextures = true;
 	bool HasAlpha = false;
 	std::string ObjectTransmissionString();
 	std::string ActorPath;
-
+	std::string actorFile;
 	//Holder for meshes
 	Model *actorMeshes;
 
 	Actor(const char* modelpath,CDeviceClass *devclass);
+	Actor(Model *m, CDeviceClass* devclass);
 	~Actor();
+
+	void SetMeshUseCustomMaterial();
 
 	inline void UpdateMatrix();
 
 	void SetModelPosition(XMVECTOR s);
 	void SetModelRotation(XMVECTOR r);
 	void SetModelSize(XMVECTOR r);
+
+	void SetMaterial(Material* m);
+	void UnsetMaterial();
+
 
 	void SetDiffuseTexture(char *path);
 	void SetSpecularTexture(char *path);

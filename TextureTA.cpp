@@ -36,6 +36,10 @@ bool CTextureTA::LoadFreeImage(ID3D11Device* device, ID3D11DeviceContext* device
 	FIBITMAP *dib(0);
 
 
+	//memcpy(&textureName, filename, sizeof(filename));
+
+	this->textureName = filename;
+
 	FreeImage_FlipVertical(dib);
 
 	fif = FreeImage_GetFileType(filename, 0);
@@ -160,10 +164,7 @@ bool CTextureTA::LoadCubeMap(ID3D11Device * dev, ID3D11DeviceContext * devcon, s
 	D3D11_TEXTURE2D_DESC texElementDesc;
 	((ID3D11Texture2D*)srcTex[0])->GetDesc(&texElementDesc);
 	
-	for (int i = 0; i < 6; i++)
-	{
-		tex[i]->Shutdown();
-	}
+
 	
 
 
@@ -216,6 +217,13 @@ bool CTextureTA::LoadCubeMap(ID3D11Device * dev, ID3D11DeviceContext * devcon, s
 
 	if (FAILED(dev->CreateShaderResourceView(texArray, &viewDesc, &srvCubeMap)))
 		return false;
+
+
+	for (int i = 0; i < 6; i++)
+	{
+		tex[i]->Shutdown();
+		delete tex[i];
+	}
 
 	return true;
 }

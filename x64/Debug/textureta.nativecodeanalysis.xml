@@ -4,14 +4,14 @@
     <SFA>
       <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
       <FILENAME>textureta.cpp</FILENAME>
-      <LINE>295</LINE>
+      <LINE>354</LINE>
       <COLUMN>7</COLUMN>
     </SFA>
     <DEFECTCODE>6387</DEFECTCODE>
-    <DESCRIPTION>'filePtr' could be '0':  this does not adhere to the specification for the function 'fclose'. See line 260 for an earlier location where this can occur</DESCRIPTION>
+    <DESCRIPTION>'filePtr' could be '0':  this does not adhere to the specification for the function 'fread'. </DESCRIPTION>
     <FUNCTION>CTextureTA::LoadTarga</FUNCTION>
     <DECORATED>?LoadTarga@CTextureTA@@AEAA_NPEADAEAH1@Z</DECORATED>
-    <FUNCLINE>243</FUNCLINE>
+    <FUNCLINE>337</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -21,73 +21,73 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>17</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>28</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>35</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>38</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>41</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>246</LINE>
+        <LINE>340</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>247</LINE>
+        <LINE>341</LINE>
         <COLUMN>14</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>248</LINE>
+        <LINE>342</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>249</LINE>
+        <LINE>343</LINE>
         <COLUMN>16</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>253</LINE>
+        <LINE>347</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -99,7 +99,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>254</LINE>
+        <LINE>348</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -111,7 +111,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>260</LINE>
+        <LINE>354</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>3</ID>
@@ -123,7 +123,141 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>261</LINE>
+        <LINE>354</LINE>
+        <COLUMN>7</COLUMN>
+        <KEYEVENT>
+          <ID>4</ID>
+          <KIND>usage</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'filePtr' should not be NULL, because this is not consistent with the SAL annotation on 'fread'</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+    </PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+      <FILENAME>textureta.cpp</FILENAME>
+      <LINE>389</LINE>
+      <COLUMN>7</COLUMN>
+    </SFA>
+    <DEFECTCODE>6387</DEFECTCODE>
+    <DESCRIPTION>'filePtr' could be '0':  this does not adhere to the specification for the function 'fclose'. See line 354 for an earlier location where this can occur</DESCRIPTION>
+    <FUNCTION>CTextureTA::LoadTarga</FUNCTION>
+    <DECORATED>?LoadTarga@CTextureTA@@AEAA_NPEADAEAH1@Z</DECORATED>
+    <FUNCLINE>337</FUNCLINE>
+    <PROBABILITY>1</PROBABILITY>
+    <RANK>4</RANK>
+    <CATEGORY>
+      <RULECATEGORY>mspft</RULECATEGORY>
+    </CATEGORY>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>5</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>12</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>17</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>28</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>35</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>38</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>339</LINE>
+        <COLUMN>41</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>340</LINE>
+        <COLUMN>7</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>341</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>342</LINE>
+        <COLUMN>13</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>343</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>347</LINE>
+        <COLUMN>7</COLUMN>
+        <KEYEVENT>
+          <ID>1</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Essential</IMPORTANCE>
+          <MESSAGE>'filePtr' may be NULL</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>348</LINE>
+        <COLUMN>11</COLUMN>
+        <KEYEVENT>
+          <ID>2</ID>
+          <KIND>branch</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>Skip this branch, (assume 'error!=0' is false)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>354</LINE>
+        <COLUMN>7</COLUMN>
+        <KEYEVENT>
+          <ID>3</ID>
+          <KIND>declaration</KIND>
+          <IMPORTANCE>Full</IMPORTANCE>
+          <MESSAGE>'filePtr' is an In/Out argument to 'fread' (declared at c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h:231)</MESSAGE>
+        </KEYEVENT>
+      </SFA>
+      <SFA>
+        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
+        <FILENAME>textureta.cpp</FILENAME>
+        <LINE>355</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>4</ID>
@@ -135,25 +269,25 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>267</LINE>
+        <LINE>361</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>268</LINE>
+        <LINE>362</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>269</LINE>
+        <LINE>363</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>272</LINE>
+        <LINE>366</LINE>
         <COLUMN>9</COLUMN>
         <KEYEVENT>
           <ID>5</ID>
@@ -165,19 +299,19 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>278</LINE>
+        <LINE>372</LINE>
         <COLUMN>11</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>281</LINE>
+        <LINE>375</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>282</LINE>
+        <LINE>376</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>6</ID>
@@ -189,7 +323,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>288</LINE>
+        <LINE>382</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>7</ID>
@@ -201,7 +335,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>289</LINE>
+        <LINE>383</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>8</ID>
@@ -213,7 +347,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>295</LINE>
+        <LINE>389</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>9</ID>
@@ -225,7 +359,7 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>295</LINE>
+        <LINE>389</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>10</ID>
@@ -240,14 +374,14 @@
     <SFA>
       <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
       <FILENAME>textureta.cpp</FILENAME>
-      <LINE>319</LINE>
+      <LINE>413</LINE>
       <COLUMN>26</COLUMN>
     </SFA>
     <DEFECTCODE>6386</DEFECTCODE>
     <DESCRIPTION>Buffer overrun while writing to 'textureData':  the writable size is 'imageSize*1' bytes, but '5' bytes might be written.</DESCRIPTION>
     <FUNCTION>CTextureTA::LoadTarga</FUNCTION>
     <DECORATED>?LoadTarga@CTextureTA@@AEAA_NPEADAEAH1@Z</DECORATED>
-    <FUNCLINE>243</FUNCLINE>
+    <FUNCLINE>337</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -257,79 +391,79 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>17</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>28</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>35</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>38</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
+        <LINE>339</LINE>
         <COLUMN>41</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>246</LINE>
+        <LINE>340</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>247</LINE>
+        <LINE>341</LINE>
         <COLUMN>14</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>248</LINE>
+        <LINE>342</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>249</LINE>
+        <LINE>343</LINE>
         <COLUMN>16</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>253</LINE>
+        <LINE>347</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>254</LINE>
+        <LINE>348</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -341,13 +475,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>260</LINE>
+        <LINE>354</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>261</LINE>
+        <LINE>355</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -359,25 +493,25 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>267</LINE>
+        <LINE>361</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>268</LINE>
+        <LINE>362</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>269</LINE>
+        <LINE>363</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>272</LINE>
+        <LINE>366</LINE>
         <COLUMN>9</COLUMN>
         <KEYEVENT>
           <ID>3</ID>
@@ -389,19 +523,19 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>278</LINE>
+        <LINE>372</LINE>
         <COLUMN>11</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>281</LINE>
+        <LINE>375</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>282</LINE>
+        <LINE>376</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>4</ID>
@@ -413,13 +547,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>288</LINE>
+        <LINE>382</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>289</LINE>
+        <LINE>383</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>5</ID>
@@ -431,13 +565,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>295</LINE>
+        <LINE>389</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>296</LINE>
+        <LINE>390</LINE>
         <COLUMN>11</COLUMN>
         <KEYEVENT>
           <ID>6</ID>
@@ -449,13 +583,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>302</LINE>
+        <LINE>396</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>303</LINE>
+        <LINE>397</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>7</ID>
@@ -467,25 +601,25 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>309</LINE>
+        <LINE>403</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>312</LINE>
+        <LINE>406</LINE>
         <COLUMN>3</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>315</LINE>
+        <LINE>409</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>315</LINE>
+        <LINE>409</LINE>
         <COLUMN>14</COLUMN>
         <KEYEVENT>
           <ID>8</ID>
@@ -497,13 +631,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>9</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>15</COLUMN>
         <KEYEVENT>
           <ID>9</ID>
@@ -515,37 +649,37 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>319</LINE>
+        <LINE>413</LINE>
         <COLUMN>26</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>320</LINE>
+        <LINE>414</LINE>
         <COLUMN>26</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>321</LINE>
+        <LINE>415</LINE>
         <COLUMN>26</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>322</LINE>
+        <LINE>416</LINE>
         <COLUMN>26</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>325</LINE>
+        <LINE>419</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>326</LINE>
+        <LINE>420</LINE>
         <COLUMN>9</COLUMN>
         <KEYEVENT>
           <ID>10</ID>
@@ -557,13 +691,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>24</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>15</COLUMN>
         <KEYEVENT>
           <ID>11</ID>
@@ -575,19 +709,19 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>330</LINE>
+        <LINE>424</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>315</LINE>
+        <LINE>409</LINE>
         <COLUMN>24</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>315</LINE>
+        <LINE>409</LINE>
         <COLUMN>14</COLUMN>
         <KEYEVENT>
           <ID>12</ID>
@@ -599,13 +733,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>9</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>317</LINE>
+        <LINE>411</LINE>
         <COLUMN>15</COLUMN>
         <KEYEVENT>
           <ID>13</ID>
@@ -617,147 +751,13 @@
       <SFA>
         <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
         <FILENAME>textureta.cpp</FILENAME>
-        <LINE>319</LINE>
+        <LINE>413</LINE>
         <COLUMN>26</COLUMN>
         <KEYEVENT>
           <ID>14</ID>
           <KIND>usage</KIND>
           <IMPORTANCE>Essential</IMPORTANCE>
           <MESSAGE>Invalid write to 'textureData[4]', (writable range is 0 to 3)</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-    </PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-      <FILENAME>textureta.cpp</FILENAME>
-      <LINE>260</LINE>
-      <COLUMN>7</COLUMN>
-    </SFA>
-    <DEFECTCODE>6387</DEFECTCODE>
-    <DESCRIPTION>'filePtr' could be '0':  this does not adhere to the specification for the function 'fread'. </DESCRIPTION>
-    <FUNCTION>CTextureTA::LoadTarga</FUNCTION>
-    <DECORATED>?LoadTarga@CTextureTA@@AEAA_NPEADAEAH1@Z</DECORATED>
-    <FUNCLINE>243</FUNCLINE>
-    <PROBABILITY>1</PROBABILITY>
-    <RANK>4</RANK>
-    <CATEGORY>
-      <RULECATEGORY>mspft</RULECATEGORY>
-    </CATEGORY>
-    <PATH>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>5</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>12</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>17</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>28</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>35</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>38</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>245</LINE>
-        <COLUMN>41</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>246</LINE>
-        <COLUMN>7</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>247</LINE>
-        <COLUMN>14</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>248</LINE>
-        <COLUMN>13</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>249</LINE>
-        <COLUMN>16</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>253</LINE>
-        <COLUMN>7</COLUMN>
-        <KEYEVENT>
-          <ID>1</ID>
-          <KIND>declaration</KIND>
-          <IMPORTANCE>Essential</IMPORTANCE>
-          <MESSAGE>'filePtr' may be NULL</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>254</LINE>
-        <COLUMN>11</COLUMN>
-        <KEYEVENT>
-          <ID>2</ID>
-          <KIND>branch</KIND>
-          <IMPORTANCE>Full</IMPORTANCE>
-          <MESSAGE>Skip this branch, (assume 'error!=0' is false)</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>260</LINE>
-        <COLUMN>7</COLUMN>
-        <KEYEVENT>
-          <ID>3</ID>
-          <KIND>declaration</KIND>
-          <IMPORTANCE>Full</IMPORTANCE>
-          <MESSAGE>'filePtr' is an In/Out argument to 'fread' (declared at c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\stdio.h:231)</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-      <SFA>
-        <FILEPATH>d:\graphics-programming\d3d_template\d3d_template\</FILEPATH>
-        <FILENAME>textureta.cpp</FILENAME>
-        <LINE>260</LINE>
-        <COLUMN>7</COLUMN>
-        <KEYEVENT>
-          <ID>4</ID>
-          <KIND>usage</KIND>
-          <IMPORTANCE>Essential</IMPORTANCE>
-          <MESSAGE>'filePtr' should not be NULL, because this is not consistent with the SAL annotation on 'fread'</MESSAGE>
         </KEYEVENT>
       </SFA>
     </PATH>

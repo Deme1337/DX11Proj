@@ -13,6 +13,14 @@ CTextureTA* Model::LoadTexturesForAssimp(const char* pathforfile, std::string di
 	return temptex;
 }
 
+Model::~Model()
+{
+	for (size_t i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].Release();
+	}
+}
+
 void Model::Release()
 {
 	for (size_t i = 0; i < meshes.size(); i++)

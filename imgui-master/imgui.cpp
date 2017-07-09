@@ -8673,11 +8673,15 @@ void ImGui::ListBoxFooter()
     EndGroup();
 }
 
+
+
 bool ImGui::ListBox(const char* label, int* current_item, const char** items, int items_count, int height_items)
 {
     const bool value_changed = ListBox(label, current_item, Items_ArrayGetter, (void*)items, items_count, height_items);
     return value_changed;
 }
+
+
 
 bool ImGui::ListBox(const char* label, int* current_item, bool (*items_getter)(void*, int, const char**), void* data, int items_count, int height_in_items)
 {

@@ -16,7 +16,7 @@ CAntUI::~CAntUI()
 
 
 
-void CAntUI::ShutDownPointLights(CAntUI * clientData)
+void CAntUI::ShutDownPointLights(const CAntUI * clientData)
 {
 	for (size_t i = 0; i < clientData->MainScene->pointLights.size(); i++)
 	{
@@ -24,7 +24,7 @@ void CAntUI::ShutDownPointLights(CAntUI * clientData)
 	}
 }
 
-void CAntUI::LoadModel(CAntUI *clientData)
+void CAntUI::LoadModel(const CAntUI *clientData)
 {
 	
 	std::string Path = "";
@@ -50,7 +50,7 @@ void CAntUI::LoadModel(CAntUI *clientData)
 	delete ofd;
 }
 
-void CAntUI::DeleteModel(CAntUI * clientData)
+void CAntUI::DeleteModel(const CAntUI * clientData)
 {
 	clientData->MainScene->m_Actors[clientData->SelectedIndex]->Release();
 	clientData->MainScene->m_Actors.erase(clientData->MainScene->m_Actors.begin() + clientData->SelectedIndex);
@@ -58,7 +58,7 @@ void CAntUI::DeleteModel(CAntUI * clientData)
 
 
 //TODO: Add "save file dialog"
-void CAntUI::SaveScene(CAntUI * clientData)
+void CAntUI::SaveScene(const CAntUI * clientData)
 {
 	std::string SceneSavePath;
 
@@ -90,7 +90,7 @@ void CAntUI::SaveScene(CAntUI * clientData)
 	SceneSavePath = "";
 }
 
-void CAntUI::LoadScene(CAntUI * clientData)
+void CAntUI::LoadScene(const CAntUI * clientData)
 {
 	std::vector<std::string> lines;
 
@@ -153,6 +153,7 @@ void TW_CALL SaveSceneS(void *clientData)
 void TW_CALL DeleteActor(void *clientData)
 {
 	CAntUI *ca = (CAntUI*)clientData;
+	ca->SelectedIndex = 0;
 	ca->DeleteModel(ca);
 }
 
