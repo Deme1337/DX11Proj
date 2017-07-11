@@ -48,7 +48,10 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 {
 	PixelOutputType output;
 
-
+    if (shaderTexture.Sample(SampleTypeWrap, input.tex).w < 0.4 && input.HasAlpha == 1)
+    {
+        discard;
+    }
 	if (UseTextures > 0.9)
 	{
 		// Sample the color from the texture and store it for output to the render target.
@@ -89,10 +92,7 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 		output.binormal = float4(input.binormal,1.0);
 	}
 
-	if (shaderTexture.Sample(SampleTypeWrap, input.tex).w < 0.4 && input.HasAlpha == 1)
-	{
-		discard;
-	}
+
 	
     return output;
 }

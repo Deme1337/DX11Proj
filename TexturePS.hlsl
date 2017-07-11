@@ -276,6 +276,7 @@ float4 ReturnTexture(PixelInputType input) : SV_TARGET
 	return shaderTexture.Sample(SampleType, input.tex);
 }
 
+//Combines the blurred and not blurred images
 
 float4 Combine(PixelInputType input) : SV_TARGET
 {
@@ -285,15 +286,16 @@ float4 Combine(PixelInputType input) : SV_TARGET
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
 	FxaaTex fColors;
 	fColors.smpl = SampleType;
-	fColors.tex = smaaReadyTex;
+	fColors.tex =  shaderTexture;
 	textureColor = float4(FxaaPixelShader(TexPos, fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
     
 	//
 	fColors.tex = specHighTex;
 	textureColor1 = float4(FxaaPixelShader(TexPos, fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
 
-
-	return textureColor + ToneMap(textureColor1);
+    return textureColor + pow(ToneMap(textureColor1), 2.2);
+      
+	
 }
 
 
@@ -317,10 +319,10 @@ float4 ToneMapPass(PixelInputType input) : SV_Target
 
     float4 texColor = 0.0f;
 
-    texColor = ToneMap(shaderTexture.Sample(SampleType, TexPos));
+    texColor = ToneMap(smaaReadyTex.Sample(SampleType, TexPos));
 
 
-    return texColor;
+    return pow(texColor,2.2);
 
 }
 

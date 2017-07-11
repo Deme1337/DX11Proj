@@ -59,6 +59,7 @@ private:
 
 	int ResetBenchMark = 0;
 	int Setting = 0;
+	float renderScale = 1.0f;
 	const int POINT_LIGHT_COUNT = 40;
 
 	bool ShadowUseFrontCulling = false;

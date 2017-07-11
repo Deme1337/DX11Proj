@@ -83,6 +83,13 @@ bool PostProcessor::InitializePostProcessor(CDeviceClass * devclass, int windoww
 		return false;
 	}
 	
+	smaaFinalizeTex = new RenderTarget();
+	if (!smaaFinalizeTex->Initialize(devclass, windowwidth, windowheight, 10.0, 0.1, 0, DXGI_FORMAT_R16G16B16A16_FLOAT))
+	{
+		MessageBox(devclass->_mainWindow, L"Cannot init blurh rt", L"ERROR", MB_OK);
+		return false;
+	}
+
 
 
 	//generate random samples for ssao
@@ -117,7 +124,7 @@ void PostProcessor::SetPostProcessInputs(ID3D11ShaderResourceView* color, ID3D11
 		rtShader->SetSpecularHighLights(devclass->GetDevCon(), light);
 
 
-		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, color, XMFLOAT2(_width, _height));
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
 		rtShader->RenderShaderBloom(devclass->GetDevCon(), window->m_indexCount);
 
 	}
@@ -132,7 +139,7 @@ void PostProcessor::SetPostProcessInputs(ID3D11ShaderResourceView* color, ID3D11
 		window->Render(devclass->GetDevCon());
 
 		rtShader->SetSpecularHighLights(devclass->GetDevCon(), bloom->GetShaderResourceView(0));
-		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, color, XMFLOAT2(_width, _height));
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
 		rtShader->RenderShaderBlurV(devclass->GetDevCon(), window->m_indexCount);
 
 	}
@@ -147,16 +154,29 @@ void PostProcessor::SetPostProcessInputs(ID3D11ShaderResourceView* color, ID3D11
 		window->Render(devclass->GetDevCon());
 
 		rtShader->SetSpecularHighLights(devclass->GetDevCon(), blurV->GetShaderResourceView(0));
-		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, color, XMFLOAT2(_width, _height));
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix,  XMFLOAT2(_width, _height));
 		rtShader->RenderShaderBlurH(devclass->GetDevCon(), window->m_indexCount);
-
+		
 	}
 
 
-	
+	//Combine the blurred and not blurred image and prepare for smaa
+	{
+		devclass->ResetViewPort();
+		smaaFinalizeTex->ClearRenderTarget(devclass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
+		smaaFinalizeTex->SetRenderTarget(devclass->GetDevCon());
+
+		UpdatePostProcessorMatrices();
+		window->Render(devclass->GetDevCon());
+
+		rtShader->UpdateTextureIndex(devclass->GetDevCon(), color, 0);
+		rtShader->SetSpecularHighLights(devclass->GetDevCon(), blurH->GetShaderResourceView(0));
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
+		rtShader->RenderShader(devclass->GetDevCon(), window->m_indexCount);
+	}
 }
 
-ID3D11ShaderResourceView * PostProcessor::SmaaProcess(ID3D11ShaderResourceView * input, COrthoWindow * window, ID3D11ShaderResourceView* areaTex, ID3D11ShaderResourceView* searchTex, RenderTarget* blurred)
+ID3D11ShaderResourceView * PostProcessor::SmaaProcess(COrthoWindow * window, ID3D11ShaderResourceView* input, ID3D11ShaderResourceView* areaTex, ID3D11ShaderResourceView* searchTex)
 {
 
 
@@ -169,8 +189,9 @@ ID3D11ShaderResourceView * PostProcessor::SmaaProcess(ID3D11ShaderResourceView *
 		UpdatePostProcessorMatrices();
 		window->Render(devclass->GetDevCon());
 
+
 		rtShader->UpdateTextureIndex(devclass->GetDevCon(), input, 0);
-		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, input, XMFLOAT2(_width, _height));
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
 		rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_SMAALumaEdgeVS, rtShader->m_SMAALumaEdgePS);
 	}
 
@@ -187,7 +208,7 @@ ID3D11ShaderResourceView * PostProcessor::SmaaProcess(ID3D11ShaderResourceView *
 		rtShader->UpdateTextureIndex(devclass->GetDevCon(), edgesTex->GetShaderResourceView(0), 6);
 		rtShader->UpdateTextureIndex(devclass->GetDevCon(), areaTex, 2);
 		rtShader->UpdateTextureIndex(devclass->GetDevCon(), searchTex, 5);
-		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, input, XMFLOAT2(_width, _height));
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
 		rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_SmaaBlendingWeightVS, rtShader->m_SMAABlendingWeightPS);
 	}
 
@@ -202,11 +223,11 @@ ID3D11ShaderResourceView * PostProcessor::SmaaProcess(ID3D11ShaderResourceView *
 
 		rtShader->UpdateTextureIndex(devclass->GetDevCon(), input, 0);
 		rtShader->UpdateTextureIndex(devclass->GetDevCon(), blendTex->GetShaderResourceView(0), 7);
-		rtShader->UpdateTextureIndex(devclass->GetDevCon(), areaTex, 2);
-		rtShader->UpdateTextureIndex(devclass->GetDevCon(), searchTex, 5);
-		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, input, XMFLOAT2(_width, _height));
+		rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
 		rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_SMAANeighborhoodBlendVS, rtShader->m_SMAANeighborhoodBlendPS);
 	}
+
+
 
 	
 	return smaaResultTex->GetShaderResourceView(0);
@@ -214,28 +235,26 @@ ID3D11ShaderResourceView * PostProcessor::SmaaProcess(ID3D11ShaderResourceView *
 
 void PostProcessor::PostProcess(COrthoWindow* window, ID3D11ShaderResourceView* colors)
 {
-	//Final result
+	devclass->Begin();
+	devclass->SetBackBufferRenderTarget();
 
-	
 	devclass->ResetViewPort();
 	UpdatePostProcessorMatrices();
 	window->Render(devclass->GetDevCon());
 
-	if(useSmaa) rtShader->UpdateTextureIndex(devclass->GetDevCon(), colors, 8);
-	else rtShader->UpdateTextureIndex(devclass->GetDevCon(), blurV->GetShaderResourceView(0), 8);
-	
-	rtShader->SetSpecularHighLights(devclass->GetDevCon(), blurV->GetShaderResourceView(0));
-	rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, this->color, XMFLOAT2(_width, _height));
-	rtShader->RenderShader(devclass->GetDevCon(), window->m_indexCount);
+	if (useSmaa) rtShader->UpdateTextureIndex(devclass->GetDevCon(), colors, 8);
+	else rtShader->UpdateTextureIndex(devclass->GetDevCon(), this->color, 8);
 
 	
+	rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
+	rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_vertexShader, rtShader->m_pixelShaderToneMap);
 }
 
-ID3D11ShaderResourceView* PostProcessor::prepareSmaa(COrthoWindow * window, ID3D11ShaderResourceView * color, ID3D11ShaderResourceView * light, ID3D11ShaderResourceView * areaTex, ID3D11ShaderResourceView * searchTex)
+ID3D11ShaderResourceView* PostProcessor::prepareSmaa(COrthoWindow * window, ID3D11ShaderResourceView* input, ID3D11ShaderResourceView * areaTex, ID3D11ShaderResourceView * searchTex)
 {
 	if (useSmaa)
 	{
-		return SmaaProcess(color, window, areaTex, searchTex, blurV);
+		return SmaaProcess(window, input, areaTex, searchTex);
 	}
 	else // If not smaa then return param color
 	{
@@ -256,7 +275,7 @@ ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, CO
 	rtShader->Exposure = 5.0f;
 	rtShader->UpdateTextureIndex(devclass->GetDevCon(), ssaoRand->GetTexture(), 2);
 	rtShader->UpdateTextureIndex(devclass->GetDevCon(), pos, 3); rtShader->UpdateTextureIndex(devclass->GetDevCon(), normal, 4);
-	rtShader->SetShaderParameters(devclass->GetDevCon(), worldMatrix, baseViewMatrix, orthoMatrix, color, XMFLOAT2(_width, _height), ssaoKernel);
+	rtShader->SetShaderParameters(devclass->GetDevCon(), worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height), ssaoKernel);
 	rtShader->PPSSAO(devclass->GetDevCon(), window->m_indexCount);
 
 	//BlurV
@@ -268,7 +287,7 @@ ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, CO
 	window->Render(devclass->GetDevCon());
 
 	rtShader->SetSpecularHighLights(devclass->GetDevCon(), SSAO->GetShaderResourceView(0));
-	rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, color, XMFLOAT2(_width, _height));
+	rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix,  XMFLOAT2(_width, _height));
 	rtShader->RenderShaderBlurV(devclass->GetDevCon(), window->m_indexCount);
 
 
@@ -281,7 +300,7 @@ ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, CO
 	window->Render(devclass->GetDevCon());
 
 	rtShader->SetSpecularHighLights(devclass->GetDevCon(), blurV->GetShaderResourceView(0));
-	rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, color, XMFLOAT2(_width, _height));
+	rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
 	rtShader->RenderShaderBlurH(devclass->GetDevCon(), window->m_indexCount);
 
 	return blurH->GetShaderResourceView(0);
@@ -300,13 +319,14 @@ void PostProcessor::Release()
 	blurV->Shutdown();
 	blendTex->Shutdown();
 	edgesTex->Shutdown();
+	smaaFinalizeTex->Shutdown();
 	smaaResultTex->Shutdown();
-
+	this->color->Release();
 	combine->Shutdown();
 	SSAO->Shutdown();
 	rtShader->Shutdown();
 	ssaoRand->Shutdown();
-	SafeRelease(color);
+
 }
 
 void PostProcessor::GenerateSSAOSamples()

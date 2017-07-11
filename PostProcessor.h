@@ -22,10 +22,10 @@ public:
 	void ClearRenderTarget();
 
 	void SetPostProcessInputs(ID3D11ShaderResourceView* color, ID3D11ShaderResourceView* light, COrthoWindow* window, float exposure);
-	ID3D11ShaderResourceView* SmaaProcess(ID3D11ShaderResourceView* input, COrthoWindow* window, ID3D11ShaderResourceView* areaTex, ID3D11ShaderResourceView* searchTex, RenderTarget* blurred); //Returns SMAA texture that will be rendered on screen 
+	ID3D11ShaderResourceView* SmaaProcess(COrthoWindow * window, ID3D11ShaderResourceView* input, ID3D11ShaderResourceView* areaTex, ID3D11ShaderResourceView* searchTex); //Returns SMAA texture that will be rendered on screen 
 	void PostProcess(COrthoWindow* window, ID3D11ShaderResourceView* color);
 
-	ID3D11ShaderResourceView* prepareSmaa(COrthoWindow* window, ID3D11ShaderResourceView* color, ID3D11ShaderResourceView* light, ID3D11ShaderResourceView* areaTex, ID3D11ShaderResourceView* searchTex);
+	ID3D11ShaderResourceView* prepareSmaa(COrthoWindow * window, ID3D11ShaderResourceView* input, ID3D11ShaderResourceView * areaTex, ID3D11ShaderResourceView * searchTex);
 
 	ID3D11ShaderResourceView* CreateSSAO(CDeviceClass* devclass, COrthoWindow* window, ID3D11ShaderResourceView* pos, ID3D11ShaderResourceView* normal);
 
@@ -33,20 +33,24 @@ public:
 
 	void Release();
 
-private:
-	CDeviceClass* devclass;
-	int _width, _height;
-
+	RenderTarget* smaaFinalizeTex;
 	RenderTarget* bloom;
 	RenderTarget* blurV;
+
 	RenderTarget* blurH;
-	RenderTarget* combine;
 	RenderTarget* SSAO;
 
 	//SMAA
 	RenderTarget* blendTex;
 	RenderTarget* edgesTex;
 	RenderTarget* smaaResultTex;
+private:
+	CDeviceClass* devclass;
+	int _width, _height;
+
+
+
+	RenderTarget* combine;
 
 	void GenerateSSAOSamples();
 

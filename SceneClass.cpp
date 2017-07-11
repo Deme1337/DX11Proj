@@ -19,9 +19,12 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	this->_sceneHeight = sceneheight;
 	this->mainWindow = hWnd;
 
+
 	m_DeferredBuffer = new DeferredBuffersClass();
 	
-	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth*1.5, sceneheight * 1.5, 10.0, 0.1, DXGI_FORMAT_R16G16B16A16_FLOAT);
+	renderScale = 2.0f;
+
+	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth*renderScale, sceneheight * renderScale, 10.0, 0.1, DXGI_FORMAT_R16G16B16A16_FLOAT);
 
 
 	m_DeferredShader = new DeferredShader();
@@ -341,12 +344,13 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		//	postProcessor->SetPostProcessInputs(ssaoRes, nullptr, m_Window, BlurSigma);
 		//}
 
-		ID3D11ShaderResourceView* smaaTexture = postProcessor->prepareSmaa(m_Window, postProcessTexture->GetShaderResourceView(0), postProcessTexture->GetShaderResourceView(1), areaTexture->GetTexture(), searchTexture->GetTexture());
+		ID3D11ShaderResourceView* smaaTexture = postProcessor->prepareSmaa(m_Window, postProcessor->smaaFinalizeTex->GetShaderResourceView(0), areaTexture->GetTexture(), searchTexture->GetTexture());
 
-		DevClass->Begin();
-		DevClass->SetBackBufferRenderTarget();
+
 		
 		postProcessor->PostProcess(m_Window, smaaTexture);
+
+		
 	}
 
 	

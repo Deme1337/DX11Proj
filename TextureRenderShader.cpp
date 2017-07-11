@@ -63,14 +63,14 @@ void CTextureRenderShader::SetSpecularHighLights(ID3D11DeviceContext* devcon,ID3
 
 
 bool CTextureRenderShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix,
-	XMMATRIX& projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT2 swh)
+	XMMATRIX& projectionMatrix,  XMFLOAT2 swh)
 {
 	bool result;
 
 
 	// Set the shader parameters that it will use for rendering.
 	std::vector<XMVECTOR> nullvec;
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, swh,nullvec);
+	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, swh,nullvec);
 	if (!result)
 	{
 		return false;
@@ -107,8 +107,9 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 	pixelShaderBufferBlurV   = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurVertical");
 	pixelShaderBufferBlurH   = CDeviceClass::CompileShader(psFilename, PixelShader, "BlurHorizontal");
 	pixelShaderBufferBloom   = CDeviceClass::CompileShader(psFilename, PixelShader, "BloomColors");
-	vertexShaderBuffer       = CDeviceClass::CompileShader(vsFilename, VertexShader, "TextureVertexShader");
 	pixelShaderBufferToneMap = CDeviceClass::CompileShader(psFilename, PixelShader, "ToneMapPass");
+
+	vertexShaderBuffer = CDeviceClass::CompileShader(vsFilename, VertexShader, "TextureVertexShader");
 
 #ifdef SMAA_1
 
@@ -299,7 +300,7 @@ bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, W
 	SafeRelease(pixelShaderBufferBlurH);
 	SafeRelease(pixelShaderBufferBlurV);
 	SafeRelease(pixelShaderBufferColor);
-
+	SafeRelease(pixelShaderBufferToneMap);
 #ifdef SMAA_1
 	SafeRelease(pixelShaderBufferSMAAE);
 	SafeRelease(pixelShaderBufferSMAAEC);
@@ -389,7 +390,7 @@ void CTextureRenderShader::ShutdownShader()
 
 
 	SafeRelease(m_pixelShaderToneMap);
-	return;
+
 }
 
 
@@ -430,7 +431,7 @@ void CTextureRenderShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HW
 
 
 bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix,
-	XMMATRIX& projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT2 swh, std::vector<XMVECTOR> ssaoSampl)
+	XMMATRIX& projectionMatrix,  XMFLOAT2 swh, std::vector<XMVECTOR> ssaoSampl)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -497,9 +498,6 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 	// Now set the constant buffer in the vertex shader with the updated values.
 	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_PostProcess);
 
-
-	// Set shader texture resource in the pixel shader.
-	deviceContext->PSSetShaderResources(0, 1, &texture);
 
 	return true;
 }

@@ -281,6 +281,9 @@ void GraphicsEngine::Release()
 	m_D3DDevice->Release();
 	ImGui::Shutdown();
 	m_Scene->Release();
+
+
+
 	for (size_t i = 0; i < materiallist.size(); i++)
 	{
 		materiallist[i]->ReleaseMaterial();
@@ -439,8 +442,8 @@ void GraphicsEngine::PrepareScene()
 	a[0]->UseTextures = true;
 	m_Scene->AddSceneActor(a[0],m_D3DDevice);
 
-
-	m_Scene->BlurSigma = 0.0f;
+	//Set to maximum atm gotta fix black screen bug when blur sigma is 0.00
+	m_Scene->BlurSigma = 50.0f;
 
 
 }
@@ -465,7 +468,6 @@ void GraphicsEngine::PrepareTW()
 	m_GUI->AddVariableFloat("Sun scale1: ", m_Scene->dirLight.lightProperties.scale1);
 	m_GUI->AddVariableFloat("Sun scale2: ", m_Scene->dirLight.lightProperties.scale2);
 	m_GUI->AddVariableFloat("GlobalAmbient: ", m_Scene->dirLight.lightProperties.globalAmbient);
-	m_GUI->AddVariableFloat("Blur sigma: ", m_Scene->BlurSigma);
 
 	m_GUI->AddDirectionalLight(m_Scene->dirLight);
 

@@ -37,9 +37,9 @@ public:
 	void Shutdown();
 	void UpdateTextureIndex(ID3D11DeviceContext* devcon, ID3D11ShaderResourceView* tex, int index);
 	void SetSpecularHighLights(ID3D11DeviceContext* devcon, ID3D11ShaderResourceView* tex);
-	bool Render(ID3D11DeviceContext*, int, XMMATRIX&, XMMATRIX&, XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT2 swh);
+	bool Render(ID3D11DeviceContext*, int, XMMATRIX&, XMMATRIX&, XMMATRIX&, XMFLOAT2 swh);
 
-	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX&, XMMATRIX&, XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT2 swh, std::vector<XMVECTOR> ssaoSampl);
+	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX&, XMMATRIX&, XMMATRIX&, XMFLOAT2 swh, std::vector<XMVECTOR> ssaoSampl);
 
 	void RenderShader(ID3D11DeviceContext*, int);
 
