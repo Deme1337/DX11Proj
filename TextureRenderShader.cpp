@@ -69,8 +69,8 @@ bool CTextureRenderShader::Render(ID3D11DeviceContext* deviceContext, int indexC
 
 
 	// Set the shader parameters that it will use for rendering.
-	std::vector<XMVECTOR> nullvec;
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, swh,nullvec);
+	std::vector<XMFLOAT4> nullvec;
+	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, swh, nullvec);
 	if (!result)
 	{
 		return false;
@@ -78,7 +78,6 @@ bool CTextureRenderShader::Render(ID3D11DeviceContext* deviceContext, int indexC
 
 	return true;
 }
-
 
 
 bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
@@ -431,7 +430,7 @@ void CTextureRenderShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HW
 
 
 bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX& worldMatrix, XMMATRIX& viewMatrix,
-	XMMATRIX& projectionMatrix,  XMFLOAT2 swh, std::vector<XMVECTOR> ssaoSampl)
+	XMMATRIX& projectionMatrix,  XMFLOAT2 swh, std::vector<XMFLOAT4> ssaoSampl)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -460,6 +459,7 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 	dataPtr->view = viewMatrix;
 	dataPtr->projection = projectionMatrix;
 	dataPtr->projV = projVV;
+	dataPtr->viewMat = tempViewMat;
 	// Unlock the constant buffer.
 	deviceContext->Unmap(m_matrixBuffer, 0);
 
@@ -482,6 +482,8 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 	// Copy the matrices into the constant buffer.
 	dataPtr1->expa = Exposure;
 	dataPtr1->screenWH = swh;
+	dataPtr1->ssaoBias = this->ssaoBiasAndRadius.x;
+	dataPtr1->ssaoRadius = this->ssaoBiasAndRadius.y;
 
 	
 	for (size_t i = 0; i < ssaoSampl.size(); i++)

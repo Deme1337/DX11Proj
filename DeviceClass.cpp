@@ -425,7 +425,7 @@ bool CDeviceClass::InitDeviceAndSwapChain(HWND hWnd, HINSTANCE hInst, int width,
 	screenAspect = (float)width / (float)height;
 
 	// Create the projection matrix for 3D rendering.
-	projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, 1.0f, 10000.0f);
+	projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, 0.1f, 10000.0f);
 	orthoMatrix = XMMatrixOrthographicLH(width, height, 1.0f, 10.0f);
 
 	Initialized = true;

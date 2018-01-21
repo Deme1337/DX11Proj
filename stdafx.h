@@ -61,23 +61,26 @@ namespace Keys
 
 // wide char to multi byte:
 std::string ws2s(const std::wstring& wstr);
-
+std::wstring s2ws(const std::string& s);
 
 
 
 //get file name from path
 std::vector<std::string> SplitPath(const std::string& str, const std::set<char> delimiters);
 
+//get files from folder
+std::vector<std::string> GetFileNamesFromFolder(std::wstring folderpath);
 
 
-
+static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
+std::wstring BrowseFolder(std::string saved_path);
 
 //Safe release from http://www.3dgep.com/introduction-to-directx-11/#DXGI
 // Safely release a COM object.
 template<typename T>
 inline void SafeRelease(T& ptr)
 {
-	if (ptr != NULL)
+	if (ptr != NULL || ptr != nullptr)
 	{
 		ptr->Release();
 		ptr = NULL;
@@ -98,34 +101,10 @@ public:
 	{
 	}
 
-	/*
-	// assignment operator
-	TInitZero<T> &operator=(const T& in)
-	{
-	Value = in;
-	return *this;
-	}
-	*/
-
 	operator const T() const
 	{
 		return Value;
 	}
-
-	/*
-	const T& T::operator++()
-	{
-	++itsVal;
-	return *this;
-	}
-
-	const T T::operator++(int)
-	{
-	T temp(*this);
-	++itsVal;
-	return temp;
-	}
-	*/
 
 
 	T operator ->() const

@@ -194,21 +194,12 @@ bool CAntUI::InitializeTW(CDeviceClass *devclass, int width, int height,SceneCla
 	TwDefine(" Main label = 'Scene Parameters' position = '1200 10' size='600 300'");
 
 
-	loaderBar = TwNewBar("Loader");
 
 	lightBar = TwNewBar("Lights");
 
-	TwDefine(" Loader label = 'Object load' position = '1600 500'");
 
 	TwDefine(" Lights label = 'Light properties' position = '500 800' size='500 400' ");
 
-	TwAddVarRW(loaderBar, "Load: ", TW_TYPE_STDSTRING, &ModelPathLoad, "");
-
-	TwAddButton(loaderBar, "Load Model", LoadModelS, this, "");
-	TwAddButton(loaderBar, "Delete Model", DeleteActor, this, "");
-	TwAddButton(loaderBar, "Save Scene",SaveSceneS , this, "");
-	TwAddButton(loaderBar, "Load Scene", LoadSceneS, this, "");
-	TwAddButton(loaderBar, "Point light off", PointLightOff, this, "");
 	return true;
 }
 
@@ -218,6 +209,11 @@ void CAntUI::AddVariableString(const char * name, std::string &var)
 }
 
 void CAntUI::AddVariableXMfloat(const char * name, XMFLOAT4 &var)
+{
+	TwAddVarRW(testBar, name, TW_TYPE_DIR3F, &var, "");
+}
+
+void CAntUI::AddVariableXMfloat(const char * name, XMFLOAT3 & var)
 {
 	TwAddVarRW(testBar, name, TW_TYPE_DIR3F, &var, "");
 }
@@ -238,6 +234,7 @@ void CAntUI::AddDirectionalLight(DirectionalLight& dlight)
 	TwAddVarRW(lightBar, "Light color: ", TW_TYPE_DIR3F, &dlight.lightProperties.Color, "");
 	TwAddVarRW(lightBar, "Light projection matrix: ", TW_TYPE_DIR3F, &dlight.lightProjectionF, "");
 }
+
 
 void CAntUI::AddPointLights(std::vector<PointLight> &plight)
 {

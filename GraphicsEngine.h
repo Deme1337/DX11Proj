@@ -11,9 +11,8 @@
 
 class GraphicsEngine
 {
-private:
-	TcpClass GuiMessager;
-public:
+
+public: //Functions
 	GraphicsEngine();
 	~GraphicsEngine();
 
@@ -22,46 +21,75 @@ public:
 	void Release();
 
 	void UpdateWindow(int x, int y);
+
+public: //Objects
+
+public: //Variables
+
 	bool _vSyncEnabled = false;
+	bool gUseTerrain = false;
 
-private:
-
-	std::vector<Material*> materiallist;
+private: //Functions
 
 	void SetImgui();
-
+	void GenerateFoliage();
 
 	SIZE_T GetTotalMemory();
+
+	void CustomizeActorSpriteSheet();
+	void AddSpriteSheetToObject();
 
 	void LoadMaterialTexture(const char* type);
 
 	void SaveScene();
-
+	bool LoadSceneFromFile();
 	void PrepareScene();
 	void PrepareTW();
 	void GetHwndSize(HWND hWnd, int &width, int &height);
 
-	CDeviceClass *m_D3DDevice;
+private: //Objects
 
+	TcpClass GuiMessager;
+	CDeviceClass *m_D3DDevice;
 	SceneClass* m_Scene;
 	CAntUI* m_GUI;
 	HWND mainWindow;
+	Actor* a[11];
 
-	const char** actorListNames;
-	std::vector<std::string> materialNames;
-
-	
-	std::string GPUinfo;
+	std::vector<Material*> materiallist;
+	std::vector<Actor*> LoadedActorList;
+	std::ofstream SaveFile;
 
 	TinyTextContext_c textContext;
-	int _sampleCount = 1;
-	bool FullScreen = false;
-	unsigned int ObjectSelectedIndex = 0;
-	int materialIndex = 0;
-	bool matListUpdated = false;
+
+private: //Variables
+
+	std::vector<std::string> materialNames;
+	std::vector<std::string> ActorNames;
 
 	std::string SceneInitTime;
-	Actor* a[11];
+	std::string GPUinfo;
+	std::string gSceneName = " ";
+
+	char* sceneNameBuffer = " ";
+	const char** actorListNames;
+
+	int SpriteSheetIndex = 0;
+	int materialIndex = 0;
+	int _sampleCount = 1;
+
+	//Index of the selected object
+	int ObjectSelectedIndex = 0;
+
+
+	bool matListUpdated = false;
+	bool FullScreen = false;
+
+	float ssaoBias = 3.0f;
+	float ssaoRadius = 32.5f;
+
+
+
 };
 
 #endif

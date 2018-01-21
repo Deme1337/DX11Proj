@@ -29,6 +29,8 @@ public:
 	
 	void AddVariableString(const char* name, std::string &var);
 	void AddVariableXMfloat(const char* name, XMFLOAT4 &var);
+	void AddVariableXMfloat(const char* name, XMFLOAT3 &var);
+
 	void AddVariableFloat(const char* name, float &var);
 	void AddVariableBoolean(const char* name, bool &var);
 

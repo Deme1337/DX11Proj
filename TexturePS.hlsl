@@ -6,25 +6,43 @@ Texture2D areaTexture : register(t2);
 Texture2D positionTex   : register(t3);
 Texture2D normalTex     : register(t4);
 
+
+
 Texture2D searchTex : register(t5);
 Texture2D edgesTex : register(t6);
 Texture2D blendTex : register(t7);
 
 Texture2D smaaReadyTex : register(t8);
 
+Texture2D tangentTex : register(t9);
+Texture2D bitangentTex : register(t10);
+
 SamplerState SampleType;
+
+SamplerState SamplerWrap
+{
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
+    MaxAnisotropy = 1;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
 
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
-	matrix projection : TEXCOORD1;
+    matrix projectionMatrix : TEXCOORD1;
+    matrix viewMatrix : TEXCOORD10;
 };
 
 cbuffer PostProcessData : register(b0)
 {
 	float2 screenWH;
 	float expa;
+    float ssaoBias;
+    float ssaoRadius;
 	float4 ssaoKernel[64];
 };
 
@@ -69,7 +87,7 @@ struct SmaaPSInputType3
     float4 offset : TEXCOORD1;
 };
 
-
+#include "ToneMapping.hlsl"
 
 float2 SmaaPSStage1(SmaaPSInputType1 input) : SV_TARGET
 {
@@ -89,14 +107,40 @@ float4 SmaaPSStage3(SmaaPSInputType3 input) : SV_TARGET
 
 
 
+float4 ssaoBlur(PixelInputType input) : SV_TARGET
+{
+    float4 blurredColor = 1.0f;
 
+
+
+    return blurredColor;
+}
 
 
 // Performs a gaussian blur in one direction
-float4 Blur(PixelInputType input, Texture2D shaderTexture, float2 texScale, float sigma, bool nrmlize)
+float4 Blur1(PixelInputType input, float2 texScale, float sigma)
+{
+    float2 inputSize = 0.0f;
+    specHighTex.GetDimensions(inputSize.x, inputSize.y);
+
+    float4 color = 0;
+    for (int i = -6; i < 6; i++)
+    {
+        float weight = CalcGaussianWeight(i, sigma);
+        float2 texCoord = input.tex;
+        texCoord += (i / inputSize) * texScale;
+        float4 sample = specHighTex.Sample(PointSampler, texCoord);
+        color += sample * weight;
+    }
+
+    return color;
+}
+
+// Performs a gaussian blur in one direction
+float4 Blur(PixelInputType input, Texture2D shaderTexture1, float2 texScale, float sigma, bool nrmlize)
 {
 	float2 inputSize = 0.0f;
-	shaderTexture.GetDimensions(inputSize.x, inputSize.y);
+    shaderTexture1.GetDimensions(inputSize.x, inputSize.y);
 
 	float4 color = 0;
 	float weightSum = 0.0f;
@@ -108,7 +152,7 @@ float4 Blur(PixelInputType input, Texture2D shaderTexture, float2 texScale, floa
 		weightSum += weight;
 		float2 texCoord = input.tex;
 		texCoord += (i / inputSize) * texScale;
-		float4 samples = shaderTexture.Sample(SampleType, texCoord);
+        float4 samples = shaderTexture1.Sample(SampleType, texCoord);
 		color += samples * weight;
 	}
 
@@ -148,18 +192,6 @@ float4 LuminanceMap(float2 texcoord)
 	return float4(luminance, 1.0f, 1.0f, 1.0f);
 }
 
-//Jim Heijl & Richard Burgess-Dawson
-float4 ToneMap(float4 TexColor)
-{
-	float3 TexCol = TexColor.rgb;
-	TexCol *= 16;
-
-	float3 x = max(0, TexColor - 0.004);
-	
-	float3 retColor = (x*(6.2*x + .5)) / (x* (6.2*x + 1.7) + 0.06);
-
-	return float4(retColor, 1.0f);
-}
 
 
 // Determines the color based on exposure settings
@@ -197,9 +229,9 @@ float4 Threshold(float2 texcoord)
 float4 Bloom(PixelInputType input)
 {
 	
-	float4 reds   = specHighTex.GatherRed(  SampleType, input.tex,int2(1,1));
+	float4 reds   = specHighTex.GatherRed  (SampleType, input.tex, int2(1, 1));
 	float4 greens = specHighTex.GatherGreen(SampleType, input.tex, int2(1, 1));
-	float4 blues = specHighTex.GatherBlue(SampleType, input.tex, int2(1, 1));
+	float4 blues  = specHighTex.GatherBlue (SampleType, input.tex, int2(1, 1));
 
 	float3 result = 0.0f;
 
@@ -242,7 +274,7 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 	if (sigma > 0.1)
 	{
 
-		textureColor *= ToneMap(textureColor);
+		//textureColor *= ToneMap(textureColor);
 		textureColor += (Bloom(input) + (Blur(input, specHighTex, float2(0, 1), sigma, false) + Blur(input, specHighTex, float2(1, 0), sigma, false)));
 	}
 	
@@ -255,13 +287,13 @@ float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 float4 BlurVertical(PixelInputType input) : SV_TARGET
 {
 	float sigma = expa;
-	return Blur(input, specHighTex, float2(0, 1), sigma, false);
+	return Blur1(input, float2(0, 1), sigma);
 }
 
 float4 BlurHorizontal(PixelInputType input) : SV_TARGET
 {
 	float sigma = expa;
-	return Blur(input, specHighTex, float2(1, 0), sigma, false);
+    return Blur1(input, float2(1, 0), sigma);
 }
 
 
@@ -293,23 +325,13 @@ float4 Combine(PixelInputType input) : SV_TARGET
 	fColors.tex = specHighTex;
 	textureColor1 = float4(FxaaPixelShader(TexPos, fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
 
-    return textureColor + pow(ToneMap(textureColor1), 2.2);
+    if (expa <= 0.01)
+        return textureColor;
+    else
+        return textureColor + textureColor1;
       
 	
 }
-
-
-/*
-float4 Combine(PixelInputType input) : SV_TARGET
-{
-
-    //return blendTex.Sample(SampleType, input.tex);
-    //return areaTexture.Sample(SampleType, input.tex);
-    //return searchTex.Sample(SampleType, input.tex);
-    //return edgesTex.Sample(SampleType, input.tex);
-    return smaaReadyTex.Sample(SampleType, input.tex);
-}
-*/
 
 float4 ToneMapPass(PixelInputType input) : SV_Target
 {
@@ -319,7 +341,7 @@ float4 ToneMapPass(PixelInputType input) : SV_Target
 
     float4 texColor = 0.0f;
 
-    texColor = ToneMap(smaaReadyTex.Sample(SampleType, TexPos));
+    texColor = float4(tonemap_filmic(smaaReadyTex.Sample(SampleType, TexPos).rgb), 1.0f);
 
 
     return pow(texColor,2.2);
@@ -329,39 +351,44 @@ float4 ToneMapPass(PixelInputType input) : SV_Target
 //http://www.learnopengl.com/#!Advanced-Lighting/SSAO changed to hlsl
 float4 SSAO(PixelInputType input) : SV_TARGET
 {
-	float3 position = positionTex.Sample(SampleType, input.tex).xyz;
-	float3 normal = normalTex.Sample(SampleType, input.tex).xyz;
-	float3 randomF = areaTexture.Sample(SampleType, input.tex).xyz;
+    float2 noiseScale = float2(screenWH.x / 4.0f, screenWH.y / 4.0f);
 
-	float3 tangent = normalize(randomF - normal * dot(randomF, normal));
-	float3 bitangent = cross(normal, tangent);
+	float4 position = positionTex.Sample(SampleType, input.tex).xyzw;
+	float3 normal = normalTex.Sample(SampleType, input.tex).xyz;
+    float3 randomF = areaTexture.Sample(SamplerWrap, input.tex * noiseScale).xyz * 2.0f - 1.0f;
+
+    float3 tangent = tangentTex.Sample(SampleType, input.tex);
+    float3 bitangent = bitangentTex.Sample(SampleType, input.tex);
+
+    matrix TBN = float4x4(float4(tangent, 1.0), float4(bitangent, 1.0f), float4(normal, 1.0f), float4(0.0f, 0.0f, 0.0f, 1.0f));
 
 	float occlusion = 0.0f;
 
-	float radius = 100.0f;
-	
-	float2 noiseScale = float2(screenWH.x / 4.0f, screenWH.y / 4.0f);
+    float radius = ssaoRadius;
+    float bias = ssaoBias;
+    float sampleDepth1 = positionTex.Sample(SampleType, input.tex).w;
 
 	for (int i = 0; i < 64; i++)
 	{
-		float3 sample = tangent * bitangent * normal *  ssaoKernel[i].xyz;
-		sample = position + sample * radius;
+        float3 sample = mul(TBN, saturate(ssaoKernel[i]));
+		sample = position.xyz + sample * radius;
 
 		float4 offset = float4(sample, 1.0f);
 
-		offset = mul(input.projection, offset);
-		offset.xyz /= offset.w; // perspective divide
-		offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
+        //offset = mul(input.projectionMatrix, offset);
+		//offset.xyz /= offset.w; // perspective divide
+	    //offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
 		
-		float sampleDepth = -positionTex.Sample(SampleType, offset.xy).w;
+		float sampleDepth = positionTex.Sample(SampleType, offset.xy).w;
 
+		float rangeCheck = smoothstep(0.0f, 1.0, radius / abs(position.w  - sampleDepth));
 
-		float rangeCheck = smoothstep(0.0f, 1.0f, radius / abs(position.z  - sampleDepth + 0.000005));
-
-		occlusion += (sampleDepth >= sample.z ? 1.0f : 0.0f) * rangeCheck;
-	}
+        occlusion += (sampleDepth >= sample.z - bias ? 1.0f : 0.0f) * rangeCheck;
+    }
 
 	occlusion = 1.0f - (occlusion / 64);
 
-	return occlusion;
+    return float4(occlusion, occlusion, occlusion, 1.0f);
+    //return float4(sampleDepth1, sampleDepth1, sampleDepth1, 1.0f);
+    //return float4(randomF, 1.0f);
 }					  

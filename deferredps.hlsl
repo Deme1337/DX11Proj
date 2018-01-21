@@ -13,6 +13,7 @@ cbuffer	ObjectData
 	int UseTextures;
 	float roughnessOffset;
 	float metallic;
+    int IsPaper;
 };
 
 struct PixelInputType
@@ -52,45 +53,60 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
     {
         discard;
     }
-	if (UseTextures > 0.9)
-	{
-		// Sample the color from the texture and store it for output to the render target.
-		output.color = shaderTexture.Sample(SampleTypeWrap, input.tex).xyz;
-		output.specular.x = shaderSpecular.Sample(SampleTypeWrap, input.tex).x;
-		output.specular.y = metallic;
 
-		float3 bumpMap = shaderBumpMap.Sample(SampleTypeWrap, input.tex);
+    if (IsPaper == 1)
+    {
+        output.color = shaderTexture.Sample(SampleTypeWrap, input.tex).xyz * 2;
+        output.normal = float4(1.0f, 1.0f, 1.0f, 0.8f);
+        output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
+        output.position = input.worldPosition;
+        output.roughness = float4(1.0f, 1.0f, 1.0f, 1.0f);
+        output.tangent = float4(input.tangent, 1.0f) * 2.0f - 1.0f;
+        output.binormal = float4(input.binormal, 1.0) * 2.0f - 1.0f;
+        return output;
+    }
+    else
+    {
+        if (UseTextures > 0.9)
+        {
+	        // Sample the color from the texture and store it for output to the render target.
+            output.color = shaderTexture.Sample(SampleTypeWrap, input.tex).xyz;
+            output.specular.x = shaderSpecular.Sample(SampleTypeWrap, input.tex).x;
+            output.specular.y = metallic;
 
-		bumpMap = (bumpMap * 2.0f) - 1.0f;
+            float3 bumpMap = shaderBumpMap.Sample(SampleTypeWrap, input.tex);
 
-		// Calculate the normal from the data in the bump map.
-		float3 bumpNormal = (bumpMap.x * input.tangent) + (bumpMap.y * input.binormal) + (bumpMap.z * input.normal);
+            bumpMap = (bumpMap * 2.0f) - 1.0f;
+
+	        // Calculate the normal from the data in the bump map.
+            float3 bumpNormal = (bumpMap.x * input.tangent) + (bumpMap.y * input.binormal) + (bumpMap.z * input.normal);
 	
-		output.normal = float4(bumpNormal, 1.0f);
+            output.normal = float4(bumpNormal, 1.0f);
 
-		output.position = input.worldPosition;
+            output.position = input.worldPosition;
+            output.position.w = input.position.z;
+            output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex).x + roughnessOffset;
 
-		output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex).x + roughnessOffset;
+            output.tangent = float4(input.tangent, 1.0f) * 2.0f - 1.0f;
+            output.binormal = float4(input.binormal, 1.0) * 2.0f - 1.0f;
 
-		output.tangent = float4(input.tangent, 1.0f) * 2.0f - 1.0f;
-		output.binormal = float4(input.binormal, 1.0)* 2.0f - 1.0f;
+        }
+        else
+        {
+            output.color = objColor;
+            output.specular.x = 1.0f;
+            output.specular.y = metallic;
+            output.position = input.worldPosition;
+            output.normal = float4(input.normal, 1.0f);
+            output.roughness = 1.0f + roughnessOffset;
 
-	}
-	
-	else
-	{
-		output.color = objColor;
-		output.specular.x = 1.0f;
-		output.specular.y = metallic;
-		output.position = input.worldPosition;
+            output.position.w = input.position.z;
+            output.tangent = float4(input.tangent, 1.0f);
+            output.binormal = float4(input.binormal, 1.0);
+        }
 
-		output.normal = float4(input.normal,1.0f);
-		output.roughness = 1.0f + roughnessOffset;
+    }
 
-
-		output.tangent = float4(input.tangent, 1.0f);
-		output.binormal = float4(input.binormal,1.0);
-	}
 
 
 	

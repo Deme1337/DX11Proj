@@ -32,6 +32,10 @@ public:
 
 	//Loads tga image
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
+
+
+	bool NoiseTexture(ID3D11Device* dev, ID3D11DeviceContext* devcon);
+
 	//Loads texture using free image library
 	bool LoadFreeImage(ID3D11Device*, ID3D11DeviceContext*, const char*);
 	bool LoadCubeMap(ID3D11Device* dev, ID3D11DeviceContext* devcon, std::vector<std::string> images);

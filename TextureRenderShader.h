@@ -17,13 +17,16 @@ private:
 		XMMATRIX view;
 		XMMATRIX projection;
 		XMMATRIX projV;
+		XMMATRIX viewMat;
 	};
 
 	struct PostProcessData
 	{
 		XMFLOAT2 screenWH;
 		float expa;
-		XMVECTOR ssaoSampl[64];
+		float ssaoBias = 0.025f;
+		float ssaoRadius = 1.5f;
+		XMFLOAT4 ssaoSampl[64];
 	};
 
 public:
@@ -33,13 +36,17 @@ public:
 
 	float Exposure = 0.0f;
 
+	XMFLOAT2 ssaoBiasAndRadius;
+
 	bool Initialize(CDeviceClass *devclass, HWND);
 	void Shutdown();
 	void UpdateTextureIndex(ID3D11DeviceContext* devcon, ID3D11ShaderResourceView* tex, int index);
 	void SetSpecularHighLights(ID3D11DeviceContext* devcon, ID3D11ShaderResourceView* tex);
 	bool Render(ID3D11DeviceContext*, int, XMMATRIX&, XMMATRIX&, XMMATRIX&, XMFLOAT2 swh);
 
-	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX&, XMMATRIX&, XMMATRIX&, XMFLOAT2 swh, std::vector<XMVECTOR> ssaoSampl);
+	void SetProjectionMatix(XMMATRIX &mat);
+
+	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX&, XMMATRIX&, XMMATRIX&, XMFLOAT2 swh, std::vector<XMFLOAT4> ssaoSampl);
 
 	void RenderShader(ID3D11DeviceContext*, int);
 
@@ -81,10 +88,9 @@ public:
 	ID3D11PixelShader* m_SMAABlendingWeightPS;
 	ID3D11PixelShader* m_SMAANeighborhoodBlendPS;
 
+	XMMATRIX tempViewMat;
+
 private:
-
-
-	
 
 	CDeviceClass* devclass;
 	ID3D11InputLayout* m_layout;

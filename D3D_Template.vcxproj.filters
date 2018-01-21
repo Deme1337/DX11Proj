@@ -159,6 +159,15 @@
     <ClInclude Include="Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneSaver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -248,9 +257,6 @@
     <ClCompile Include="imgui-master\imgui.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="imgui-master\imgui_demo.cpp">
-      <Filter>GUI\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="imgui-master\imgui_draw.cpp">
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
@@ -258,6 +264,18 @@
       <Filter>GUI\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui-master\imgui_demo.cpp">
+      <Filter>GUI\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneSaver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -312,6 +330,15 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="SMAA.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="ToneMapping.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="TerrainPS.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="TerrainVS.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

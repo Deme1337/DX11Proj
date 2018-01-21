@@ -28,6 +28,7 @@ private:
 		XMVECTOR LightColor;
 		XMMATRIX lightViewMatrix;
 		XMMATRIX lightProjectionMatrix;
+		XMMATRIX viewMatrix;
 		float GlobalAmbient;
 	};
 
@@ -53,6 +54,8 @@ private:
 public:
 	LightShader();
 	~LightShader();
+
+	XMMATRIX tempViewMatrix;
 
 	bool Initialize(CDeviceClass *devclass, WCHAR* vsFilename, WCHAR* psFilename);
 

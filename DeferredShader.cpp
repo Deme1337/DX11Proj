@@ -220,7 +220,7 @@ void DeferredShader::UpdateTextureRough(CDeviceClass * devclass, ID3D11ShaderRes
 	devclass->GetDevCon()->PSSetShaderResources(3, 1, &texture);
 }
 
-void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMATRIX & view, XMMATRIX & projection, bool HasAlpha, float texoffset)
+void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMATRIX & view, XMMATRIX & projection, bool HasAlpha, XMFLOAT2 texOffSets)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -247,7 +247,8 @@ void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMA
 	dataPtr->world = world;
 	dataPtr->view = XMMatrixMultiply(projection, view);
 	dataPtr->HasAlpha = HasAlpha;
-	dataPtr->texOffSet = texoffset;
+	dataPtr->texOffSetX = texOffSets.x;
+	dataPtr->texOffSetY = texOffSets.y;
 	//dataPtr->projection = projection;
 
 	// Unlock the constant buffer.
@@ -282,6 +283,7 @@ void DeferredShader::SetObjectData(CDeviceClass * devclass, XMFLOAT4 data, XMFLO
 	dataPtr->roughnessOffset = data.y;
 	dataPtr->metallic = data.z;
 	dataPtr->objColor = objcolor;
+	dataPtr->IsPaper = ObjectIs2DAnimated;
 
 	devclass->GetDevCon()->Unmap(m_ObjDataBuffer, 0);
 

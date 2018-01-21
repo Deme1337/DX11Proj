@@ -18,6 +18,8 @@
 #include "Skydome.h"
 #include "SkyDomeShader.h"
 #include "PostProcessor.h"
+#include "Terrain.h"
+#include "TerrainShader.h"
 
 #include <vector>
 
@@ -33,6 +35,7 @@ public:
 	void GeometryPass(CDeviceClass *DevClass);
 	void LightPass(CDeviceClass *DevClass);
 
+
 	void AddSceneActor(Actor* a, CDeviceClass* devc);
 
 	XMFLOAT4 subspectintani = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -44,16 +47,25 @@ public:
 	int viewPortOffSet = -330;
 	std::string SceneName = ""; 
 
+	CTerrain *terrain;
+	CSkydome *m_SkyDome;
+
 	std::vector<Actor*> m_Actors;
 	std::vector<PointLight> pointLights;
 
+	float maxObjectDrawDistance = 5000.0f;
+	float minObjectDrawDistance = -5000.0f;
+
+	bool DrawTerrain = false;
 	 
 	float BlurSigma = 19.0f;
+	XMFLOAT2 ssaoBiasAndRadius;
 	DirectionalLight dirLight;
 	
 	CSkydome* GetSkyDome() { return this->m_SkyDome; }
 	FreeCamera* GetCamera() { return this->m_Camera; }
 private:
+	void RenderTerrainGPass(CDeviceClass *DevClass);
 
 	void HandleSceneInput();
 
@@ -63,9 +75,10 @@ private:
 	const int POINT_LIGHT_COUNT = 40;
 
 	bool ShadowUseFrontCulling = false;
+	bool UseOrthoCamera = false;
 
-	CSkydome* m_SkyDome;
 	CSkyDomeShader* m_SkyDomeShader;
+	CTerrainShader *terrainShader;
 
 	ShadowMapRenderTarget* shadowMap;
 
@@ -85,6 +98,8 @@ private:
 	bool ApplyPostProcess = true;
 	int _sceneWidth, _sceneHeight;	
 
+
+
 	PostProcessor* postProcessor;
 	CRenderToTexture* postProcessTexture;
 	
@@ -92,6 +107,7 @@ private:
 	CTextureTA* irradianceMap;
 	CTextureTA* areaTexture;
 	CTextureTA* searchTexture;
+	CTextureTA* ssaoNoiseTexture;
 };
 
 

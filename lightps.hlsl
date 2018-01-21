@@ -32,6 +32,7 @@ cbuffer LightBuffer: register(b0)
 	float4 lightColor;
 	matrix lightViewMatrix;
 	matrix lightProjectionMatrix;
+    matrix viewMatrix;
 	float globalAmbient; 
 };
 
@@ -43,26 +44,18 @@ cbuffer PointLightBuffer: register(b1)
 	float4 PointLightColor[POINT_LIGHT_COUNT];
 };
 
-/*
-#define g_Subsurface            0.0f
-#define g_Specular              0.0f
-#define g_SpecularTint          0.0f
-#define g_Anisotropic           0.0f
-#define g_Sheen                 0.0f
-#define g_SheenTint             0.0f
-#define g_Clearcoat             0.0f
-#define g_ClearcoatGloss        0.0f
-
-*/
-
-
-
 struct PixelInputType
 {
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
 	float3 viewDir : TEXCOORD1;
 
+};
+
+struct LightPixelShaderOutput
+{
+    float4 color : SV_Target0;
+    float4 specular : SV_Target1;
 };
 
 #include "Commons.hlsl"
@@ -160,64 +153,6 @@ float3 ApproximateSpecularIBL(float3 SpecularColor, float Roughness, float3 N, f
 	return PrefilteredColor * (SpecularColor * EnvBRDF.x + EnvBRDF.y);
 }
 
-float G1V(float dotNV, float k)
-{
-	return 1.0f / (dotNV*(1.0f - k) + k);
-}
-
-float LightingFuncGGX_REF(float3 N, float3 V, float3 L, float roughness, float F0, float2 texCoord)
-{
-	float alpha = roughness*roughness;
-
-	float3 H = normalize(V + L);
-
-	float specAlbedoX = specularTexture.Sample(SampleTypePoint, texCoord).r;
-
-	float3 specAlbedo = float3(specAlbedoX, specAlbedoX, specAlbedoX);
-
-	float dotNL = saturate(dot(N, L));
-	float dotNV = saturate(dot(N, V));
-	float dotNH = saturate(dot(N, H));
-	float dotLH = saturate(dot(L, H));
-	float dotVH = saturate(dot(V, H));
-	float dotLV = saturate(dot(L, V));
-
-	float F, D, vis;
-
-	// D
-	float alphaSqr = alpha*alpha;
-	float pi = 3.14159f;
-	float denom2 = (dotNH * alphaSqr - dotNH) * dotNH + 1;
-	//float denom = dotNH * dotNH *(alphaSqr - 1.0) + 1.0f;
-	D = alphaSqr / (pi * denom2 * denom2);
-	//D = Specular_D(alpha, dotNH);
-	//D = GTR1(dotNH, alpha);
-	
-
-
-	// F
-	float dotLH5 = pow(1.0f - dotLH, 5);
-	//F = F0 + (1.0 - F0)*(dotLH5);
-	F = Specular_F(specAlbedo, H, V);
-
-	// V
-	//float k = alpha / 2.0f;
-	//vis = G1V(dotNL, k)*G1V(dotNV, k);
-	vis = Specular_G(alpha, dotNV, dotNL, dotNH, dotVH, dotLV);
-
-
-	float specular = dotNL * D * F * vis;
-
-	
-	return saturate(specular);
-}
-
-struct LightPixelShaderOutput
-{
-	float4 color : SV_Target0;
-	float4 specular : SV_Target1;
-};
-
 float4 CalculateEnvironmentMap(float3 normals, float3 viewDir, float roughness)
 {
 	float a = roughness;
@@ -228,229 +163,52 @@ float4 CalculateEnvironmentMap(float3 normals, float3 viewDir, float roughness)
 	envMap = pow(envMap, 2.2);
 	return envMap;
 }
-/*
-float4 PointLightCalculation(float4 Ppos, float4 Pcolor, float4 ColorTex, float3 Normals, 
-	float Spec, float Roughness, float4 FragPos, float3 View, float2 texCoord)
+
+//Cook torrance lighting N = normal, V = View, L = light, a = roughness, albedo = color, metallic = specular texture
+float3 CookTorrance(float3 N, float3 V, float3 L, float a, float3 albedo, float metallic, float3 radiance)
 {
-	float4 PointLightColor = 0.0f;
-	float4 DiffuseColor = 0.0f;
-	float4 SpecularColor = 0.0f;
+    float3 H = normalize(V + L);
+    float3 F0 = 0.03f.xxx;
+    float3 Cook = 0.0f;
 
+    float3 metallic1 = float3(metallic, metallic, metallic);
 
-	
-	//Diffuse color
-	float3 lightDir = normalize(Ppos - FragPos);
-	float NdotL = saturate(dot(Normals, lightDir));
-
-	if (NdotL < 0.0f)
-	{
-		return float4(0.0f,0.0f,0.0f,1.0f);
-	}
-
-
-
-	//Specular color
-	SpecularColor = LightingFuncGGX_REF(Normals, View, lightDir, Roughness, 0.1f, texCoord) * Pcolor;
-
-	float4 envMap = CalculateEnvironmentMap(Normals.xyz, View, Roughness);
-
-	float4 envFresnel = float4(Specular_F_Roughness(SpecularColor.rgb, Roughness * Roughness, Normals, View), 1.0);
-
-	DiffuseColor = Pcolor * NdotL * ColorTex;// envMap*envFresnel;
-
-	float dist = length(Ppos - FragPos);
-	float atten = 10.0f / (1.0f + 0.09 * dist + 0.032 * (dist * dist));
-
-
-	SpecularColor *= atten;
-	float pi = 3.14159f;
-	DiffuseColor *= atten * (1 / pi);
-
-	PointLightColor = DiffuseColor + SpecularColor;
-
-	return PointLightColor;
-}
-*/
-
-/*
-LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
-{
-	LightPixelShaderOutput output;
-
-	float4 colors;
-	float4 normals;
-	float3 lightDir;
-	float lightIntensity;
-	float4 outputColor;
-	float4 ambientLight = globalAmbient;
-	float4 specularColor;
-
-	
-	
-	// Sample the colors from the color render texture using the point sampler at this texture coordinate location.
-	colors = colorTexture.Sample(SampleTypePoint, input.tex);
-
-	colors = pow(colors, 1.2);
-
-	// Sample the normals from the normal render texture using the point sampler at this texture coordinate location.
-	normals = normalTexture.Sample(SampleTypePoint, input.tex);
-
-	specularColor = specularTexture.Sample(SampleTypePoint, input.tex);
-	
-	float4 Irradiance = irradianceTexture.Sample(SampleTypePoint, input.tex);
-
-	ambientLight *= Irradiance;
-	
-	
-	// Invert the light direction for calculations.
-    lightDir = -lightDirection.xyz;
-
-	float4 positionTex = positionTexture.Sample(SampleTypePoint, input.tex);
-	
-
-	
-
-	
-	float4 lightMatrix = mul(positionTex, lightViewMatrix);
-	lightMatrix = mul(lightMatrix, lightProjectionMatrix);
-	
-	float shadow = shadowAA(shadowMapTexture, SampleTypeShadow, lightMatrix);
-
-
-	//input.viewDir is actually camera position
-	float3 viewDirection = normalize(input.viewDir - positionTex.xyz);
-	
-	float3 H = normalize(lightDir + viewDirection);
-
-    // Calculate the amount of light on this pixel.
-    lightIntensity = saturate(dot(normals.xyz, lightDir));
-	
-	//float4 irradiance = irradianceTexture.SampleLevel(SamplerAnisotropic, normals, 0);
-	
-	ambientLight *= colors;
-
-	
-
-	float a = roughnessTexture.Sample(SampleTypePoint, input.tex).x;
-	
-
-	float3 DiffuseLight;
-	float4 specularLight;
-
-	
-	//Reflection
-	float4 envMap = CalculateEnvironmentMap(normals.xyz, viewDirection, a);
-	
-
-	DiffuseLight = colors * lightColor;
-	
-
-	specularLight = LightingFuncGGX_REF(normals.xyz, viewDirection, lightDir, a, 0.1f, input.tex) * lightColor;
-
-	float4 envFresnel = float4(Specular_F_Roughness(specularLight.rgb, a * a, normals.xyz, viewDirection), 1.0);
-	
-	DiffuseLight = DiffuseLight + envMap.xyz * envFresnel.xyz;
-	
-
-	float pi = 3.14159f;
-	//DiffuseLight *= (1 / pi);
-
-
-	float4 PointLightVal = 0.0f;
-
-	for (int i = 0; i < POINT_LIGHT_COUNT; i++)
-	{
-		if (PointLightColor[i].r > 0.0f || PointLightColor[i].g > 0.0f|| PointLightColor[i].b > 0.0f || PointLightColor[i].a> 0.0f)
-		{
-			PointLightVal += PointLightCalculation(PointLightPosition[i], PointLightColor[i], colors, normals, specularColor.r, a, positionTex, viewDirection, input.tex);
-		}
-	}
-
-	output.color = ambientLight;
-
-	
-
-	if (length(lightColor.xyz) > 0.01f)
-	{
-		output.color += saturate(lightIntensity * (float4(DiffuseLight, 1.0)  * shadow));
-	}
-	
-
-
-	
-	output.color += PointLightVal;
-
-
-
-	if (length(output.color) > 0.98f)
-	{
-		output.specular = saturate((lightIntensity * (float4(DiffuseLight, 1.0)  + specularLight )) + PointLightVal);
-		output.specular.w = 1.0;
-	}
-	
-	else
-	{
-		output.specular = float4(0.0,0.0,0.0,0.5);
-	}
-	
-	//check if it is skydome so use only color
-	if (normals.w < 1.0f)
-	{
-		output.color = colors;
-		output.specular = float4(0.0, 0.0, 0.0, 0.5);
-	}
-		
-
-	
-	
-
-	return output;
-}
-*/
-
-
-
-
-
-/*
-
-LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
-{
-    LightPixelShaderOutput output;
-    float Ambient = globalAmbient;
-    float4 color = 0.0f;
-
-   
-
-    float4 Albedo = colorTexture.Sample(SampleTypePoint, input.tex);
-    float1 specularColor = specularTexture.Sample(SampleTypePoint, input.tex).r;
-    float4 normals = normalTexture.Sample(SampleTypePoint, input.tex);
-    float roughness = roughnessTexture.Sample(SampleTypePoint, input.tex).r;
-
-
-    float3 lightDir = normalize(lightDirection.xyz);
-    float4 positionTex = positionTexture.Sample(SampleTypePoint, input.tex);
-    float3 viewDirection = normalize(input.viewDir - positionTex.xyz);
-
-    float3 realSpec = lerp(0.03f.xxx, Albedo.xyz, specularColor);
-    float3 diffuseC =  CalculateEnvironmentMap(normals.xyz, viewDirection.xyz, 0.2).xyz * Albedo.xyz;
-    float3 specularC = ApproximateSpecularIBL(realSpec, roughness, normals.xyz, viewDirection);
+    F0 = lerp(F0, albedo, metallic1);
     
-    float3 Cook = (diffuseC + specularC + diffuseC);
 
-    output.color = float4(Cook, 1.0f);
- 
-    output.specular = float4(Cook, 1.0f);
-   
-   // check if it is skydome so use only color
-    if (normals.w < 1.0f)
-    {
-        output.color = Albedo;
-        output.specular = float4(0.0, 0.0, 0.0, 0.5);
-    }
-    return output;
+    float NoH = dot(N, H);
+    float NoV = dot(N, V);
+    float NoL = dot(N, L);
+    float VoH = dot(V, H);
+    float HoV = dot(H, V);
+
+
+    float NDF = DistributionGGX(N, H, a);
+    float G = GeometrySmith(N, V, L, a);
+    float3 F = FresnelSchlick1(max(HoV, 0.0), F0);
+
+    float3 kS = F;
+    float kD = float3(1.0f, 1.0f, 1.0f) - kS;
+    kD *= 1.0 - metallic1;
+
+    float3 nominator = NDF * G * F;
+    float denom = 4 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.001;
+    float3 specular = nominator / denom;
+
+    NoL = saturate(NoL);
+    float3 diffuseC = Diffuse_OrenNayar(albedo, a, NoV, NoL, VoH); //DiffuseLambertian(albedo);
+    float3 specularC = specular;
+
+    Cook = (kD * diffuseC + specularC) * radiance * NoL;
+
+    Cook = Cook / (Cook + 1.0f);
+    Cook = pow(Cook, 1.0f / 2.2f);
+
+    return Cook;
+
 }
-*/
+
+
 
 
 float4 PointLightCalculation(PixelInputType input, float4 N, float r, float3 t, float3 bt, float4 pos, float metallic, float spec, float4 ambient)
@@ -519,6 +277,9 @@ float4 PointLightCalculation(PixelInputType input, float4 N, float r, float3 t, 
 }
 
 
+/**********************
+     DISNEY BRDF
+**********************/
 LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 {
 	LightPixelShaderOutput output;
@@ -546,15 +307,15 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float3 rlAlbedo;
 	float3 realSpec;
 
-    //check if it is skydome so use only color
-    if (normals.w < 1.0f)
+    //check if it is 2d or skydome so use only color
+    if (normals.w < 1.0f && normals.w > 0.2)
     {
         output.color = float4(Albedo,1.0);
         output.specular = float4(0.0, 0.0, 0.0, 0.5);
         return output;
     }
 
-	if (Metallic > 0.03f)
+	if (Metallic >= 0.03f)
 	{
 		 rlAlbedo = Albedo;
 		 realSpec = lerp(0.03f.xxx, Albedo, Metallic);
@@ -579,26 +340,41 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float mipIndex = roughness* roughness * 8.0f;
 
 	float3 envColor = envmapTexture.SampleLevel(SampleTypePoint, -reflectVector, mipIndex);
-	//envColor = pow(envColor, 2.2);
+	envColor = pow(envColor, 2.2);
 
 	float3 realalbedoColor = saturate(Diffuse);
+
+    
 
 	float4 lightMatrix = mul(positionTex, lightViewMatrix);
 	lightMatrix = mul(lightMatrix, lightProjectionMatrix);
 
-	float shadow = shadowAA(shadowMapTexture, SampleTypeShadow, lightMatrix);
+
+
+    float shadow= shadowAA(shadowMapTexture, SampleTypeShadow, lightMatrix);
+    //float shadow = softShadow(shadowMapTexture, SampleTypePoint, lightMatrix); 
    
+    float3 fragColor; //Envmap   //Irradiancemap (this is cheating)
 
-    float3 fragColor = shadow *  1.5 * 1 * brdf_Disney + envFresnel * envColor * (CalculateEnvironmentMap(normals.xyz, viewDirection.xyz, 1.0f).xyz * shadow) + realalbedoColor  * (float3(1.0f, 1.0f, 1.0f) * 0.5);
+    //float AmbientOcclusion = ssaoTexture.Sample(SampleTypePoint, input.tex).r;
 
+    //terrain for now without shadow
+    if(normals.w < 0.3f)
+    {
+        fragColor =  3 * 1 * brdf_Disney + envFresnel * envColor * CalculateEnvironmentMap(normals.xyz, viewDirection.xyz, 1.0f).xyz + realalbedoColor * (float3(1.0f, 1.0f, 1.0f) * 0.5);
+    }
+    else
+    {
+        fragColor = shadow * 1.5 * 1 * brdf_Disney + envFresnel * envColor * CalculateEnvironmentMap(normals.xyz, viewDirection.xyz, 1.0f).xyz + realalbedoColor * (float3(1.0f, 1.0f, 1.0f) * 0.5);
+    }
 	
     output.color = float4(fragColor, 1.0f); //PointLightCalculation(input, normals, roughness, tangent, binormal, positionTex, Metallic, specularColor, Ambient);
-    output.color += Ambient;
+    output.color += Ambient; // * ssaoTexture.Sample(SampleTypePoint, input.tex).r;
 
 	if (shadow > 0.98)
 	{
-		output.specular = float4(fragColor, 1.0);
-	}
+        output.specular = float4(fragColor, 1.0);
+    }
 	else
 	{
 		output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);

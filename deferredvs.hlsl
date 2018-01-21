@@ -4,7 +4,8 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
-    float texOffSet;
+    float texOffSetX;
+    float texOffSetY;
 	int HasAlpha;
 };
 
@@ -44,11 +45,11 @@ PixelInputType DeferredVertexShader(VertexInputType input)
     output.worldPosition = output.position;
     output.position = mul(output.position, viewMatrix);
 
-    
+
 	
 	float2 newTex = input.tex;
-    output.tex = newTex * texOffSet;
-    
+    output.tex.x = newTex.x * texOffSetX;
+    output.tex.y = newTex.y * texOffSetY;
 
     output.normal = mul(input.normal, (float3x3)worldMatrix);
 	

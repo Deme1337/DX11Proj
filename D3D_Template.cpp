@@ -195,13 +195,19 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    
 
    m_Engine = new GraphicsEngine();
-   m_Engine->_vSyncEnabled = true;
+   m_Engine->_vSyncEnabled = false;
    m_Engine->InitializeEngine(hWnd, hInst);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
    bool winres = enterFullscreen(hWnd, 1920, 1080, 32, 60);
+
+   if (!enterFullscreen(hWnd, 1920, 1080, 32, 60))
+   {
+	   MessageBox(hWnd, L"Cannot enter full screen mode", L"Error", MB_OK);
+	   return false;
+   }
 
    return TRUE;
 }
@@ -224,7 +230,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	}
 	
-	if (ImGui_ImplDX11_WndProcHandler(hWnd, message, wParam, lParam))
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
 		return true;
 
     switch (message)

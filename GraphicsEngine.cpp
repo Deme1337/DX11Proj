@@ -7,6 +7,7 @@
 #include <thread>
 #include <sstream>
 #include <future>
+#include <algorithm>
 
 
 #include "imgui-master\imgui_impl_dx11.h"
@@ -16,11 +17,28 @@
 
 namespace ImGui
 {
+
 	static auto vector_getter = [](void* vec, int idx, const char** out_text)
 	{
 		auto& vector = *static_cast<std::vector<std::string>*>(vec);
 		if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
 		*out_text = vector.at(idx).c_str();
+		return true;
+	};
+
+	static auto vector_getter1 = [](void* vec, int idx, const char** out_text)
+	{
+		auto &vector = *static_cast<std::vector<Material*>*>(vec);
+		if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
+		*out_text = vector[idx]->matname.c_str();
+		return true;
+	};
+
+	static auto vector_getterActors = [](void* vec, int idx, const char** out_text)
+	{
+		auto &vector = *static_cast<std::vector<Actor*>*>(vec);
+		if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
+		*out_text = vector[idx]->actorFile.c_str();
 		return true;
 	};
 
@@ -32,10 +50,24 @@ namespace ImGui
 	}
 
 
-	bool ListBox(const char* label, int* currIndex, std::vector<std::string>& values)
+	bool Combo2(const char* label, int* currIndex, std::vector<Material*>& values)
 	{
 		if (values.empty()) { return false; }
-		return ListBox(label, currIndex, vector_getter,
+		return Combo(label, currIndex, vector_getter1,
+			static_cast<void*>(&values), values.size());
+	}
+
+	bool ListBoxActors(const char* label, int* currIndex, std::vector<Actor*>& values)
+	{
+		if (values.empty()) { return false; }
+		return ListBox(label, currIndex, vector_getterActors,
+			static_cast<void*>(&values), values.size());
+	}
+
+	bool ListBox(const char* label, int* currIndex, std::vector<Material*>& values)
+	{
+		if (values.empty()) { return false; }
+		return ListBox(label, currIndex, vector_getter1,
 			static_cast<void*>(&values), values.size());
 	}
 }
@@ -106,8 +138,14 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 	m_Scene->SceneName = "MainScene1";
 
 	this->PrepareScene();
-	
 	this->PrepareTW();
+
+	if (gUseTerrain)
+	{
+		GenerateFoliage();
+		m_Scene->DrawTerrain = true;
+	}
+
 }
 
 
@@ -138,10 +176,12 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 
 		if (m_Scene->m_Actors.size() > 0 && m_Scene->m_Actors[ObjectSelectedIndex] != nullptr)
 		{
+			ImGui::ListBoxActors("Loaded Actors", &ObjectSelectedIndex, m_Scene->m_Actors);
 			ImGui::Text(m_Scene->m_Actors[ObjectSelectedIndex]->actorFile.c_str());
 			ImGui::SliderFloat("Actor roughness", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.roughness, -1.0f, 1.0f);
 			ImGui::SliderFloat("Metallic", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.metallic, 0.0f, 1.0f);
-			ImGui::InputFloat("Texture padding", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.texOffset, -20.0f, 20.0f);
+			ImGui::InputFloat("Texture padding x", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.texOffsetx, -20.0f, 20.0f);
+			ImGui::InputFloat("Texture padding y", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.texOffsety, -20.0f, 20.0f);
 		}
 
 		ImGui::SliderFloat("Subsurface", &m_Scene->subspectintani.x, 0.0f, 1.0f);
@@ -152,6 +192,109 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 		ImGui::SliderFloat("sheenTint", &m_Scene->sheentintcleargloss.y, 0.0f, 1.0f);
 		ImGui::SliderFloat("clearcoat", &m_Scene->sheentintcleargloss.z, 0.0f, 1.0f);
 		ImGui::SliderFloat("clearcoatGloss", &m_Scene->sheentintcleargloss.w, 0.0f, 1.0f);
+
+		if (ImGui::CollapsingHeader("Sprite menu"))
+		{
+
+			if (m_Scene->m_Actors.size() > 0)
+			{
+				
+				ImGui::Checkbox("Use sprite sheet:", &m_Scene->m_Actors[ObjectSelectedIndex]->UseAnimatedSpriteSheet);
+			
+				ImGui::LabelText("", "Use custom material");
+				if (ImGui::Button("Set", ImVec2(100, 30)))
+				{
+					m_Scene->m_Actors[ObjectSelectedIndex]->UnSetMeshUseCustomMaterial();
+				}
+				if (ImGui::Button("Unset", ImVec2(100, 30)))
+				{
+					m_Scene->m_Actors[ObjectSelectedIndex]->SetMeshUseCustomMaterial();
+				}
+			}
+
+		}
+	
+		ImGui::InputFloat("max obj dist: ", &m_Scene->maxObjectDrawDistance, 0.0f, 20000.0f);
+		ImGui::InputFloat("min obj dist: ", &m_Scene->minObjectDrawDistance, -20000.0f, 0.0f);
+		if(m_Scene->m_Actors.size() > 0) ImGui::InputInt("Sprite animation interval: ", (int*)&m_Scene->m_Actors[ObjectSelectedIndex]->SpriteAnimationInterval, 1, 400);
+
+
+		if (ImGui::Button("Add spritesheet", ImVec2(120, 40)))
+		{
+			AddSpriteSheetToObject();
+		}
+
+		ImGui::End();
+
+
+		ImGui::Begin("File");
+		ImGui::SetWindowSize(ImVec2(300, 400));
+		ImGui::SetWindowPos(ImVec2(1600, 400));
+
+		if (ImGui::Button("Load Model"))
+		{
+
+			std::string Path = "";
+			OpenFileDialog* ofd = new OpenFileDialog();
+			ofd->Owner = mainWindow;
+			if (ofd->ShowDialog() && ofd->FileName != nullptr)
+			{
+				std::wstring p(ofd->FileName);
+				Path = ws2s(p);
+
+				Actor* a = new Actor(Path.c_str(), m_D3DDevice);
+				m_Scene->AddSceneActor(a, m_D3DDevice);
+				LoadedActorList.push_back(a);
+			}
+
+			ofd = nullptr;
+			delete ofd;
+		}
+
+		if (ImGui::Button("Delete Model"))
+		{
+			m_Scene->m_Actors[ObjectSelectedIndex]->Release();
+			m_Scene->m_Actors.erase(m_Scene->m_Actors.begin() + ObjectSelectedIndex);
+		}
+
+		std::string sceneName = gSceneName;
+		std::string saveScenePath = "D:\\Graphics-programming\\D3D_Template\\D3D_Template\\Scenes\\" + sceneName;
+		ImGui::InputText("Scene name: ", sceneNameBuffer, strlen(sceneNameBuffer));
+
+
+		if (ImGui::Button("Save Scene"))
+		{
+			SaveFile.open(saveScenePath);
+
+			if (SaveFile.is_open())
+			{
+
+				for (size_t i = 0; i < m_Scene->m_Actors.size(); i++)
+				{
+					std::string aData = m_Scene->m_Actors[i]->ObjectTransmissionString() + "\n";
+					SaveFile << aData;
+				}
+
+				SaveFile.close();
+			}
+			else
+			{
+
+				MessageBox(NULL, L"ERROR CANNOT OPEN FILE", L"ERROR", MB_OK);
+
+				SaveFile.close();
+			}
+		}
+
+		if (ImGui::Button("Load Scene"))
+		{
+			if (!LoadSceneFromFile())
+			{
+				MessageBox(NULL, L"ERROR CANNOT OPEN FILE", L"ERROR", MB_OK);
+			}
+		}
+
+		CustomizeActorSpriteSheet();
 
 		ImGui::End();
 
@@ -171,6 +314,7 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 	double sTime = duration(timeNow() - shadowTime) * pow(10, -6);
 
 	TimeVar gbTime = timeNow();
+	m_Scene->ssaoBiasAndRadius = XMFLOAT2(this->ssaoBias, this->ssaoRadius);
 	m_Scene->GeometryPass(m_D3DDevice);
 	double gTime = duration(timeNow() - gbTime) * pow(10, -6);
 
@@ -230,8 +374,6 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 	
 	std::string vpofs = "Frame:  " + std::to_string(frameTime) + " FPS: " + std::to_string(fps) + " Pass1: " + std::to_string(gTime) + " Pass2: " + std::to_string(lTime) + " Shadow pass: " + std::to_string(sTime);
 
-	SceneInitTime = "Deferred rt: " + std::to_string(m_Scene->GeoBenchMarks[0] * pow(10, -6)) + " : Mesh: " + std::to_string(m_Scene->GeoBenchMarks[1] * pow(10, -6)) + " : Mesh shader: " + std::to_string(m_Scene->GeoBenchMarks[2] * pow(10, -6));
-
 	std::string opt1 = "Press p to take a screen shot";
 
 	std::string memoryUsage = "";
@@ -243,7 +385,6 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 
 	textContext.Print(5, 15, vpofs.c_str());
 	textContext.Print(5, 35, GPUinfo.c_str());
-	textContext.Print(5, 55, SceneInitTime.c_str());
 	textContext.Print(5, 75, memoryUsage.c_str());
 
 
@@ -329,6 +470,7 @@ void GraphicsEngine::SetImgui()
 		if (materiallist[materialIndex]->GetTexture("albedo") != nullptr)
 		{
 			ImGui::Text(materiallist[materialIndex]->GetTexture("albedo")->textureName.c_str());
+			ImGui::Image(materiallist[materialIndex]->GetTexture("albedo")->GetTexture(), ImVec2(50, 50));
 		}
 
 		if (ImGui::Button("Create metallic/spec"))
@@ -338,6 +480,7 @@ void GraphicsEngine::SetImgui()
 		if (materiallist[materialIndex]->GetTexture("specular") != nullptr)
 		{
 			ImGui::Text(materiallist[materialIndex]->GetTexture("specular")->textureName.c_str());
+			ImGui::Image(materiallist[materialIndex]->GetTexture("specular")->GetTexture(), ImVec2(50, 50));
 		}
 
 		if (ImGui::Button("Create normal"))
@@ -347,6 +490,7 @@ void GraphicsEngine::SetImgui()
 		if (materiallist[materialIndex]->GetTexture("normal") != nullptr)
 		{
 			ImGui::Text(materiallist[materialIndex]->GetTexture("normal")->textureName.c_str());
+			ImGui::Image(materiallist[materialIndex]->GetTexture("normal")->GetTexture(), ImVec2(50, 50));
 		}
 
 		if (ImGui::Button("Create roughness"))
@@ -356,7 +500,7 @@ void GraphicsEngine::SetImgui()
 		if (materiallist[materialIndex]->GetTexture("roughness") != nullptr)
 		{
 			ImGui::Text(materiallist[materialIndex]->GetTexture("roughness")->textureName.c_str());
-			
+			ImGui::Image(materiallist[materialIndex]->GetTexture("roughness")->GetTexture(), ImVec2(50, 50));
 		}
 
 
@@ -377,6 +521,73 @@ void GraphicsEngine::SetImgui()
 	ImGui::End();
 }
 
+
+void GraphicsEngine::GenerateFoliage()
+{
+	//Template models
+	Actor *a1 = new Actor("Models\\betula\\Models\\BL02m.obj", m_D3DDevice);
+	a1->SetModelSize(XMVectorSet(0.1, 0.1, 0.1, 1.0));
+	a1->SetModelPosition(XMVectorSet(1, 1, 1, 1.0f));
+	a1->HasAlpha = true;
+	a1->actorMatrix.roughness = 0.80f;
+	a1->UseTextures = true;
+	m_Scene->AddSceneActor(a1, m_D3DDevice);
+
+
+	Actor *a2 = new Actor("Models\\betula\\Models\\BL02y.obj", m_D3DDevice);
+	a2->SetModelSize(XMVectorSet(0.1, 0.1, 0.1, 1.0));
+	a2->SetModelPosition(XMVectorSet(1, 1, 1, 1.0f));
+	a2->HasAlpha = true;
+	a2->actorMatrix.roughness = 0.80f;
+	a2->UseTextures = true;
+	m_Scene->AddSceneActor(a2, m_D3DDevice);
+
+
+
+	m_Scene->terrain->terrainMatrix.terrainScale = XMFLOAT3(10.0f, 10.0f, 10.0f);
+	m_Scene->terrain->terrainMatrix.terrainPosition = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	for (size_t i = 0; i < 50; i++)
+	{
+		for (size_t j = 0; j < 50; j++)
+		{
+			
+			XMFLOAT3 locf;
+			std::random_shuffle(m_Scene->terrain->terrainmodels.begin(), m_Scene->terrain->terrainmodels.end());
+
+			XMStoreFloat3(&locf, m_Scene->terrain->terrainmodels[i]);
+		
+
+			locf.x = locf.x * m_Scene->terrain->terrainMatrix.terrainScale.x - m_Scene->terrain->terrainMatrix.terrainPosition.x;
+			locf.y = locf.y * m_Scene->terrain->terrainMatrix.terrainScale.y - m_Scene->terrain->terrainMatrix.terrainPosition.y;
+			locf.z = locf.z * m_Scene->terrain->terrainMatrix.terrainScale.z - m_Scene->terrain->terrainMatrix.terrainPosition.z;
+
+			Actor *a = new Actor(*a1);
+			a->SetModelSize(XMVectorSet(0.5, 0.5, 0.5, 1.0));
+			a->SetModelPosition(XMVectorSet(locf.x, locf.y, locf.z , 1.0f));
+			a->SetModelRotation(XMVectorSet(4.5f, 1.0f, 1.0f, 1.0f));
+			a->HasAlpha = true;
+			a->HasShadow = false;
+			a->actorMatrix.roughness = 0.90f;
+			a->UseTextures = true;
+
+			Actor *aa = new Actor(*a2);
+			aa->SetModelSize(XMVectorSet(1.0, 1.0, 1.0, 1.0));
+			aa->SetModelPosition(XMVectorSet(locf.x + 25, locf.y, locf.z + i, 1.0f));
+			aa->SetModelRotation(XMVectorSet(4.5f, 1.0f, 1.0f, 1.0f));
+			aa->HasAlpha = true;
+			aa->HasShadow = false;
+			aa->actorMatrix.roughness = 0.90f;
+			aa->UseTextures = true;
+
+			m_Scene->AddSceneActor(a, m_D3DDevice);
+			m_Scene->AddSceneActor(aa, m_D3DDevice);
+		}
+	}
+
+
+}
+
 SIZE_T GraphicsEngine::GetTotalMemory()
 {
 	PROCESS_MEMORY_COUNTERS pmc;
@@ -384,6 +595,79 @@ SIZE_T GraphicsEngine::GetTotalMemory()
 	SIZE_T virtualMemUsedByMe = pmc.WorkingSetSize;
 
 	return virtualMemUsedByMe;
+}
+
+void GraphicsEngine::CustomizeActorSpriteSheet()
+{
+
+		ImGui::Begin("SpriteSheet");
+		ImGui::SetWindowSize(ImVec2(300, 400));
+
+		if (m_Scene->m_Actors.size() > 0)
+		{
+			if (m_Scene->m_Actors[ObjectSelectedIndex]->UseAnimatedSpriteSheet)
+			{
+				ImGui::ListBox("Sprites", &SpriteSheetIndex, m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet);
+				std::string spriteCount(std::to_string(m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.size()));
+				ImGui::LabelText(spriteCount.c_str(), "Sprite Count: ");
+
+				ImGui::Text(m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet[SpriteSheetIndex]->GetTexture("albedo")->textureName.c_str());
+				ImGui::Image(m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet[SpriteSheetIndex]->GetTexture("albedo")->GetTexture(), ImVec2(50, 50));
+
+				if (ImGui::Button("Delete", ImVec2(100, 30)))
+				{
+					m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet[SpriteSheetIndex]->ReleaseMaterial();
+					m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.erase(m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.begin() + SpriteSheetIndex);
+					SpriteSheetIndex = 0;
+				}
+
+				//swap sprite places in the list
+				if (ImGui::Button("--", ImVec2(40, 30)))
+				{
+					if (SpriteSheetIndex + 1 <= m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.size())
+					{
+						std::iter_swap(m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.begin() + SpriteSheetIndex,
+							m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.begin() + SpriteSheetIndex + 1);
+						SpriteSheetIndex++;
+					}
+				}
+				if (ImGui::Button("++", ImVec2(40, 30)))
+				{
+					if (SpriteSheetIndex - 1 >= 0)
+					{
+						std::iter_swap(m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.begin() + SpriteSheetIndex,
+							m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.begin() + SpriteSheetIndex - 1);
+						SpriteSheetIndex--;
+					}
+
+				}
+			}
+
+		}
+		ImGui::End();
+
+
+}
+
+void GraphicsEngine::AddSpriteSheetToObject()
+{
+	std::wstring folder = BrowseFolder("D:\\Graphics-programming\\D3D_Template\\D3D_Template\\Textures\\");
+
+	std::vector<std::string> getSpritePaths = GetFileNamesFromFolder(folder);
+
+	if (folder.size() > 0)
+	{
+		m_Scene->m_Actors[ObjectSelectedIndex]->spriteSheet.clear();
+		for (size_t i = 0; i < getSpritePaths.size(); i++)
+		{
+			m_Scene->m_Actors[ObjectSelectedIndex]->AppendSpriteSheet(getSpritePaths[i]);
+			m_Scene->m_Actors[ObjectSelectedIndex]->UseAnimatedSpriteSheet = true;
+			m_Scene->m_Actors[ObjectSelectedIndex]->SetMeshUseCustomMaterial();
+		}
+	}
+
+
+
 }
 
 
@@ -431,6 +715,61 @@ void GraphicsEngine::SaveScene()
 	SaveFile.close();
 }
 
+bool GraphicsEngine::LoadSceneFromFile()
+{
+	std::vector<std::string> lines;
+
+	std::string Path = "";
+	OpenFileDialog* ofd = new OpenFileDialog();
+	ofd->Owner = mainWindow;
+	if (ofd->ShowDialog() && ofd->FileName != nullptr)
+	{
+		std::wstring p(ofd->FileName);
+		Path = ws2s(p);
+		gSceneName = ws2s(p);
+		sceneNameBuffer = &gSceneName[0];
+		gSceneName = SplitPath(gSceneName, { '\\' }).back();
+		std::ifstream inFile(Path);
+		std::string line;
+		while (std::getline(inFile, line))
+		{
+			lines.push_back(line);
+		}
+
+		m_Scene->m_Actors.clear();
+
+		for (size_t i = 0; i < lines.size(); i++)
+		{
+			std::vector<std::string> astring = split(lines[i], '+');
+			std::string::size_type sz;
+			Actor *a = new Actor(astring[0].c_str(), m_D3DDevice);
+			a->actorMatrix.position.x = std::stof(astring[1], &sz);
+			a->actorMatrix.position.y = std::stof(astring[2], &sz);
+			a->actorMatrix.position.z = std::stof(astring[3], &sz);
+
+			a->actorMatrix.rotation.x = std::stof(astring[5], &sz);
+			a->actorMatrix.rotation.y = std::stof(astring[6], &sz);
+			a->actorMatrix.rotation.z = std::stof(astring[7], &sz);
+
+			a->actorMatrix.size.x = std::stof(astring[9], &sz);
+			a->actorMatrix.size.y = std::stof(astring[10], &sz);
+			a->actorMatrix.size.z = std::stof(astring[11], &sz);
+
+			m_Scene->AddSceneActor(a, m_D3DDevice);
+		}
+
+		ofd = 0;
+		delete ofd;
+		return true;
+	}
+	else
+	{
+		ofd = 0;
+		delete ofd;
+		return false;
+	}
+}
+
 void GraphicsEngine::PrepareScene()
 {
 
@@ -441,11 +780,33 @@ void GraphicsEngine::PrepareScene()
 	a[0]->actorMatrix.roughness = 0.80f;
 	a[0]->UseTextures = true;
 	m_Scene->AddSceneActor(a[0],m_D3DDevice);
+	LoadedActorList.push_back(a[0]);
 
-	//Set to maximum atm gotta fix black screen bug when blur sigma is 0.00
-	m_Scene->BlurSigma = 50.0f;
+	m_Scene->BlurSigma = 0.0f;
 
 
+
+
+	//a[1] = new Actor("Models\\plane.obj", m_D3DDevice);
+	//a[1]->SetModelSize(XMVectorSet(0.1, 0.1, 0.1, 1.0));
+	//a[1]->SetModelPosition(XMVectorSet(0, 5, 10, 1.0f));
+	//a[1]->SetModelRotation(XMVectorSet(1.59f, 0.0f, 3.18f, 1.0f));
+	//a[1]->HasAlpha = true;
+	//a[1]->actorMatrix.roughness = 0.80f;
+	//a[1]->UseTextures = true;
+	//a[1]->SetMeshUseCustomMaterial();
+	//a[1]->UseAnimatedSpriteSheet = true;
+	//
+	//std::vector<std::string> spritesPaths = GetFileNamesFromFolder(L"Textures\\SpriteSheet\\Braid");
+	//
+	//for (size_t i = 0; i < spritesPaths.size(); i++)
+	//{
+	//	a[1]->AppendSpriteSheet(spritesPaths[i]);
+	//}
+	//
+	//
+	//m_Scene->AddSceneActor(a[1], m_D3DDevice);
+	//LoadedActorList.push_back(a[1]);
 }
 
 void GraphicsEngine::PrepareTW()
@@ -468,11 +829,12 @@ void GraphicsEngine::PrepareTW()
 	m_GUI->AddVariableFloat("Sun scale1: ", m_Scene->dirLight.lightProperties.scale1);
 	m_GUI->AddVariableFloat("Sun scale2: ", m_Scene->dirLight.lightProperties.scale2);
 	m_GUI->AddVariableFloat("GlobalAmbient: ", m_Scene->dirLight.lightProperties.globalAmbient);
+	m_GUI->AddVariableXMfloat("Terrain Pos: ", m_Scene->terrain->terrainMatrix.terrainPosition);
+	m_GUI->AddVariableXMfloat("Terrain scale: ", m_Scene->terrain->terrainMatrix.terrainScale);
+	m_GUI->AddVariableFloat("SSAO Bias: ", ssaoBias);
+	m_GUI->AddVariableFloat("SSAO Radius: ", ssaoRadius);
 
 	m_GUI->AddDirectionalLight(m_Scene->dirLight);
-
-	m_GUI->AddPointLights(m_Scene->pointLights);
-
 	
 }
 

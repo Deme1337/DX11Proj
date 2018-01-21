@@ -40,7 +40,7 @@ void Material::LoadTexture(CDeviceClass * devclass, const char * path, const cha
 
 CTextureTA* Material::GetTexture(const char * type)
 {
-	if (type == "albedo")
+	if (type == "albedo" && AlbedoTexture != nullptr)
 	{
 		return AlbedoTexture;
 	}

@@ -5,7 +5,7 @@
 
 #pragma comment(lib, "FreeImage.lib")
 #include <iostream>
-
+#include <random>
 
 CTextureTA::CTextureTA()
 {
@@ -295,30 +295,95 @@ bool CTextureTA::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	return true;
 }
 
+bool CTextureTA::NoiseTexture(ID3D11Device * dev, ID3D11DeviceContext * devcon)
+{
+	D3D11_TEXTURE2D_DESC textureDesc;
+	HRESULT hResult;
+	unsigned int rowPitch;
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+
+	std::uniform_real_distribution<float> randomFloats(0.0f, 1.0f);
+	std::default_random_engine gen;
+
+	std::vector<XMFLOAT3> ssaoNoise;
+	for (unsigned int i = 0; i < 16; i++)
+	{
+		 
+		XMFLOAT3 noise = XMFLOAT3(randomFloats(gen) * 2.0 - 1.0, randomFloats(gen) * 2.0 - 1.0, 0.0f);
+		ssaoNoise.push_back(noise);
+	}
+
+
+	// Setup the description of the texture.
+	textureDesc.Height = 4;
+	textureDesc.Width = 4;
+	textureDesc.MipLevels = 0;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+	// Create the empty texture.
+	hResult = dev->CreateTexture2D(&textureDesc, NULL, &m_texture);
+	if (FAILED(hResult))
+	{
+		return false;
+	}
+
+	// Set the row pitch of the targa image data.
+	rowPitch = (4 * 4) * sizeof(unsigned char);
+
+	// Copy the targa image data into the texture.
+	devcon->UpdateSubresource(m_texture, 0, NULL, &ssaoNoise[0], rowPitch, 0);
+
+	// Setup the shader resource view description.
+	srvDesc.Format = textureDesc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = -1;
+
+	// Create the shader resource view for the texture.
+	hResult = dev->CreateShaderResourceView(m_texture, &srvDesc, &m_textureView);
+	if (FAILED(hResult))
+	{
+		return false;
+	}
+
+	// Generate mipmaps for this texture.
+	devcon->GenerateMips(m_textureView);
+
+
+	return true;
+}
+
 
 void CTextureTA::Shutdown()
 {
 	// Release the texture view resource.
-	if (m_textureView)
+	if (m_textureView != NULL)
 	{
 		m_textureView->Release();
 		m_textureView = 0;
 	}
 
 	// Release the texture.
-	if (m_texture)
+	if (m_texture != NULL)
 	{
 		m_texture->Release();
 		m_texture = 0;
 	}
 
 	// Release the targa data.
-	if (textureData)
+	if (textureData != NULL)
 	{
 		textureData = 0;
 	}
 
-	if (srvCubeMap != nullptr)
+	if (srvCubeMap != NULL)
 	{
 		srvCubeMap->Release();
 		srvCubeMap = 0;

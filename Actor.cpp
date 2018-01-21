@@ -35,12 +35,12 @@ Actor::Actor(const char * modelpath, CDeviceClass *devclass)
 }
 
 
-Actor::Actor(Model *m, CDeviceClass* devclass)
+Actor::Actor(const Actor &m, CDeviceClass* devclass)
 {
 	this->devclass = devclass;
-	actorMeshes = m;
+	actorMeshes = m.actorMeshes;
 
-	this->ActorPath = m->path_;
+	this->ActorPath = m.ActorPath;
 	this->actorFile = SplitPath(this->ActorPath, { '\\' }).back();
 }
 
@@ -50,9 +50,20 @@ Actor::~Actor()
 
 void Actor::SetMeshUseCustomMaterial()
 {
+	UseAnimatedSpriteSheet = false;
 	for (size_t i = 0; i < actorMeshes->meshes.size(); i++)
 	{
 		actorMeshes->meshes[i].UseMeshMaterials = false;
+	}
+}
+
+void Actor::UnSetMeshUseCustomMaterial()
+{
+	useMaterial = true;
+	UseAnimatedSpriteSheet = false;
+	for (size_t i = 0; i < actorMeshes->meshes.size(); i++)
+	{
+		actorMeshes->meshes[i].UseMeshMaterials = true;
 	}
 }
 
@@ -77,22 +88,47 @@ inline void Actor::UpdateMatrix()
 	modelMatrix = RotationMatrix  * ScaleMatrix *TranslationMatrix;
 }
 
+void Actor::Animate(DeferredShader* defshader)
+{
+	if (SpriteAnimationCounter >= spriteSheet.size()) SpriteAnimationCounter = 0;
+	defshader->UpdateTexture(devclass, spriteSheet[SpriteAnimationCounter]->GetTexture("albedo")->GetTexture());
+
+	if (SpriteAnimationInterval <= SpriteAnimationIntervalCounter)
+	{
+
+		SpriteAnimationCounter++;
+		SpriteAnimationIntervalCounter = 0;
+	}
+
+	SpriteAnimationIntervalCounter++;
+}
+
 void Actor::SetModelSize(XMVECTOR r)
 {
 	XMStoreFloat4(&actorMatrix.size, r);
 	UpdateMatrix();
 }
 
+void Actor::AppendSpriteSheet(std::string path)
+{
+	Material *mat = new Material();
+	mat->LoadTexture(devclass, path.c_str(), "albedo");
+	mat->matname = path;
+	spriteSheet.push_back(mat);
+}
+
 void Actor::SetMaterial(Material * m)
 {
 	this->objectMaterial = m;
 	useMaterial = true;
+	UseAnimatedSpriteSheet = false;
 	SetMeshUseCustomMaterial();
 }
 
 void Actor::UnsetMaterial()
 {
 	useMaterial = false;
+	UseAnimatedSpriteSheet = false;
 	for (size_t i = 0; i < actorMeshes->meshes.size(); i++)
 	{
 		actorMeshes->meshes[i].UseMeshMaterials = true;
@@ -137,9 +173,14 @@ void Actor::RenderModel(CDeviceClass * devclass, DeferredShader* defshader)
 
 	UpdateMatrix();
 
-
-	if (useMaterial)
+	if (UseAnimatedSpriteSheet && spriteSheet.size() > 0)
 	{
+		defshader->ObjectIs2DAnimated = 1;
+		Animate(defshader);
+	}
+	if (useMaterial && !UseAnimatedSpriteSheet)
+	{
+		defshader->ObjectIs2DAnimated = 0;
 		if (objectMaterial->GetTexture("albedo") != nullptr)
 		{
 			defshader->UpdateTexture(devclass, objectMaterial->GetTexture("albedo")->GetTexture());
@@ -168,7 +209,7 @@ void Actor::RenderModel(CDeviceClass * devclass, DeferredShader* defshader)
 		
 	}
 
-	if (useMaterial)
+	if (useMaterial || UseAnimatedSpriteSheet)
 	{
 		defshader->UpdateTexture(devclass, nullptr);
 		defshader->UpdateTextureSpecular(devclass, nullptr);
@@ -181,6 +222,11 @@ void Actor::RenderModel(CDeviceClass * devclass, DeferredShader* defshader)
 void Actor::Release()
 {
 	actorMeshes->Release();
+	
+	for (size_t i = 0; i < spriteSheet.size(); i++)
+	{
+		spriteSheet[i]->ReleaseMaterial();
+	}
 }
 
 void Actor::SetModelPosition(XMVECTOR s)

@@ -18,7 +18,8 @@ private:
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX projection;
-		float texOffSet;
+		float texOffSetX;
+		float texOffSetY;
 		int HasAlpha;
 	};
 
@@ -28,12 +29,14 @@ private:
 		int UseTextures;
 		float roughnessOffset;
 		float metallic;
+		int IsPaper;
 	};
 	
 
 public:
 	DeferredShader();
 	~DeferredShader();
+	int ObjectIs2DAnimated = 0;
 
 	void SetObjectData(CDeviceClass * devclass, XMFLOAT4 data, XMFLOAT4 objcolor);
 
@@ -43,7 +46,7 @@ public:
 	void UpdateTextureSpecular(CDeviceClass * devclass, ID3D11ShaderResourceView* texture);
 	void UpdateTextureRough(CDeviceClass * devclass, ID3D11ShaderResourceView* texture);
 
-	void UpdateShader(CDeviceClass* devclass, XMMATRIX& world, XMMATRIX& view, XMMATRIX& projection, bool HasAlpha, float texoffset);
+	void UpdateShader(CDeviceClass* devclass, XMMATRIX& world, XMMATRIX& view, XMMATRIX& projection, bool HasAlpha, XMFLOAT2 texOffSets);
 
 	void RenderShader(CDeviceClass* devclass, int indexCount);
 	

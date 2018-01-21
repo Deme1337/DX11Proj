@@ -1,0 +1,5 @@
+Terrain Filename: Models\\Terrain\\scalloped.r16
+Terrain Height: 513
+Terrain Width: 513
+Terrain Scaling: 300.0
+Color Map Filename: Models\\Terrain\\colormap1.bmp

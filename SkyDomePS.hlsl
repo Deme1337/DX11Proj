@@ -104,7 +104,7 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 
 
 
-	output.normal = float4(1.0f, 1.0f, 1.0f, 0.5f);
+	output.normal = float4(1.0f, 1.0f, 1.0f, 0.8f);
 	output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	output.position = input.domePosition;
 	output.roughness = float4(1.0f, 1.0f, 1.0f, 1.0f);

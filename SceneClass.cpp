@@ -97,7 +97,26 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	searchTexture->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\SearchTex.dds");
 
+	ssaoNoiseTexture = new CTextureTA();
 
+	if (!ssaoNoiseTexture->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\randomtexture.jpg"))
+	{
+		MessageBox(hWnd, L"Cannot init ssao noise texture", L"ERROR!", MB_OK);
+	}
+
+	//Terrain init
+	terrain = new CTerrain();
+	if (!terrain->Initialize(DevClass->GetDevice(), "Models\\Terrain\\setup.txt"))
+	{
+		MessageBox(hWnd, L"Could not initialize terrain.", L"Error", MB_OK);
+	}
+	terrain->SetTerrainTextures(DevClass, "Models\\Terrain\\textures\\dirt01d.tga", "Models\\Terrain\\textures\\dirt01n.tga");
+
+	terrainShader = new CTerrainShader();
+	if (!terrainShader->Initialize(DevClass->GetDevice(), hWnd))
+	{
+		MessageBox(hWnd, L"Could not initialize terrain shader.", L"Error", MB_OK);
+	}
 
 
 	textureShader = new CTextureRenderShader();
@@ -137,7 +156,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 
 	m_Camera = new FreeCamera(hWnd);
-	m_Camera->SetCameraPosition(XMVectorSet(0, 10, -10, 1.0));
+	m_Camera->SetCameraPosition(XMVectorSet(0, 10, -15, 1.0));
 
 
 	for (size_t i = 0; i < POINT_LIGHT_COUNT; i++)
@@ -176,12 +195,16 @@ void SceneClass::ShadowPass(CDeviceClass * DevClass)
 
 	for (size_t i = 0; i < this->m_Actors.size(); i++)
 	{
-		worlMatrix = XMMatrixIdentity();
-		viewMatrix = dirLight.GetLightViewMatrix();
-		projectionMatrix = dirLight.GetLightProjectionMatrix();
+		if (m_Actors[i]->HasShadow)
+		{
+			worlMatrix = XMMatrixIdentity();
+			viewMatrix = dirLight.GetLightViewMatrix();
+			projectionMatrix = dirLight.GetLightProjectionMatrix();
 
-		m_ShadowShader->Render(DevClass->GetDevCon(), 0, m_Actors[i]->modelMatrix, viewMatrix, projectionMatrix);
-		m_Actors[i]->RenderShadowMap(DevClass, m_ShadowShader);
+			m_ShadowShader->Render(DevClass->GetDevCon(), 0, m_Actors[i]->modelMatrix, viewMatrix, projectionMatrix);
+			m_Actors[i]->RenderShadowMap(DevClass, m_ShadowShader);
+		}
+
 	}
 
 	DevClass->ResetViewPort();
@@ -199,7 +222,10 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	XMMATRIX projection, view;
 
 	projection = DevClass->GetProjectionMatrix();
-	view = m_Camera->GetCameraView();
+
+	if (!UseOrthoCamera)	view = m_Camera->GetCameraView();
+	else view = m_Camera->GetBaseViewMatrix();
+
 
 	TimeVar time1 = timeNow();
 	m_DeferredBuffer->SetRenderTargets(DevClass->GetDevCon());
@@ -229,9 +255,18 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 		}
 	}
 
+	//Terrain
+	if (DrawTerrain)
+	{
+		RenderTerrainGPass(DevClass);
+	}
 
 	projection = DevClass->GetProjectionMatrix();
-	view = m_Camera->GetCameraView();
+	if (!UseOrthoCamera)	view = m_Camera->GetCameraView();
+	else view = m_Camera->GetBaseViewMatrix();
+	m_LightShader->tempViewMatrix = view;
+	postProcessor->ssaoBiasAndRadius = this->ssaoBiasAndRadius;
+
 
 	DevClass->TurnCullingOn();
 	DevClass->TurnZBufferOn();
@@ -239,18 +274,25 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	TimeVar time2 = timeNow();
 	for (size_t i = 0; i < m_Actors.size(); i++)
 	{
+		XMVECTOR actorPosXMV = XMLoadFloat4(&m_Actors[i]->actorMatrix.position);
+		XMFLOAT4 distanceToCamera; XMStoreFloat4(&distanceToCamera, XMVector4Length(XMVectorSubtract(actorPosXMV, m_Camera->GetCameraPosition())));
+		//XMFLOAT4 isBehindCamera; XMStoreFloat4(&isBehindCamera, XMVector4Dot(XMVector4Normalize(m_Camera->lookAt), XMVector4Normalize(actorPosXMV)));
 
-		TimeVar time3 = timeNow();
-		m_DeferredShader->UpdateShader(DevClass, m_Actors[i]->modelMatrix, view, projection, m_Actors[i]->HasAlpha, m_Actors[i]->actorMatrix.texOffset);
-		double geo2New = duration(timeNow() - time3);
-		GeoBenchMarks[2] = geo2New;
+		if ((distanceToCamera.x >= minObjectDrawDistance && distanceToCamera.x <= maxObjectDrawDistance))
+		{
+			TimeVar time3 = timeNow();
+			m_DeferredShader->UpdateShader(DevClass, m_Actors[i]->modelMatrix, view, projection, m_Actors[i]->HasAlpha, XMFLOAT2(m_Actors[i]->actorMatrix.texOffsetx, m_Actors[i]->actorMatrix.texOffsety));
+			double geo2New = duration(timeNow() - time3);
+			GeoBenchMarks[2] = geo2New;
+		
 		
 
-		m_Actors[i]->RenderModel(DevClass, m_DeferredShader);
-		
+			m_Actors[i]->RenderModel(DevClass, m_DeferredShader);
+		}
 		
 		projection = DevClass->GetProjectionMatrix();
-		view = m_Camera->GetCameraView();
+		if (!UseOrthoCamera)	view = m_Camera->GetCameraView();
+		else view = m_Camera->GetBaseViewMatrix();
 	}
 	double geo3New = duration(timeNow() - time2);
 	GeoBenchMarks[1] = geo3New;
@@ -269,7 +311,7 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	DevClass->TurnZBufferOff();
 	m_Window->UpdateWindow(DevClass->GetDevCon(), viewPortOffSet, 0);
 
-	//ID3D11ShaderResourceView* ssaoRes = postProcessor->CreateSSAO(DevClass, m_Window, m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(2));
+	//ID3D11ShaderResourceView* shadowRes = postProcessor->BlurShadows(DevClass, m_Window, shadowMap->GetShaderResourceView());
 
 	DevClass->ResetViewPort();
 	if (ApplyPostProcess)
@@ -286,12 +328,14 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	orthoMatrix = DevClass->GetOrthoMatrix();
 	baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 	
-	
+
+
 	m_LightShader->UpdateDisneyBuffer(DevClass, subspectintani, sheentintcleargloss);
 	m_LightShader->UpdateShadowMap(DevClass, shadowMap->GetShaderResourceView());
 	m_LightShader->UpdateTextureByIndex(DevClass, environmentMap->cubeGetTexture(), 8);
 	m_LightShader->UpdateTextureByIndex(DevClass, irradianceMap->GetTexture(),9);
-//	m_LightShader->UpdateTextureByIndex(DevClass, ssaoRes, 10);
+	//m_LightShader->UpdateTextureByIndex(DevClass, ssaoRes, 10);
+
 	//Settings to show all textures passed 
 	if (Setting == 0)
 	{
@@ -332,17 +376,19 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	// Post process the outputs of light shader
 	if (ApplyPostProcess)
 	{
+		
 		postProcessor->SetPostProcessInputs(postProcessTexture->GetShaderResourceView(0), postProcessTexture->GetShaderResourceView(1), m_Window, BlurSigma);
 
-		//Check shadowmap
+		//Check texture
 		if (Setting == 5)
 		{
 			postProcessor->SetPostProcessInputs(shadowMap->GetShaderResourceView(), nullptr, m_Window, BlurSigma);
 		}
-		//if (Setting == 8)
-		//{
-		//	postProcessor->SetPostProcessInputs(ssaoRes, nullptr, m_Window, BlurSigma);
-		//}
+		if (Setting == 8)
+		{
+			//postProcessor->SetPostProcessInputs(ssaoRes, nullptr, m_Window, BlurSigma);
+		}
+
 
 		ID3D11ShaderResourceView* smaaTexture = postProcessor->prepareSmaa(m_Window, postProcessor->smaaFinalizeTex->GetShaderResourceView(0), areaTexture->GetTexture(), searchTexture->GetTexture());
 
@@ -385,6 +431,32 @@ void SceneClass::Release()
 	postProcessor->Release();
 	irradianceMap->Shutdown();
 	environmentMap->Shutdown();
+	terrain->Shutdown();
+	terrainShader->Shutdown();
+	ssaoNoiseTexture->Shutdown(); 
+}
+
+void SceneClass::RenderTerrainGPass(CDeviceClass *DevClass)
+{
+	DevClass->TurnCullingOn();
+	DevClass->TurnZBufferOn();
+
+	XMMATRIX projection, view, worldMatrix;
+
+	worldMatrix = XMMatrixIdentity();
+	projection = DevClass->GetProjectionMatrix();
+	view = m_Camera->GetCameraView();
+
+
+	XMMATRIX TerrainScale = XMMatrixScalingFromVector(XMLoadFloat3(&terrain->terrainMatrix.terrainScale));
+	XMMATRIX TerrainLocation = XMMatrixTranslationFromVector(XMLoadFloat3(&terrain->terrainMatrix.terrainPosition));
+	worldMatrix = TerrainScale * TerrainLocation;
+
+	terrain->Render(DevClass->GetDevCon());
+
+	bool res = terrainShader->Render(DevClass->GetDevCon(), terrain->GetIndexCount(), worldMatrix, view, projection,
+		terrain->m_TerrainTexture[0]->GetTexture(), terrain->m_TerrainTexture[1]->GetTexture(), XMFLOAT3(0,0,0), XMFLOAT4(0,0,0, 1.0f));
+
 }
 
 void SceneClass::HandleSceneInput()
@@ -441,6 +513,12 @@ void SceneClass::HandleSceneInput()
 	if (Keys::key(VKEY_B))
 	{
 		Setting = 8;
+	}
+
+	if (Keys::key(VKEY_NUM9))
+	{
+		if (!UseOrthoCamera) UseOrthoCamera = true;
+		else UseOrthoCamera = false;
 	}
 
 }

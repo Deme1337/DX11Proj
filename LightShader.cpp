@@ -336,6 +336,7 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	dataPtr2->LightColor	= col;
 	dataPtr2->lightViewMatrix = XMMatrixTranspose(dlight.GetLightViewMatrix());
 	dataPtr2->lightProjectionMatrix = XMMatrixTranspose(dlight.GetLightProjectionMatrix());
+	dataPtr2->viewMatrix = XMMatrixTranspose(tempViewMatrix);
 	dataPtr2->GlobalAmbient = dlight.lightProperties.globalAmbient;
 
 	// Unlock the constant buffer.
