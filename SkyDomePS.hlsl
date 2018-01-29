@@ -19,7 +19,7 @@ cbuffer ColorBuffer
     float sunPower;
     float scale1;
     float scale2;
-
+    float radiance;
 };
 
 
@@ -79,10 +79,6 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
     
 
     float SunSize = sunSize;
-	
-    float sunTheta = max(0.0, dot(normalize(input.domePosition), sunPosition1));
-
-
 	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
     outputColor = lerp(centerColor, apexColor, height);
 
@@ -102,6 +98,7 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
     }
 
 
+ 
 
 
 	output.normal = float4(1.0f, 1.0f, 1.0f, 0.8f);

@@ -246,6 +246,7 @@ void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMA
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = world;
 	dataPtr->view = XMMatrixMultiply(projection, view);
+	dataPtr->projection = projection;
 	dataPtr->HasAlpha = HasAlpha;
 	dataPtr->texOffSetX = texOffSets.x;
 	dataPtr->texOffSetY = texOffSets.y;

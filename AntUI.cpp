@@ -233,6 +233,7 @@ void CAntUI::AddDirectionalLight(DirectionalLight& dlight)
 	TwAddVarRW(lightBar, "Light position: ", TW_TYPE_DIR3F, &dlight.lightProperties.Position, "");
 	TwAddVarRW(lightBar, "Light color: ", TW_TYPE_DIR3F, &dlight.lightProperties.Color, "");
 	TwAddVarRW(lightBar, "Light projection matrix: ", TW_TYPE_DIR3F, &dlight.lightProjectionF, "");
+	TwAddVarRW(lightBar, "Light attenuation: ", TW_TYPE_FLOAT, &dlight.lightProperties.attenuation, "");
 }
 
 

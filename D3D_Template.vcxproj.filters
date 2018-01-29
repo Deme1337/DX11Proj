@@ -31,6 +31,9 @@
     <Filter Include="GUI\ImGui">
       <UniqueIdentifier>{c6fcb91a-ee57-4c3a-b2b7-9a6e226820d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hosek">
+      <UniqueIdentifier>{d8f5ac88-85d3-4ca3-9638-aa2c5bdbcc31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -168,6 +171,18 @@
     <ClInclude Include="SceneSaver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModelData_Spectral.h">
+      <Filter>hosek</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModelData_RGB.h">
+      <Filter>hosek</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModelData_CIEXYZ.h">
+      <Filter>hosek</Filter>
+    </ClInclude>
+    <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModel.h">
+      <Filter>hosek</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -277,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="SceneSaver.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ext\HosekSky\Include\ArHosekSkyModel.c">
+      <Filter>hosek</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

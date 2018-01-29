@@ -8,6 +8,7 @@
 #include "SceneClass.h"
 #include "TcpClass.h"
 #include "AntUI.h"
+#include "SceneSaver.h"
 
 class GraphicsEngine
 {
@@ -41,7 +42,7 @@ private: //Functions
 
 	void LoadMaterialTexture(const char* type);
 
-	void SaveScene();
+	void SaveSceneS();
 	bool LoadSceneFromFile();
 	void PrepareScene();
 	void PrepareTW();
@@ -59,6 +60,8 @@ private: //Objects
 	std::vector<Material*> materiallist;
 	std::vector<Actor*> LoadedActorList;
 	std::ofstream SaveFile;
+
+	SceneSaver* SaveScene;
 
 	TinyTextContext_c textContext;
 

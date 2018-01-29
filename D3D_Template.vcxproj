@@ -164,6 +164,10 @@
     <ClInclude Include="DeferredShader.h" />
     <ClInclude Include="DepthShader.h" />
     <ClInclude Include="DeviceClass.h" />
+    <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModel.h" />
+    <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModelData_CIEXYZ.h" />
+    <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModelData_RGB.h" />
+    <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModelData_Spectral.h" />
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="imgui-master\imconfig.h" />
@@ -209,6 +213,7 @@
     <ClCompile Include="DeferredShader.cpp" />
     <ClCompile Include="DepthShader.cpp" />
     <ClCompile Include="DeviceClass.cpp" />
+    <ClCompile Include="Ext\HosekSky\Include\ArHosekSkyModel.c" />
     <ClCompile Include="FreeCamera.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="imgui-master\imgui.cpp" />

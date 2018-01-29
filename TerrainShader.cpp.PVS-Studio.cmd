@@ -1,1 +1,0 @@
-@call "C:\Program Files (x86)\PVS-Studio\x64\PVS-Studio.exe" --cfg "D:\Graphics-programming\D3D_Template\D3D_Template\TerrainShader.cpp.PVS-Studio.cfg"

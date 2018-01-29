@@ -1,14 +1,19 @@
 #include "stdafx.h"
 #include "SkyDomeShader.h"
 
-
-
+#include <cstdint>
+#include <iostream>
+#include <iomanip>
+#include <random>
+#include <algorithm> // notice this
 using namespace std;
 
-float Pi = 3.14159265359;
+
+
 
 float PhysicalSunSize = XMConvertToRadians(0.27f);
 float CosPhysicalSunSize = std::cos(PhysicalSunSize);
+
 
 static float AngleBetween(const XMVECTOR& dir0, const XMVECTOR& dir1)
 {
@@ -377,6 +382,9 @@ bool CSkyDomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMM
 	dataPtr2->sunPower = dlight.lightProperties.sunPower;
 	dataPtr2->scale1 = dlight.lightProperties.scale1;
 	dataPtr2->scale1 = dlight.lightProperties.scale2;
+
+	dataPtr2->radiance = SampleSky(this->skyModel, XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f)).x;
+
 	// Unlock the color constant buffer.
 	deviceContext->Unmap(m_colorBuffer, 0);
 
@@ -404,3 +412,75 @@ void CSkyDomeShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexC
 
 	return;
 }
+
+XMFLOAT3 CSkyDomeShader::SampleSky(const SkyModelData & data, XMVECTOR sampleDir)
+{
+
+
+	float gamma = AngleBetween(sampleDir, XMLoadFloat3(&data.SunDirection));
+	float theta = AngleBetween(sampleDir, XMVectorSet(0, 1, 0, 1));
+
+	XMFLOAT3 radiance;
+
+	radiance.x = float(arhosek_tristim_skymodel_radiance(data.StateR, theta, gamma, 0));
+	radiance.y = float(arhosek_tristim_skymodel_radiance(data.StateG, theta, gamma, 1));
+	radiance.z = float(arhosek_tristim_skymodel_radiance(data.StateB, theta, gamma, 2));
+
+	// Multiply by standard luminous efficacy of 683 lm/W to bring us in line with the photometric
+	// units used during rendering
+	radiance.x *= 683.0f;
+	radiance.y *= 683.0f;
+	radiance.z *= 683.0f;
+
+	radiance.x *= FP16Scale;
+	radiance.y *= FP16Scale;
+	radiance.z *= FP16Scale;
+
+	return radiance;
+}
+
+
+float clip(float n, float lower, float upper)
+{
+	return std::max(lower, std::min(n, upper));
+}
+
+XMFLOAT3 Saturate(XMFLOAT3 val)
+{
+	XMFLOAT3 result;
+	result.x = clip(val.x, 0.0f, 1.0f);
+	result.y = clip(val.y, 0.0f, 1.0f);
+	result.z = clip(val.z, 0.0f, 1.0f);
+	return result;
+}
+
+float Saturate(float val)
+{
+	return clip(val, 0.0f, 1.0f);
+}
+
+
+void CSkyDomeShader::SkyModelData::Init(XMFLOAT3 sunDirection, XMFLOAT3 groundAlbedo, float turbidity)
+{
+
+
+	sunDirection.y = Saturate(sunDirection.y);
+	XMVECTOR sunDirV = XMLoadFloat3(&sunDirection);
+	sunDirV = XMVector3Normalize(sunDirV);
+    turbidity = clip(turbidity, 1.0f, 32.0f);
+    groundAlbedo = Saturate(groundAlbedo);
+
+
+    float thetaS = AngleBetween(sunDirV, XMVectorSet(0, 1, 0, 1.0f));
+    float elevation = Pi_2 - thetaS;
+    StateR = arhosek_rgb_skymodelstate_alloc_init(turbidity, groundAlbedo.x, elevation);
+    StateG = arhosek_rgb_skymodelstate_alloc_init(turbidity, groundAlbedo.y, elevation);
+    StateB = arhosek_rgb_skymodelstate_alloc_init(turbidity, groundAlbedo.z, elevation);
+
+    Albedo = groundAlbedo;
+    Elevation = elevation;
+    SunDirection = sunDirection;
+    Turbidity = turbidity;
+}
+
+

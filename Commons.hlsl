@@ -93,7 +93,8 @@ float2 texOffset(int u, int v )
 	return float2(u * 2.0f / 2048.0f, v * 2.0f / 2048.0f);
 }
 
-float softShadow(Texture2D shaderShadow, SamplerState SampleTypeShadow, float4 lightMatrix)
+
+float softShadow(Texture2D shaderShadow, SamplerState SampleTypeShadow, float4 lightMatrix, float shBias)
 {
     float vis = 0.1f;
     lightMatrix.xyz = lightMatrix.xyz / lightMatrix.w;
@@ -109,11 +110,11 @@ float softShadow(Texture2D shaderShadow, SamplerState SampleTypeShadow, float4 l
     lightMatrix.x = lightMatrix.x / 2.0f + 0.5f;
     lightMatrix.y = lightMatrix.y / -2.0f + 0.5f;
 	
-    float shadowBias = 0.0002f;
+    float bias = shBias;
 
     float shaderTex = shaderShadow.Sample(SampleTypeShadow, lightMatrix.xy).r;
 			
-    if (shaderTex < lightMatrix.z - shadowBias)
+    if (shaderTex < lightMatrix.z - bias)
     {
         vis = 0.1f;
     }
@@ -126,23 +127,24 @@ float softShadow(Texture2D shaderShadow, SamplerState SampleTypeShadow, float4 l
     return vis;
 }
 
-float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, float4 lightMatrix)
+float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, float4 lightMatrix, float shBias, float globalAmbients)
 {
 	float visibility = 0.0f;
 	lightMatrix.xyz = lightMatrix.xyz / lightMatrix.w;
 	
+
 	if (lightMatrix.x < -1.0f || lightMatrix.x > 1.0f ||
 		lightMatrix.y < -1.0f || lightMatrix.y > 1.0f ||
 		lightMatrix.z < 0.0f  || lightMatrix.z > 1.0f 
 		)
 	{
-		return 0.4f;
-	}
+        return globalAmbients;
+    }
 	
 	lightMatrix.x = lightMatrix.x / 2.0f + 0.5f;
 	lightMatrix.y = lightMatrix.y / -2.0f + 0.5f;
 	
-	float shadowBias = 0.0002f;
+    float Bias = shBias;
 
 	float x, y;
 	float LOS = 4;
@@ -152,9 +154,9 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 	{	
 		for (x = -LOS; x <= LOS; x += 1.0f)
 		{
-			float shaderTex = shaderShadow.SampleCmpLevelZero(SampleTypeShadow, lightMatrix.xy + texOffset(x, y) * 0.1, lightMatrix.z - shadowBias).r;
+            float shaderTex = shaderShadow.SampleCmpLevelZero(SampleTypeShadow, lightMatrix.xy + texOffset(x, y) * 0.1, lightMatrix.z - Bias).r;
 			
-			if (shaderTex > lightMatrix.z - shadowBias)
+            if (shaderTex > lightMatrix.z - Bias)
 			{
 				visibility += shaderTex;
 			}
@@ -164,15 +166,15 @@ float shadowAA(Texture2D shaderShadow, SamplerComparisonState SampleTypeShadow, 
 
 	visibility /= 8.0f;
 
-	//if (visibility > 1.1f)
+	//if (visibility > 1.0f)
 	//{
-	//	visibility = 1.1f;
+	//	visibility = 1.0f;
 	//}
 
-	if (visibility < 0.2)
+	if (visibility < 0.4)
 	{
-		visibility = 0.2f;
-	}
+        visibility = globalAmbients;
+    }
 
 
 
@@ -737,7 +739,7 @@ cbuffer DisneyParam : register(b2)
 
 };
 // From Disney's BRDF explorer: https://github.com/wdas/brdf
-float3 DisneyBRDF(float3 baseColor, out float3 specularColor, float3 normal, float roughness, float3 lightDir, float3 viewDir, float3 X, float3 Y, out float3 diffuse, float2 tex)
+float3 DisneyBRDF(float3 baseColor, out float3 specularColor, float3 normal, float roughness, float3 lightDir, float3 viewDir, float3 X, float3 Y, out float3 diffuse, float2 tex, float shadow)
 {
 	float g_Subsurface = 0.0f;
 	float g_Specular = 0.0f;
@@ -814,6 +816,7 @@ float3 DisneyBRDF(float3 baseColor, out float3 specularColor, float3 normal, flo
 	float Fr = lerp(0.04f, 1.0f, FH);
 	float Gr = smithG_GGX(NdL, 0.25f) * smithG_GGX(NdV, 0.25f);
 	diffuse = ((1.0f / PI) * lerp(Fd, ss, g_Subsurface) * baseColor + Fsheen) * (1.0f - g_Metallic);
-	return (diffuse  + Gs*Fs*Ds + 0.25f*g_Clearcoat*Gr*Fr*Dr)*NdL;
+    return (diffuse + Gs * Fs * Ds + 0.25f * g_Clearcoat * Gr * Fr * Dr) * NdL;
+
 }
 

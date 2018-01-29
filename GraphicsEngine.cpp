@@ -140,6 +140,8 @@ void GraphicsEngine::InitializeEngine(HWND hWnd, HINSTANCE hInst)
 	this->PrepareScene();
 	this->PrepareTW();
 
+	SaveScene = new SceneSaver();
+
 	if (gUseTerrain)
 	{
 		GenerateFoliage();
@@ -183,6 +185,19 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 			ImGui::InputFloat("Texture padding x", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.texOffsetx, -20.0f, 20.0f);
 			ImGui::InputFloat("Texture padding y", &m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.texOffsety, -20.0f, 20.0f);
 		}
+
+		if (ImGui::Button("Save", ImVec2(100, 20)))
+		{
+			if (!SaveScene->SaveScene(m_Scene, "null"))
+			{
+				MessageBox(mainWindow, L"Cannot save file", L"ERROR", MB_OK);
+			}
+
+		}
+
+		ImGui::InputFloat("Shadow bias: ", &m_Scene->dirLight.lightProperties.shadowBias, 0.001f, 0.01f);
+
+		ImGui::Separator();
 
 		ImGui::SliderFloat("Subsurface", &m_Scene->subspectintani.x, 0.0f, 1.0f);
 		ImGui::SliderFloat("specular", &m_Scene->subspectintani.y, 0.0f, 1.0f);
@@ -338,7 +353,7 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 
 	if (Keys::onekey(VKEY_B))
 	{
-		this->SaveScene();
+		this->SaveSceneS();
 	}
 
 	if (Keys::onekey(VKEY_UP_ARROW) && ObjectSelectedIndex < m_Scene->m_Actors.size())
@@ -603,7 +618,7 @@ void GraphicsEngine::CustomizeActorSpriteSheet()
 		ImGui::Begin("SpriteSheet");
 		ImGui::SetWindowSize(ImVec2(300, 400));
 
-		if (m_Scene->m_Actors.size() > 0)
+		if (m_Scene->m_Actors.size() > 0 && ObjectSelectedIndex <= m_Scene->m_Actors.size()-1)
 		{
 			if (m_Scene->m_Actors[ObjectSelectedIndex]->UseAnimatedSpriteSheet)
 			{
@@ -696,7 +711,7 @@ void GraphicsEngine::LoadMaterialTexture(const char* type)
 	delete ofd;
 }
 
-void GraphicsEngine::SaveScene()
+void GraphicsEngine::SaveSceneS()
 {
 	std::string SceneSavePath;
 

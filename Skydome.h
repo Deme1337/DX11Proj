@@ -5,6 +5,8 @@
 
 #include "DeviceClass.h"
 #include "TextureTA.h"
+
+
 using namespace std;
 
 class CSkydome

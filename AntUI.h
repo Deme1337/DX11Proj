@@ -5,12 +5,12 @@
 #define UI_H
 
 #include "DeviceClass.h"
-#include <AntTweakBar.h>
+
 #include <vector>
 #include "SceneClass.h"
 #include "Lights.h"
 
-
+#include <AntTweakBar.h>
 class CAntUI
 {
 public:

@@ -128,7 +128,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	dirLight.lightProperties.Position = XMFLOAT4(300.0f, 2200.0f, -400.0f, 1.0f);
 	dirLight.CalcLightViewMatrix();
 	dirLight.CalcProjectionMatrix();
-	dirLight.lightProperties.Color = XMFLOAT4(0.5, 0.5, 0.5, 1.0f);
+	//dirLight.lightProperties.Color = XMFLOAT4(0.5, 0.5, 0.5, 1.0f);
 	dirLight.lightProjectionF = XMFLOAT4(5000.0f, 700.0f, 700.0f, 1.0f);
 	dirLight.lightProperties.size = 29; //very tricky to get right.. Gotta fix shader sometime
 
@@ -244,6 +244,10 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 		view = m_Camera->GetCameraView();
 		DevClass->TurnCullingFront();
 		DevClass->TurnZBufferOff();
+
+		XMFLOAT3 sunDir; XMStoreFloat3(&sunDir, XMVector3Normalize(XMLoadFloat4(&dirLight.lightProperties.Position)));
+
+		m_SkyDomeShader->skyModel.Init(sunDir, XMFLOAT3(1.0f, 1.0f, 1.0f), 15.0f);
 
 		m_SkyDome->Render(DevClass->GetDevCon());
 		//m_SkyDomeShader->SetSkyDomeTexture(DevClass->GetDevCon(), m_SkyDome->textureSD->GetTexture(), 0);

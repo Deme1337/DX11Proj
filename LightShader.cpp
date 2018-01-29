@@ -338,6 +338,8 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	dataPtr2->lightProjectionMatrix = XMMatrixTranspose(dlight.GetLightProjectionMatrix());
 	dataPtr2->viewMatrix = XMMatrixTranspose(tempViewMatrix);
 	dataPtr2->GlobalAmbient = dlight.lightProperties.globalAmbient;
+	dataPtr2->shadowBias = dlight.lightProperties.shadowBias;
+	dataPtr2->attenuation = dlight.lightProperties.attenuation;
 
 	// Unlock the constant buffer.
 	devclass->GetDevCon()->Unmap(m_lightBuffer, 0);

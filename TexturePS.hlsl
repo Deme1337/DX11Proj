@@ -325,7 +325,7 @@ float4 Combine(PixelInputType input) : SV_TARGET
 	fColors.tex = specHighTex;
 	textureColor1 = float4(FxaaPixelShader(TexPos, fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
 
-    if (expa <= 0.01)
+    if (expa <= 0.1)
         return textureColor;
     else
         return textureColor + textureColor1;

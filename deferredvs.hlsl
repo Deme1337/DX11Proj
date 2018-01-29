@@ -40,20 +40,17 @@ PixelInputType DeferredVertexShader(VertexInputType input)
 	
     input.position.w = 1.0f;
 
-
     output.position = mul(input.position, worldMatrix);
     output.worldPosition = output.position;
     output.position = mul(output.position, viewMatrix);
-
-
 	
 	float2 newTex = input.tex;
     output.tex.x = newTex.x * texOffSetX;
     output.tex.y = newTex.y * texOffSetY;
 
+
+
     output.normal = mul(input.normal, (float3x3)worldMatrix);
-	
-   
     output.normal = normalize(output.normal);
 
 

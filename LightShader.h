@@ -30,6 +30,8 @@ private:
 		XMMATRIX lightProjectionMatrix;
 		XMMATRIX viewMatrix;
 		float GlobalAmbient;
+		float shadowBias;
+		float attenuation;
 	};
 
 	struct DisneyParam

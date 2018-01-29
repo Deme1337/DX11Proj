@@ -22,11 +22,13 @@ private:
 	{
 		XMFLOAT4 Position = XMFLOAT4(1.0, 1.0, 1.0, 1.0); 
 		XMFLOAT4 Color = XMFLOAT4(1.0, 1.0, 1.0, 1.0); 
-		float globalAmbient = 0.08f;
+		float globalAmbient = 0.4f;
 		float size = 120.0f;
 		float sunPower = 0.04f;
 		float scale1 = 1.5;
 		float scale2 = 1.7;
+		float shadowBias = 0.0001f;
+		float attenuation = 1.0f;
 	};
 
 
