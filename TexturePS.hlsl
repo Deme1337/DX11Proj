@@ -44,6 +44,7 @@ cbuffer PostProcessData : register(b0)
     float ssaoBias;
     float ssaoRadius;
 	float4 ssaoKernel[64];
+    matrix projectionMatrix;
 };
 
 // Calculates the gaussian blur weight for a given distance and sigmas
@@ -320,32 +321,49 @@ float4 Combine(PixelInputType input) : SV_TARGET
 	fColors.smpl = SampleType;
 	fColors.tex =  shaderTexture;
 	textureColor = float4(FxaaPixelShader(TexPos, fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
-    
+
 	//
 	fColors.tex = specHighTex;
 	textureColor1 = float4(FxaaPixelShader(TexPos, fColors, float2(1.0 / screenWH.x, 1.0 / screenWH.y)), 1.0);
 
     if (expa <= 0.1)
-        return textureColor;
+        return float4(textureColor.xyz, 1.0f);
     else
         return textureColor + textureColor1;
       
 	
 }
 
+float2 texOffset1(int u, int v, float2 texsize)
+{
+    return float2(u * 2.0f / texsize.x, v * 2.0f / texsize.y);
+}
+
+//This is used as blur for ssao now
 float4 ToneMapPass(PixelInputType input) : SV_Target
 {
-    
+    const int uBlurSize = 2;
+    float2 inputSize = 0.0f;
+    specHighTex.GetDimensions(inputSize.x, inputSize.y);
 
     float2 TexPos = input.tex;
 
     float4 texColor = 0.0f;
 
-    texColor = float4(tonemap_filmic(smaaReadyTex.Sample(SampleType, TexPos).rgb), 1.0f);
 
+    //float2 hlim = float2(float(-uBlurSize) * 0.5 + 0.5, float(-uBlurSize) * 0.5 + 0.5);
+    for (int i = -2; i < uBlurSize; ++i)
+    {
+        for (int j = -2; j < uBlurSize; ++j)
+        {
+            //float2 offset = (hlim + float2(float(i), float(j))) * inputSize;
+            texColor += specHighTex.Sample(SampleType, TexPos + texOffset1(i, j, inputSize));
+        }
+    }
+ 
+    texColor = texColor / 16;
 
-    return pow(texColor,2.2);
-
+    return texColor;
 }
 
 //http://www.learnopengl.com/#!Advanced-Lighting/SSAO changed to hlsl
@@ -353,42 +371,51 @@ float4 SSAO(PixelInputType input) : SV_TARGET
 {
     float2 noiseScale = float2(screenWH.x / 4.0f, screenWH.y / 4.0f);
 
-	float4 position = positionTex.Sample(SampleType, input.tex).xyzw;
-	float3 normal = normalTex.Sample(SampleType, input.tex).xyz;
-    float3 randomF = areaTexture.Sample(SamplerWrap, input.tex * noiseScale).xyz * 2.0f - 1.0f;
+    float4 position = positionTex.Sample(SampleType, input.tex);
+    //float3 normal = normalTex.Sample(SampleType, input.tex).xyz;
+    //normal = normalize(normal);
+    float3 randomF = areaTexture.Sample(SamplerWrap, input.tex * noiseScale).xyz;
+    randomF = normalize(randomF);
 
-    float3 tangent = tangentTex.Sample(SampleType, input.tex);
-    float3 bitangent = bitangentTex.Sample(SampleType, input.tex);
 
-    matrix TBN = float4x4(float4(tangent, 1.0), float4(bitangent, 1.0f), float4(normal, 1.0f), float4(0.0f, 0.0f, 0.0f, 1.0f));
+
+    float3 vsNormal = tangentTex.Sample(SampleType, input.tex);
+    vsNormal = normalize(vsNormal);
+
+
+    float3 tangent = normalize(randomF - vsNormal.xyz * dot(randomF, vsNormal.xyz));
+    float3 binormal = normalize(cross(vsNormal.xyz, tangent));
+ 
+    //float3 tangent = tangentTex.Sample(SampleType, input.tex) * 2.0f - 1.0f;
+    //float3 bitangent = bitangentTex.Sample(SampleType, input.tex) * 2.0f - 1.0f;
+
+    matrix TBN = float4x4(float4(tangent, 1.0), float4(binormal, 1.0f), float4(vsNormal, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
 
 	float occlusion = 0.0f;
 
     float radius = ssaoRadius;
     float bias = ssaoBias;
-    float sampleDepth1 = positionTex.Sample(SampleType, input.tex).w;
 
 	for (int i = 0; i < 64; i++)
 	{
-        float3 sample = mul(TBN, saturate(ssaoKernel[i]));
-		sample = position.xyz + sample * radius;
+        float3 sample = mul(TBN, ssaoKernel[i]);
+        sample = position.xyz + sample * radius;
 
 		float4 offset = float4(sample, 1.0f);
 
-        //offset = mul(input.projectionMatrix, offset);
-		//offset.xyz /= offset.w; // perspective divide
-	    //offset.xyz = offset.xyz * 0.5 + 0.5; // transform to range 0.0 - 1.0
+        offset = mul(projectionMatrix, offset);
+		offset.xy /= offset.w; // perspective divide
+	    offset.xy = offset.xy * 0.5 + 0.5; // transform to range 0.0 - 1.0
 		
-		float sampleDepth = positionTex.Sample(SampleType, offset.xy).w;
+        float sampleDepth = positionTex.Sample(SampleType, offset.xy).z;
 
-		float rangeCheck = smoothstep(0.0f, 1.0, radius / abs(position.w  - sampleDepth));
+        float rangeCheck = smoothstep(0.0f, 1.0, radius / abs(position.z - sampleDepth));
 
-        occlusion += (sampleDepth >= sample.z - bias ? 1.0f : 0.0f) * rangeCheck;
+        occlusion += (sampleDepth <= sample.z - bias ? 1.0f : 0.0f) * rangeCheck;
     }
 
 	occlusion = 1.0f - (occlusion / 64);
-
+    occlusion = pow(occlusion, expa);
     return float4(occlusion, occlusion, occlusion, 1.0f);
-    //return float4(sampleDepth1, sampleDepth1, sampleDepth1, 1.0f);
-    //return float4(randomF, 1.0f);
+    //return float4(vsNormal, 1.0f);
 }					  

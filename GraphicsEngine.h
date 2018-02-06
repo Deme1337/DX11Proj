@@ -83,13 +83,14 @@ private: //Variables
 
 	//Index of the selected object
 	int ObjectSelectedIndex = 0;
-
+	int LastObjectSelectedIndex = 0;
 
 	bool matListUpdated = false;
 	bool FullScreen = false;
 
+
 	float ssaoBias = 3.0f;
-	float ssaoRadius = 32.5f;
+	float ssaoRadius = 300.5f;
 
 
 

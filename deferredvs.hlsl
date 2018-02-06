@@ -4,6 +4,7 @@ cbuffer MatrixBuffer
 	matrix worldMatrix;
 	matrix viewMatrix;
 	matrix projectionMatrix;
+    matrix invViewMatrix;
     float texOffSetX;
     float texOffSetY;
 	int HasAlpha;
@@ -29,6 +30,8 @@ struct PixelInputType
 	float3 binormal : BINORMAL;
 	float4 worldPosition : TEXCOORD1;
 	int HasAlpha : TEXCOORD2;
+    float3 vsNormal : TEXCOORD3;
+    float3 vsPosition : TEXCOORD4;
 };
 
 
@@ -40,9 +43,12 @@ PixelInputType DeferredVertexShader(VertexInputType input)
 	
     input.position.w = 1.0f;
 
+    matrix VS = mul(viewMatrix, worldMatrix);
+    output.vsPosition = mul(input.position, VS).xyz;
+
     output.position = mul(input.position, worldMatrix);
     output.worldPosition = output.position;
-    output.position = mul(output.position, viewMatrix);
+    output.position = mul(output.position, projectionMatrix);
 	
 	float2 newTex = input.tex;
     output.tex.x = newTex.x * texOffSetX;
@@ -60,6 +66,11 @@ PixelInputType DeferredVertexShader(VertexInputType input)
 	
 	output.binormal = mul(input.binormal, (float3x3)worldMatrix);
 	output.binormal = normalize(output.binormal);
+
+    //For SSAO
+    //matrix normalMatrix = transpose(mul(invViewMatrix, worldMatrix));
+    output.vsNormal = mul(input.normal.xyz, (float3x3) invViewMatrix);
+
 
 	output.HasAlpha = HasAlpha;
 

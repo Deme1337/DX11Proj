@@ -243,10 +243,12 @@ void DeferredShader::UpdateShader(CDeviceClass * devclass,XMMATRIX & world, XMMA
 	// Get a pointer to the data in the constant buffer.
 	dataPtr = (MatrixBufferType*)mappedResource.pData;
 
+	XMVECTOR det;
 	// Copy the matrices into the constant buffer.
 	dataPtr->world = world;
-	dataPtr->view = XMMatrixMultiply(projection, view);
-	dataPtr->projection = projection;
+	dataPtr->view = view;
+	dataPtr->invViewMatrix = XMMatrixTranspose(XMMatrixInverse(&det, XMMatrixMultiply(view, world)));
+	dataPtr->projection = XMMatrixMultiply(projection, view);
 	dataPtr->HasAlpha = HasAlpha;
 	dataPtr->texOffSetX = texOffSets.x;
 	dataPtr->texOffSetY = texOffSets.y;

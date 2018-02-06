@@ -1,23 +1,21 @@
-﻿  TcpClass.cpp
-d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+﻿  SceneSaver.cpp
+d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(65): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\mesh.h(51): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
 d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\tcpclass.cpp(115): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  SkyDomeShader.cpp
-d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
-  SceneSaver.cpp
-d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  SceneClass.cpp
+d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(65): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\mesh.h(51): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
 d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
-  LightShader.cpp
-d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\lightshader.cpp(574): warning C4244: '=': conversion from 'SIZE_T' to 'unsigned long', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(27): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(166): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(235): warning C4244: '=': conversion from '__int64' to 'double', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(297): warning C4244: 'initializing': conversion from '__int64' to 'double', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(309): warning C4244: 'initializing': conversion from '__int64' to 'double', possible loss of data
   GraphicsEngine.cpp
-d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(65): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\mesh.h(51): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
 d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
@@ -25,12 +23,11 @@ d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(49): warnin
 d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(57): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(64): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(71): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(376): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(544): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(553): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(792): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(377): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(549): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\graphics-programming\d3d_template\d3d_template\graphicsengine.cpp(558): warning C4305: 'argument': truncation from 'double' to 'float'
   D3D_Template.cpp
-d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(65): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\mesh.h(51): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
 d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
@@ -40,29 +37,13 @@ d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(22): warning 
 d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(28): warning C4311: 'type cast': pointer truncation from 'HANDLE' to 'long'
 d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(28): warning C4302: 'type cast': truncation from 'HANDLE' to 'long'
 d:\graphics-programming\d3d_template\d3d_template\d3d_template.cpp(102): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  AntUI.cpp
-d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\mesh.h(51): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
-  Actor.cpp
-d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\mesh.h(51): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
   Generating Code...
   Compiling...
-  SceneClass.cpp
-d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  AntUI.cpp
+d:\graphics-programming\d3d_template\d3d_template\deferredshader.h(65): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\mesh.h(51): warning C4267: 'return': conversion from 'size_t' to 'uint32', possible loss of data
 d:\graphics-programming\d3d_template\d3d_template\lights.h(29): warning C4305: 'initializing': truncation from 'double' to 'float'
 d:\graphics-programming\d3d_template\d3d_template\lights.h(84): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(27): warning C4305: 'argument': truncation from 'double' to 'float'
-d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(27): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(165): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(234): warning C4244: '=': conversion from '__int64' to 'double', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(289): warning C4244: 'initializing': conversion from '__int64' to 'double', possible loss of data
-d:\graphics-programming\d3d_template\d3d_template\sceneclass.cpp(301): warning C4244: 'initializing': conversion from '__int64' to 'double', possible loss of data
   Generating Code...
   D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.exe
   D3D_Template.vcxproj -> D:\Graphics-programming\D3D_Template\x64\Debug\D3D_Template.pdb (Full PDB)

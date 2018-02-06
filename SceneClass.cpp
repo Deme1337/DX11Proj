@@ -24,7 +24,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	
 	renderScale = 2.0f;
 
-	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth*renderScale, sceneheight * renderScale, 10.0, 0.1, DXGI_FORMAT_R16G16B16A16_FLOAT);
+	m_DeferredBuffer->Initialize(DevClass->GetDevice(),scenewidth * renderScale, sceneheight * renderScale, 10.0, 0.1, DXGI_FORMAT_R16G16B16A16_FLOAT);
 
 
 	m_DeferredShader = new DeferredShader();
@@ -99,7 +99,8 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 
 	ssaoNoiseTexture = new CTextureTA();
 
-	if (!ssaoNoiseTexture->LoadFreeImage(DevClass->GetDevice(), DevClass->GetDevCon(), "Textures\\randomtexture.jpg"))
+
+	if (!ssaoNoiseTexture->NoiseTexture(DevClass->GetDevice(), DevClass->GetDevCon()))
 	{
 		MessageBox(hWnd, L"Cannot init ssao noise texture", L"ERROR!", MB_OK);
 	}
@@ -125,7 +126,7 @@ void SceneClass::InitializeScene(CDeviceClass * DevClass, int scenewidth, int sc
 	textureShader->Exposure = 22.0;
 
 	//Lights and shadow map rt
-	dirLight.lightProperties.Position = XMFLOAT4(300.0f, 2200.0f, -400.0f, 1.0f);
+	dirLight.lightProperties.Position = XMFLOAT4(150.0f, 2200.0f, 1500.0f, 1.0f);
 	dirLight.CalcLightViewMatrix();
 	dirLight.CalcProjectionMatrix();
 	//dirLight.lightProperties.Color = XMFLOAT4(0.5, 0.5, 0.5, 1.0f);
@@ -238,25 +239,32 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 	{
 		XMMATRIX worldSphere = XMMatrixIdentity();
 
-		worldSphere = XMMatrixScalingFromVector(XMVectorSet(4000.0f, 4000.0f, 4000.0f, 1.0f));
+		worldSphere = XMMatrixRotationRollPitchYawFromVector(XMVectorSet(0.0f, skyDomeRotator, 0.0f, 1.0f));
+		worldSphere *= XMMatrixScalingFromVector(XMVectorSet(4000.0f, 4000.0f, 4000.0f, 1.0f));
 
 		projection = DevClass->GetProjectionMatrix();
 		view = m_Camera->GetCameraView();
 		DevClass->TurnCullingFront();
 		DevClass->TurnZBufferOff();
 
-		XMFLOAT3 sunDir; XMStoreFloat3(&sunDir, XMVector3Normalize(XMLoadFloat4(&dirLight.lightProperties.Position)));
 
-		m_SkyDomeShader->skyModel.Init(sunDir, XMFLOAT3(1.0f, 1.0f, 1.0f), 15.0f);
+		//check if light has moved
+		if (lastLightPos.x != dirLight.lightProperties.Position.x || lastLightPos.y != dirLight.lightProperties.Position.y
+			|| lastLightPos.z != dirLight.lightProperties.Position.z)
+		{
+			m_SkyDomeShader->sunPosMoved = true;
+			lastLightPos = dirLight.lightProperties.Position;
+		}
 
 		m_SkyDome->Render(DevClass->GetDevCon());
 		//m_SkyDomeShader->SetSkyDomeTexture(DevClass->GetDevCon(), m_SkyDome->textureSD->GetTexture(), 0);
 		m_SkyDomeShader->SetSkyDomeTexture(DevClass->GetDevCon(), environmentMap->cubeGetTexture(), 1);
-		if (!m_SkyDomeShader->Update(DevClass->GetDevCon(), m_SkyDome->GetIndexCount(),
+		if (!m_SkyDomeShader->Update(DevClass->GetDevCon(), DevClass->GetDevice(), m_SkyDome->GetIndexCount(),
 			worldSphere, view, projection, m_SkyDome->GetApexColor(), m_SkyDome->GetCenterColor(), dirLight, m_Camera))
 		{
 			MessageBox(NULL, L"Error skydome rendering", L"ERROR", MB_OK);
 		}
+		skyDomeRotator += 0.0001f;
 	}
 
 	//Terrain
@@ -315,7 +323,8 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	DevClass->TurnZBufferOff();
 	m_Window->UpdateWindow(DevClass->GetDevCon(), viewPortOffSet, 0);
 
-	//ID3D11ShaderResourceView* shadowRes = postProcessor->BlurShadows(DevClass, m_Window, shadowMap->GetShaderResourceView());
+	ID3D11ShaderResourceView* ssaoRes = postProcessor->CreateSSAO(DevClass, m_Window, m_DeferredBuffer->GetShaderResourceView(6), m_DeferredBuffer->GetShaderResourceView(1), ssaoNoiseTexture->GetTexture(), 
+																  ssaoBlurSigma, m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(5));
 
 	DevClass->ResetViewPort();
 	if (ApplyPostProcess)
@@ -333,41 +342,41 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 	
 
-
+	m_LightShader->tempViewMatrix = m_Camera->GetCameraView();
 	m_LightShader->UpdateDisneyBuffer(DevClass, subspectintani, sheentintcleargloss);
 	m_LightShader->UpdateShadowMap(DevClass, shadowMap->GetShaderResourceView());
 	m_LightShader->UpdateTextureByIndex(DevClass, environmentMap->cubeGetTexture(), 8);
 	m_LightShader->UpdateTextureByIndex(DevClass, irradianceMap->GetTexture(),9);
-	//m_LightShader->UpdateTextureByIndex(DevClass, ssaoRes, 10);
+	m_LightShader->UpdateTextureByIndex(DevClass, ssaoRes, 10);
 
 	//Settings to show all textures passed 
 	if (Setting == 0)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(0), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3),m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(0), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3),m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(5), dirLight, pointLights);
 	}
 	if (Setting == 1)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(5), dirLight, pointLights);
 	}
 
 	if (Setting == 2)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(5), dirLight, pointLights);
 	}
 
 	if (Setting == 3)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(5), dirLight, pointLights);
 	}
 
 	if (Setting == 4)
 	{
 		m_LightShader->UpdateCameraPosition(DevClass, m_Camera->GetCameraPosition());
-		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(6), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(6), dirLight, pointLights);
+		m_LightShader->UpdateShaderParameters(DevClass, worldMatrix, baseViewMatrix, orthoMatrix, m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(1), m_DeferredBuffer->GetShaderResourceView(2), m_DeferredBuffer->GetShaderResourceView(3), m_DeferredBuffer->GetShaderResourceView(4), m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(5), dirLight, pointLights);
 	}
 	
 
@@ -383,14 +392,15 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		
 		postProcessor->SetPostProcessInputs(postProcessTexture->GetShaderResourceView(0), postProcessTexture->GetShaderResourceView(1), m_Window, BlurSigma);
 
-		//Check texture
+		//Check texture Key G
 		if (Setting == 5)
 		{
-			postProcessor->SetPostProcessInputs(shadowMap->GetShaderResourceView(), nullptr, m_Window, BlurSigma);
+			postProcessor->SetPostProcessInputs(shadowMap->GetShaderResourceView(), nullptr, m_Window, 0);
 		}
+		//Key B
 		if (Setting == 8)
 		{
-			//postProcessor->SetPostProcessInputs(ssaoRes, nullptr, m_Window, BlurSigma);
+			postProcessor->SetPostProcessInputs(ssaoRes, nullptr, m_Window, 0);
 		}
 
 
@@ -403,7 +413,9 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 		
 	}
 
-	
+	ssaoRes->Release();
+	ssaoRes = 0;
+	delete ssaoRes;
 }
 
 void SceneClass::AddSceneActor(Actor * a, CDeviceClass* devc)

@@ -47,9 +47,16 @@ bool PostProcessor::InitializePostProcessor(CDeviceClass * devclass, int windoww
 	}
 
 	SSAO = new RenderTarget();
-	if (!SSAO->Initialize(devclass, windowwidth, windowheight, 10.0, 0.1, 0, DXGI_FORMAT_R16G16B16A16_FLOAT))
+	if (!SSAO->Initialize(devclass, windowwidth, windowheight, 100.0, 0.1, 0, DXGI_FORMAT_R16G16B16A16_FLOAT))
 	{
 		MessageBox(devclass->_mainWindow, L"Cannot init SSAO rt", L"ERROR", MB_OK);
+		return false;
+	}
+
+	toneMap = new RenderTarget();
+	if (!toneMap->Initialize(devclass, windowwidth, windowheight, 100.0, 0.1, 0, DXGI_FORMAT_R16G16B16A16_FLOAT))
+	{
+		MessageBox(devclass->_mainWindow, L"Cannot init SSAO blur rt", L"ERROR", MB_OK);
 		return false;
 	}
 
@@ -244,7 +251,7 @@ void PostProcessor::PostProcess(COrthoWindow* window, ID3D11ShaderResourceView* 
 
 	
 	rtShader->Render(devclass->GetDevCon(), window->m_indexCount, worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height));
-	rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_vertexShader, rtShader->m_pixelShaderToneMap);
+	rtShader->RenderWithShaders(devclass->GetDevCon(), window->m_indexCount, rtShader->m_vertexShader, rtShader->m_pixelShader);
 }
 
 ID3D11ShaderResourceView* PostProcessor::prepareSmaa(COrthoWindow * window, ID3D11ShaderResourceView* input, ID3D11ShaderResourceView * areaTex, ID3D11ShaderResourceView * searchTex)
@@ -271,7 +278,7 @@ ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, CO
 	window->Render(devclass->GetDevCon());
 	
 	rtShader->ssaoBiasAndRadius = this->ssaoBiasAndRadius;
-	rtShader->Exposure = 25.0;
+	rtShader->Exposure = expss;
 	rtShader->UpdateTextureIndex(devclass->GetDevCon(), ssaoNoise, 2);
 	rtShader->UpdateTextureIndex(devclass->GetDevCon(), pos, 3); 
 	rtShader->UpdateTextureIndex(devclass->GetDevCon(), normal, 4);
@@ -280,33 +287,34 @@ ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, CO
 	rtShader->SetShaderParameters(devclass->GetDevCon(), worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height), ssaoKernel);
 	rtShader->PPSSAO(devclass->GetDevCon(), window->m_indexCount);
 
-	//BlurV
+
+	//Blur
 	devclass->ResetViewPort();
-	blurV->ClearRenderTarget(devclass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
-	blurV->SetRenderTarget(devclass->GetDevCon());
-	rtShader->Exposure = 25.0;
+	toneMap->ClearRenderTarget(devclass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
+	toneMap->SetRenderTarget(devclass->GetDevCon());
+	rtShader->Exposure = expss;
 	UpdatePostProcessorMatrices();
 	window->Render(devclass->GetDevCon());
 
 
 	rtShader->SetSpecularHighLights(devclass->GetDevCon(), SSAO->GetShaderResourceView(0));
 	rtShader->SetShaderParameters(devclass->GetDevCon(), worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height), ssaoKernel);
-	rtShader->RenderShaderBlurV(devclass->GetDevCon(), window->m_indexCount);
+	rtShader->RenderShaderToneMap(devclass->GetDevCon(), window->m_indexCount);
 
 
 	//BlurH
-	devclass->ResetViewPort();
-	blurH->ClearRenderTarget(devclass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
-	blurH->SetRenderTarget(devclass->GetDevCon());
-	rtShader->Exposure = 25.0;
-	UpdatePostProcessorMatrices();
-	window->Render(devclass->GetDevCon());
+	//devclass->ResetViewPort();
+	//blurH->ClearRenderTarget(devclass->GetDevCon(), 0.0, 0.0, 0.0, 1.0);
+	//blurH->SetRenderTarget(devclass->GetDevCon());
+	//rtShader->Exposure = expss;
+	//UpdatePostProcessorMatrices();
+	//window->Render(devclass->GetDevCon());
+	//
+	//rtShader->SetSpecularHighLights(devclass->GetDevCon(), blurV->GetShaderResourceView(0));
+	//rtShader->SetShaderParameters(devclass->GetDevCon(), worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height), ssaoKernel);
+	//rtShader->RenderShaderBlurH(devclass->GetDevCon(), window->m_indexCount);
 
-	rtShader->SetSpecularHighLights(devclass->GetDevCon(), blurV->GetShaderResourceView(0));
-	rtShader->SetShaderParameters(devclass->GetDevCon(), worldMatrix, baseViewMatrix, orthoMatrix, XMFLOAT2(_width, _height), ssaoKernel);
-	rtShader->RenderShaderBlurH(devclass->GetDevCon(), window->m_indexCount);
-
-	return SSAO->GetShaderResourceView(0);
+	return toneMap->GetShaderResourceView(0);
 }
 
 ID3D11ShaderResourceView * PostProcessor::BlurShadows(CDeviceClass * devclass, COrthoWindow * window, ID3D11ShaderResourceView * pos)
@@ -360,6 +368,7 @@ void PostProcessor::Release()
 	edgesTex->Shutdown();
 	smaaFinalizeTex->Shutdown();
 	smaaResultTex->Shutdown();
+	toneMap->Shutdown();
 	color->Release();
 	combine->Shutdown();
 	SSAO->Shutdown();
@@ -406,7 +415,7 @@ void PostProcessor::UpdatePostProcessorMatrices()
 	worldMatrix = XMMatrixIdentity();
 	orthoMatrix = devclass->GetOrthoMatrix();
 	baseViewMatrix = XMMatrixLookAtLH(XMVectorSet(0.0f, 0.0f, -1.0f, 1.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
-
+	rtShader->SetProjectionMatix(devclass->GetProjectionMatrix());
 }
 
 

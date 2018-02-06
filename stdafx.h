@@ -9,6 +9,7 @@
 
 #define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 #define NOMINMAX
+
 // Windows Header Files:
 #include <windows.h>
 
@@ -29,18 +30,12 @@
 // TODO: reference additional headers your program requires here
 
 typedef uint32_t uint32;
+typedef uint16_t uint16;
 typedef uint8_t uint8;
 
-// Constants
-const float Pi = 3.141592654f;
-const float Pi2 = 6.283185307f;
-const float Pi_2 = 1.570796327f;
-const float Pi_4 = 0.7853981635f;
-const float InvPi = 0.318309886f;
-const float InvPi2 = 0.159154943f;
 
-// Scale factor used for storing physical light units in fp16 floats (equal to 2^-10).
-const float FP16Scale = 0.0009765625f;
+
+
 
 //error messagebox
 #define MBERROR(MSGs, CAPT, WINDOW) \
@@ -236,3 +231,4 @@ std::vector<std::string> split(const std::string &s, char delim);
 
 const std::string currentDateTime();
 
+void writeToFile(std::vector<std::string> data);

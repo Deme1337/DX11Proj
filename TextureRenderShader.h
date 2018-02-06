@@ -27,6 +27,7 @@ private:
 		float ssaoBias = 0.025f;
 		float ssaoRadius = 1.5f;
 		XMFLOAT4 ssaoSampl[64];
+		XMMATRIX projectionMatrix;
 	};
 
 public:
@@ -67,6 +68,7 @@ private:
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
+	XMMATRIX gProjectionMatrix;
 	
 public:
 	ID3D11VertexShader* m_vertexShader;

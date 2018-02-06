@@ -317,7 +317,7 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	devclass->GetDevCon()->PSSetShaderResources(3, 1, &positionTexture);
 	devclass->GetDevCon()->PSSetShaderResources(4, 1, &roughnessTexture);
 	devclass->GetDevCon()->PSSetShaderResources(5, 1, &tangentTexture);
-	devclass->GetDevCon()->PSSetShaderResources(6, 1, &binormalTexture);
+	
 
 	// Lock the light constant buffer so it can be written to.
 	result = devclass->GetDevCon()->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -336,11 +336,11 @@ void LightShader::UpdateShaderParameters(CDeviceClass * devclass, XMMATRIX & wor
 	dataPtr2->LightColor	= col;
 	dataPtr2->lightViewMatrix = XMMatrixTranspose(dlight.GetLightViewMatrix());
 	dataPtr2->lightProjectionMatrix = XMMatrixTranspose(dlight.GetLightProjectionMatrix());
-	dataPtr2->viewMatrix = XMMatrixTranspose(tempViewMatrix);
+	dataPtr2->viewMatrix = tempViewMatrix;
 	dataPtr2->GlobalAmbient = dlight.lightProperties.globalAmbient;
 	dataPtr2->shadowBias = dlight.lightProperties.shadowBias;
 	dataPtr2->attenuation = dlight.lightProperties.attenuation;
-
+	dataPtr2->projectionMatrix = devclass->GetProjectionMatrix();
 	// Unlock the constant buffer.
 	devclass->GetDevCon()->Unmap(m_lightBuffer, 0);
 

@@ -181,6 +181,7 @@
     <ClInclude Include="Lights.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OrthoWindow.h" />

@@ -33,6 +33,7 @@ private:
 		float Elevation = 0.0f;
 		ID3D11ShaderResourceView* CubeMap;
 		void Init(XMFLOAT3 sunDirection, XMFLOAT3 groundAlbedo, float turbidity);
+		void ShutDown();
 	};
 
 	struct MatrixBufferType
@@ -63,7 +64,7 @@ public:
 
 	bool Initialize(ID3D11Device* device, HWND hwnd);
 	void Shutdown();
-	bool Update(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
+	bool Update(ID3D11DeviceContext* deviceContext, ID3D11Device* dev, int indexCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
 		XMMATRIX &projectionMatrix, XMFLOAT4 &apexColor, XMFLOAT4 &centerColor, DirectionalLight &dlight, FreeCamera* cam);
 	void SetSkyDomeTexture(ID3D11DeviceContext* devcon, ID3D11ShaderResourceView *tex, int index);
 
@@ -72,16 +73,16 @@ private:
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename);
 
-	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, ID3D11Device* dev, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
 		XMMATRIX &projectionMatrix, XMFLOAT4 &apexColor, XMFLOAT4 &centerColor, DirectionalLight &dlight, FreeCamera* cam);
 	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount);
 
 
-
+	XMVECTOR MapXYSToDirection(unsigned int x, unsigned int y, unsigned int s, unsigned int width, unsigned int height);
 
 public:
 	SkyModelData skyModel;
-
+	bool sunPosMoved = true;
     XMFLOAT3 SampleSky(const SkyModelData& data, XMVECTOR sampleDir);
 
 private:

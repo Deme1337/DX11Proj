@@ -167,7 +167,8 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 		ImGui::Begin("Tools");
 		ImGui::SetWindowSize(ImVec2(350, 500));
 		ImGui::SliderFloat("Blur sigma", &m_Scene->BlurSigma, 0.0f, 50.0f);
-
+		ImGui::SliderFloat("ssao Blur sigma", &m_Scene->ssaoBlurSigma, 0.0f, 50.0f);
+		ImGui::SliderFloat("Sky dome rotation speed: ", &m_Scene->skyDomeRotationSpeed, 0.0f, 1.0f, "%.5f");
 		ImGui::Separator();
 
 		//Just to keep index bound in actorlist size
@@ -406,7 +407,11 @@ void GraphicsEngine::UpdateEngine(int fps, double frameTime)
 
 
 
-
+	if (LastObjectSelectedIndex != ObjectSelectedIndex)
+	{
+		this->PrepareTW();
+		LastObjectSelectedIndex = ObjectSelectedIndex;
+	}
 
 	//Imgui rendering
 	{
@@ -788,14 +793,25 @@ bool GraphicsEngine::LoadSceneFromFile()
 void GraphicsEngine::PrepareScene()
 {
 
-	a[0] = new Actor("Models\\Crytek\\Sponza\\sponza.obj", m_D3DDevice);
-	a[0]->SetModelSize(XMVectorSet(0.1, 0.1, 0.1, 1.0));
-	a[0]->SetModelPosition(XMVectorSet(1, 1, 1, 1.0f));
-	a[0]->HasAlpha = true;
+	a[0] = new Actor("Models\\Crytek\\nanosuit\\nanosuit.obj", m_D3DDevice);
+	a[0]->SetModelSize(XMVectorSet(1, 1, 1, 1.0));
+	a[0]->SetModelPosition(XMVectorSet(0, 0, 0, 1.0f));
+	a[0]->HasAlpha = false;
 	a[0]->actorMatrix.roughness = 0.80f;
 	a[0]->UseTextures = true;
 	m_Scene->AddSceneActor(a[0],m_D3DDevice);
-	LoadedActorList.push_back(a[0]);
+
+
+	a[1] = new Actor("Models\\plane.obj", m_D3DDevice);
+	a[1]->SetModelSize(XMVectorSet(1, 1, 1, 1.0));
+	a[1]->SetModelPosition(XMVectorSet(0, 0, 0, 1.0f));
+	a[1]->HasAlpha = false;
+	a[1]->actorMatrix.texOffsetx = 5.0f;
+	a[1]->actorMatrix.texOffsety = 5.0f;
+	a[1]->actorMatrix.roughness = 1.0f;
+	a[1]->UseTextures = true;
+	m_Scene->AddSceneActor(a[1], m_D3DDevice);
+
 
 	m_Scene->BlurSigma = 0.0f;
 
@@ -836,6 +852,7 @@ void GraphicsEngine::PrepareTW()
 	m_GUI->AddVariableXMfloat("Color: ", m_Scene->m_Actors[ObjectSelectedIndex]->actorMatrix.objColor);
 	m_GUI->AddVariableBoolean("Alpha cull: ", m_Scene->m_Actors[ObjectSelectedIndex]->HasAlpha);
 	m_GUI->AddVariableBoolean("Use textures: ", m_Scene->m_Actors[ObjectSelectedIndex]->UseTextures);
+	m_GUI->AddVariableBoolean("Shadow map: ", m_Scene->m_Actors[ObjectSelectedIndex]->HasShadow);
 	
 	m_GUI->AddVariableXMfloat("Skydome center color: ", m_Scene->GetSkyDome()->m_centerColor);
 	m_GUI->AddVariableXMfloat("Skydome apex color: ", m_Scene->GetSkyDome()->m_apexColor);

@@ -49,7 +49,8 @@ public:
 
 	XMMATRIX GetProjectionMatrix() { return this->projectionMatrix; }
 	XMMATRIX GetOrthoMatrix() { return this->orthoMatrix; }
-	XMMATRIX projectionMatrix, orthoMatrix;
+	XMMATRIX GetProjectionMatrix2() { return this->projectionMatrix2; }
+	XMMATRIX projectionMatrix, orthoMatrix, projectionMatrix2;
 	HWND _mainWindow;
 
 private:

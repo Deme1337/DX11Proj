@@ -79,6 +79,11 @@ bool CTextureRenderShader::Render(ID3D11DeviceContext* deviceContext, int indexC
 	return true;
 }
 
+void CTextureRenderShader::SetProjectionMatix(XMMATRIX & mat)
+{
+	this->gProjectionMatrix = mat;
+}
+
 
 bool CTextureRenderShader::InitializeShader(CDeviceClass *devclass, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
@@ -484,7 +489,7 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 	dataPtr1->screenWH = swh;
 	dataPtr1->ssaoBias = this->ssaoBiasAndRadius.x;
 	dataPtr1->ssaoRadius = this->ssaoBiasAndRadius.y;
-
+	dataPtr1->projectionMatrix = devclass->GetProjectionMatrix();
 	
 	for (size_t i = 0; i < ssaoSampl.size(); i++)
 	{

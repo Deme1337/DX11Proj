@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "SkyDomeShader.h"
+#include "Math.h"
+
 
 #include <cstdint>
 #include <iostream>
@@ -8,6 +10,40 @@
 #include <algorithm> // notice this
 using namespace std;
 
+// Utility function to map a XY + Side coordinate to a direction vector
+XMVECTOR CSkyDomeShader::MapXYSToDirection(unsigned int x, unsigned int y, unsigned int s, unsigned int width, unsigned int height)
+{
+	float u = ((x + 0.5f) / float(width)) * 2.0f - 1.0f;
+	float v = ((y + 0.5f) / float(height)) * 2.0f - 1.0f;
+	v *= -1.0f;
+
+	XMVECTOR dir = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+
+	// +x, -x, +y, -y, +z, -z
+	switch (s) 
+	{
+	case 0:
+		dir = XMVector3Normalize(XMVectorSet(1.0f, v, -u, 1.0f));
+		break;
+	case 1:
+		dir = XMVector3Normalize(XMVectorSet(-1.0f, v, u, 1.0f));
+		break;
+	case 2:
+		dir = XMVector3Normalize(XMVectorSet(u, 1.0f, -v, 1.0f));
+		break;
+	case 3:
+		dir = XMVector3Normalize(XMVectorSet(u, -1.0f, v, 1.0f));
+		break;
+	case 4:
+		dir = XMVector3Normalize(XMVectorSet(u, v, 1.0f, 1.0f));
+		break;
+	case 5:
+		dir = XMVector3Normalize(XMVectorSet(-u, v, -1.0f, 1.0f));
+		break;
+	}
+
+	return dir;
+}
 
 
 
@@ -15,16 +51,14 @@ float PhysicalSunSize = XMConvertToRadians(0.27f);
 float CosPhysicalSunSize = std::cos(PhysicalSunSize);
 
 
-static float AngleBetween(const XMVECTOR& dir0, const XMVECTOR& dir1)
+float AngleBetween(const XMVECTOR& dir0, const XMVECTOR& dir1)
 {
-	XMFLOAT3 diRdot;
-	XMStoreFloat3(&diRdot, XMVector3Dot(dir0, dir1));
-	return acos(max((float)diRdot.x, 0.00001f));
+	return	std::acos(std::max(XMVectorGetX(XMVector3Dot(dir0, dir1)), 0.00001f));
 }
 
 // Returns the result of performing a irradiance integral over the portion
 // of the hemisphere covered by a region with angular radius = theta
-static float IrradianceIntegral(float theta)
+float IrradianceIntegral(float theta)
 {
 	float sinTheta = std::sin(theta);
 	return Pi * sinTheta * sinTheta;
@@ -75,14 +109,14 @@ void CSkyDomeShader::Shutdown()
 }
 
 
-bool CSkyDomeShader::Update(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
+bool CSkyDomeShader::Update(ID3D11DeviceContext* deviceContext, ID3D11Device* dev, int indexCount, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
 	XMMATRIX &projectionMatrix, XMFLOAT4 &apexColor, XMFLOAT4 &centerColor, DirectionalLight &dlight, FreeCamera* cam)
 {
 	bool result;
 
 
 	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, apexColor, centerColor, dlight, cam);
+	result = SetShaderParameters(deviceContext, dev,  worldMatrix, viewMatrix, projectionMatrix, apexColor, centerColor, dlight, cam);
 	if (!result)
 	{
 		return false;
@@ -248,6 +282,7 @@ bool CSkyDomeShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vs
 
 void CSkyDomeShader::ShutdownShader()
 {
+	skyModel.ShutDown();
 	// Release the pixel constant buffer.
 	if (m_colorBuffer)
 	{
@@ -323,7 +358,7 @@ void CSkyDomeShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwn
 }
 
 
-bool CSkyDomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
+bool CSkyDomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, ID3D11Device* dev, XMMATRIX &worldMatrix, XMMATRIX &viewMatrix,
 	XMMATRIX &projectionMatrix, XMFLOAT4 &apexColor, XMFLOAT4 &centerColor, DirectionalLight &dlight, FreeCamera* cam)
 {
 	HRESULT result;
@@ -383,7 +418,87 @@ bool CSkyDomeShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMM
 	dataPtr2->scale1 = dlight.lightProperties.scale1;
 	dataPtr2->scale1 = dlight.lightProperties.scale2;
 
-	dataPtr2->radiance = SampleSky(this->skyModel, XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f)).x;
+	XMFLOAT3 sunDirection; XMStoreFloat3(&sunDirection, XMVector3Normalize(XMLoadFloat4(&dlight.lightProperties.Position)));
+
+
+
+	//Create skycache
+	//if (sunPosMoved)
+	//{
+	//	skyModel.ShutDown();
+	//	skyModel.Init(sunDirection, XMFLOAT3(0.5f, 0.5f, 0.5f), 8.0f);
+	//	unsigned int CubeMapRes = 128;
+	//	std::vector<XMFLOAT4> texels;
+	//	texels.resize(CubeMapRes * CubeMapRes * 6);
+	//
+	//	for (int i = 0; i < 6; ++i)
+	//	{
+	//		for (int x = 0; x < CubeMapRes; ++x)
+	//		{
+	//			for (int y = 0; y < CubeMapRes; ++y)
+	//			{
+	//				XMFLOAT3 radiance = SampleSky(this->skyModel, this->MapXYSToDirection(x, y, i, CubeMapRes, CubeMapRes));
+	//
+	//				unsigned int idx = (i * CubeMapRes * CubeMapRes) + (y * CubeMapRes) + x;
+	//
+	//
+	//				texels[idx].x = radiance.x;
+	//				texels[idx].y = radiance.y;
+	//				texels[idx].z = radiance.z;
+	//				texels[idx].w = 1.0f;
+	//			}
+	//		}
+	//	}
+	//
+	//	std::vector<std::string> cmdata;
+	//	//DEBUG
+	//	for (size_t i = 0; i < texels.size(); i++)
+	//	{
+	//		std::string d = std::to_string(texels[i].x) + "  " + std::to_string(texels[i].y) + "  " + std::to_string(texels[i].z);
+	//		cmdata.push_back(d);
+	//	}
+	//
+	//	writeToFile(cmdata);
+	//
+	//	D3D11_TEXTURE2D_DESC desc;
+	//	desc.Width = CubeMapRes;
+	//	desc.Height = CubeMapRes;
+	//	desc.ArraySize = 6;
+	//	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	//	desc.CPUAccessFlags = 0;
+	//	desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	//	desc.MipLevels = 1;
+	//	desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+	//	desc.SampleDesc.Count = 1;
+	//	desc.SampleDesc.Quality = 0;
+	//	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	//
+	//	D3D11_SUBRESOURCE_DATA resData[6];
+	//	for (unsigned int i = 0; i < 6; ++i)
+	//	{
+	//		resData[i].pSysMem = &texels[i * CubeMapRes * CubeMapRes];
+	//		resData[i].SysMemPitch = sizeof(texels[0]) * CubeMapRes;
+	//		resData[i].SysMemSlicePitch = 0;
+	//	}
+	//
+	//	ID3D11Texture2D* texArray;
+	//	dev->CreateTexture2D(&desc, resData, &texArray);
+	//
+	//	// Create a resource view to the texture array.
+	//	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
+	//	viewDesc.Format = desc.Format;
+	//	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	//	viewDesc.TextureCube.MostDetailedMip = 0;
+	//	viewDesc.TextureCube.MipLevels = desc.MipLevels;
+	//	dev->CreateShaderResourceView(texArray, &viewDesc, &skyModel.CubeMap);
+	//
+	//
+	//
+	//	sunPosMoved = false;
+	//}
+	
+
+	//this->SetSkyDomeTexture(deviceContext, skyModel.CubeMap, 8);
 
 	// Unlock the color constant buffer.
 	deviceContext->Unmap(m_colorBuffer, 0);
@@ -413,12 +528,14 @@ void CSkyDomeShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexC
 	return;
 }
 
+
+
 XMFLOAT3 CSkyDomeShader::SampleSky(const SkyModelData & data, XMVECTOR sampleDir)
 {
 
 
 	float gamma = AngleBetween(sampleDir, XMLoadFloat3(&data.SunDirection));
-	float theta = AngleBetween(sampleDir, XMVectorSet(0, 1, 0, 1));
+	float theta = AngleBetween(sampleDir, XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
 
 	XMFLOAT3 radiance;
 
@@ -431,7 +548,7 @@ XMFLOAT3 CSkyDomeShader::SampleSky(const SkyModelData & data, XMVECTOR sampleDir
 	radiance.x *= 683.0f;
 	radiance.y *= 683.0f;
 	radiance.z *= 683.0f;
-
+	
 	radiance.x *= FP16Scale;
 	radiance.y *= FP16Scale;
 	radiance.z *= FP16Scale;
@@ -440,47 +557,75 @@ XMFLOAT3 CSkyDomeShader::SampleSky(const SkyModelData & data, XMVECTOR sampleDir
 }
 
 
-float clip(float n, float lower, float upper)
-{
-	return std::max(lower, std::min(n, upper));
-}
 
 XMFLOAT3 Saturate(XMFLOAT3 val)
 {
 	XMFLOAT3 result;
-	result.x = clip(val.x, 0.0f, 1.0f);
-	result.y = clip(val.y, 0.0f, 1.0f);
-	result.z = clip(val.z, 0.0f, 1.0f);
+	result.x = clamp(val.x, 0.0f, 1.0f);
+	result.y = clamp(val.y, 0.0f, 1.0f);
+	result.z = clamp(val.z, 0.0f, 1.0f);
 	return result;
 }
 
 float Saturate(float val)
 {
-	return clip(val, 0.0f, 1.0f);
+	return clamp(val, 0.0f, 1.0f);
 }
 
 
 void CSkyDomeShader::SkyModelData::Init(XMFLOAT3 sunDirection, XMFLOAT3 groundAlbedo, float turbidity)
 {
+	XMFLOAT3 sunDirection_, groundAlbedo_;
+	float turb;
 
+	sunDirection_.y = Saturate(sunDirection.y);
+	XMVECTOR sunDirV = XMVector3Normalize(XMLoadFloat3(&sunDirection_));
+	turb = clamp(turbidity, 1.0f, 32.0f);
+	groundAlbedo_ = Saturate(groundAlbedo);
 
-	sunDirection.y = Saturate(sunDirection.y);
-	XMVECTOR sunDirV = XMLoadFloat3(&sunDirection);
-	sunDirV = XMVector3Normalize(sunDirV);
-    turbidity = clip(turbidity, 1.0f, 32.0f);
-    groundAlbedo = Saturate(groundAlbedo);
+	ShutDown();
 
+	sunDirection_.y = Saturate(sunDirection.y);
+	sunDirV = XMVector3Normalize(XMLoadFloat3(&sunDirection_));
+	turb = clamp(turbidity, 1.0f, 32.0f);
+	groundAlbedo_ = Saturate(groundAlbedo);
 
-    float thetaS = AngleBetween(sunDirV, XMVectorSet(0, 1, 0, 1.0f));
+    float thetaS = AngleBetween(sunDirV, XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f));
+	//float thetaS = std::acos(1.0f - sunDirection.y);
     float elevation = Pi_2 - thetaS;
-    StateR = arhosek_rgb_skymodelstate_alloc_init(turbidity, groundAlbedo.x, elevation);
-    StateG = arhosek_rgb_skymodelstate_alloc_init(turbidity, groundAlbedo.y, elevation);
-    StateB = arhosek_rgb_skymodelstate_alloc_init(turbidity, groundAlbedo.z, elevation);
+    StateR = arhosek_rgb_skymodelstate_alloc_init(turb, groundAlbedo_.x, elevation);
+    StateG = arhosek_rgb_skymodelstate_alloc_init(turb, groundAlbedo_.y, elevation);
+    StateB = arhosek_rgb_skymodelstate_alloc_init(turb, groundAlbedo_.z, elevation);
 
     Albedo = groundAlbedo;
     Elevation = elevation;
     SunDirection = sunDirection;
     Turbidity = turbidity;
+}
+
+void CSkyDomeShader::SkyModelData::ShutDown()
+{
+	if (StateR != nullptr)
+	{
+		arhosekskymodelstate_free(StateR);
+		StateR = nullptr;
+	}
+
+	if (StateG != nullptr)
+	{
+		arhosekskymodelstate_free(StateG);
+		StateG = nullptr;
+	}
+
+	if (StateB != nullptr)
+	{
+		arhosekskymodelstate_free(StateB);
+		StateB = nullptr;
+	}
+
+	CubeMap = nullptr;
+	Turbidity = 0.0f;
+	Elevation = 0.0f;
 }
 
 

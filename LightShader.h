@@ -29,6 +29,7 @@ private:
 		XMMATRIX lightViewMatrix;
 		XMMATRIX lightProjectionMatrix;
 		XMMATRIX viewMatrix;
+		XMMATRIX projectionMatrix;
 		float GlobalAmbient;
 		float shadowBias;
 		float attenuation;

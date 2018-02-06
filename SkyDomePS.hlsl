@@ -1,5 +1,6 @@
 Texture2D skyDomeTexture : register(t0);
 TextureCube skyDomeTextureCube : register(t1);
+TextureCube skyDomeRadianceTexture : register(t8);
 
 SamplerState SamplerLinear
 {
@@ -51,13 +52,14 @@ struct PixelOutputType
 PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 {
 	PixelOutputType output;
-
+    float FP16Max = 65000.0f;
 	float height,width;
 	float4 outputColor;
 	float sunDiameter = 1.0f;
 	float pixDist;
 	float4 sunPosition1 = sunPosition;
 	float4 SkyTexture = skyDomeTextureCube.Sample(SamplerLinear, -input.normals.xyz);
+    //float4 skyRadiance = skyDomeRadianceTexture.Sample(SamplerLinear, -normalize(input.normals.xyz));
 
 	sunPosition1 = normalize(sunPosition1);
 	// Determine the position on the sky dome where this pixel is located.
@@ -94,10 +96,10 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
     }
     else
     {
-        output.color = SkyTexture + outputColor;
+        output.color = outputColor + SkyTexture;
     }
 
-
+    output.color = clamp(output.color, 0.0f, FP16Max);
  
 
 

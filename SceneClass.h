@@ -58,9 +58,14 @@ public:
 
 	bool DrawTerrain = false;
 	 
+	float ssaoBlurSigma = 1.0f;
 	float BlurSigma = 19.0f;
+	float skyDomeRotationSpeed = 0.00001f;
+
 	XMFLOAT2 ssaoBiasAndRadius;
 	DirectionalLight dirLight;
+
+	XMFLOAT4 lastLightPos = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	
 	CSkydome* GetSkyDome() { return this->m_SkyDome; }
 	FreeCamera* GetCamera() { return this->m_Camera; }
@@ -73,7 +78,7 @@ private:
 	int Setting = 0;
 	float renderScale = 1.0f;
 	const int POINT_LIGHT_COUNT = 40;
-
+	float skyDomeRotator = 0.0f;
 	bool ShadowUseFrontCulling = false;
 	bool UseOrthoCamera = false;
 

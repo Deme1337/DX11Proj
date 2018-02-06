@@ -5,7 +5,7 @@ Texture2D specularTexture : register(t2);
 Texture2D positionTexture : register(t3);
 Texture2D roughnessTexture : register(t4);
 Texture2D tangentTexture: register(t5);
-Texture2D binormalTexture : register(t6);
+
 
 Texture2D shadowMapTexture : register(t7);
 
@@ -33,6 +33,7 @@ cbuffer LightBuffer: register(b0)
 	matrix lightViewMatrix;
 	matrix lightProjectionMatrix;
     matrix viewMatrix;
+    matrix projectionMatrix;
 	float globalAmbient; 
     float shadowBias;
     float attenuation;
@@ -295,7 +296,6 @@ float ComputeScattering(float lightDotView)
 }
 
 /*
-
 LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 {
     LightPixelShaderOutput output;
@@ -328,7 +328,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
     return output;
 }
 
-*/
+
 
 //Cook torrance lighting N = normal, V = View, L = light, a = roughness, albedo = color, metallic = specular texture
 float3 CookTorrance(float3 N, float3 V, float3 L, float a, float3 albedo, float3 metallic, float3 radiance, float shadow, float3 envMap)
@@ -360,16 +360,15 @@ float3 CookTorrance(float3 N, float3 V, float3 L, float a, float3 albedo, float3
     float3 specular = nominator / denom;
 
     float3 diffuseC = DiffuseLambertian(albedo);
-    float3 specularC = pow(specular, (1.0f / 2.2f));
+    float3 specularC = specular;
 
-    Cook = kD * diffuseC * shadow + specularC * envMap;
+    Cook = (kD * diffuseC * shadow) + specularC * envMap;
     Cook *= radiance * NoL;
-    Cook = Cook / (Cook + 1.0f);
-    Cook = pow(Cook, 1.0f / 2.2f);
 
     return Cook;
 
 }
+
 
 LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 {
@@ -380,17 +379,19 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
     float3 color = 0.0f;
 
     float3 Albedo = colorTexture.Sample(SampleTypePoint, input.tex).rgb * lightColor.xyz;
-    color = pow(Albedo, (1.0f / 2.2f));
+    color = Albedo; // pow(Albedo, (1.0f / 2.2f));
+
     float4 normals = normalTexture.Sample(SampleTypePoint, input.tex);
     float specularColor = specularTexture.Sample(SampleTypePoint, input.tex).r;
     float roughness = roughnessTexture.Sample(SampleTypePoint, input.tex).x;
-	//float3 tangent = normalize(cross(float3(0,1,0), normals.xyz));
-	//float3 binormal = normalize(cross(normals.xyz, tangent));
-    float3 tangent = tangentTexture.Sample(SampleTypePoint, input.tex).xyz;
-    float3 binormal = binormalTexture.Sample(SampleTypePoint, input.tex).xyz;
+	float3 tangent = normalize(cross(float3(0,1,0), normals.xyz));
+	float3 binormal = normalize(cross(normals.xyz, tangent));
+    //float3 tangent = tangentTexture.Sample(SampleTypePoint, input.tex).xyz;
+    //float3 binormal = binormalTexture.Sample(SampleTypePoint, input.tex).xyz;
 
     float4 positionTex = positionTexture.Sample(SampleTypePoint, input.tex);
-    float3 lightDir = normalize(lightDirection);
+
+    float3 lightDir = normalize(lightDirection.xyz);
     float Metallic = specularTexture.Sample(SampleTypePoint, input.tex).g;
 
     float3 viewDirection = normalize(input.viewDir - positionTex.xyz);
@@ -433,16 +434,23 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
     float mipIndex = roughness * roughness * 8.0f;
 
     float3 envColor = envmapTexture.SampleLevel(SampleTypePoint, -reflectVector, mipIndex);
-    envColor = pow(envColor, (1.0f / 2.2f));
+    //envColor = envColor / (envColor + float3(1.0f, 1.0f, 1.0f));
+    //envColor = pow(envColor, (1.0f / 2.2f));
 
 
     pixelColor = CookTorrance(normals.xyz, viewDirection, lightDir, roughness, rlAlbedo, realSpec, radiance, shadow, envColor);
 
-    pixelColor = pixelColor + globalAmbient * Albedo;
 
-    output.color = pow(float4(pixelColor, 1.0f), 2.2f);
 
-    if(shadow > 0.90f)
+    float ssaoValue = ssaoTexture.Sample(SampleTypePoint, input.tex).r;
+
+    pixelColor += globalAmbient  * rlAlbedo;
+
+
+
+    output.color = float4(pixelColor, 1.0f);
+
+    if(shadow > 0.95f)
         output.specular = float4(pixelColor, 1.0f);
     else
         output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -451,11 +459,11 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
 }
 
-
+*/
 /**********************
      DISNEY BRDF
 **********************/
-/*
+
 LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 {
 	LightPixelShaderOutput output;
@@ -469,16 +477,16 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 	float4 normals =  normalTexture.Sample(SampleTypePoint, input.tex);
 	float specularColor = specularTexture.Sample(SampleTypePoint, input.tex).r;
 	float roughness = roughnessTexture.Sample(SampleTypePoint, input.tex).x;
-	//float3 tangent = normalize(cross(float3(0,1,0), normals.xyz));
-	//float3 binormal = normalize(cross(normals.xyz, tangent));
-	float3 tangent = tangentTexture.Sample(SampleTypePoint, input.tex).xyz;
-	float3 binormal	= binormalTexture.Sample(SampleTypePoint, input.tex).xyz;
+	float3 tangent = normalize(cross(float3(0,1,0), normals.xyz));
+	float3 binormal = normalize(cross(normals.xyz, tangent));
+	//float3 tangent = tangentTexture.Sample(SampleTypePoint, input.tex).xyz;
+	//float3 binormal	= binormalTexture.Sample(SampleTypePoint, input.tex).xyz;
 
 	float4 positionTex = positionTexture.Sample(SampleTypePoint, input.tex);
     float3 lightDir = -normalize(lightDirection);
 	float Metallic = specularTexture.Sample(SampleTypePoint, input.tex).g;
 
-	float3 viewDirection = normalize(positionTex.xyz - input.viewDir);
+    float3 viewDirection = normalize(input.viewDir - positionTex.xyz);
 
 	float3 rlAlbedo;
 	float3 realSpec;
@@ -508,7 +516,6 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
     float shadow = shadowAA(shadowMapTexture, SampleTypeShadow, lightMatrix, shadowBias, globalAmbient);
 	
-    //float shadow = softShadow(shadowMapTexture, SampleTypePoint, lightMatrix, shadowBias);
 
     float3 brdf_Disney = DisneyBRDF(Albedo, Specular.xyz, normals.xyz, roughness, -lightDir, viewDirection, tangent.xyz, binormal.xyz, Diffuse.xyz, input.tex, shadow);
 	
@@ -531,7 +538,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
     //float AmbientOcclusion = ssaoTexture.Sample(SampleTypePoint, input.tex).r;
     
-    float3 irradianceColor = 0.5f.xxx;
+    float3 irradianceColor = 0.4f.xxx;
     float3 reflectionIntensity = 0.2f.xxx;
 
     //terrain for now without shadow
@@ -559,4 +566,3 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 
 	return output;
 }
-*/

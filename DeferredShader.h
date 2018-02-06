@@ -18,6 +18,7 @@ private:
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX projection;
+		XMMATRIX invViewMatrix;
 		float texOffSetX;
 		float texOffSetY;
 		int HasAlpha;

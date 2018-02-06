@@ -335,7 +335,7 @@ bool CTextureTA::NoiseTexture(ID3D11Device * dev, ID3D11DeviceContext * devcon)
 	}
 
 	// Set the row pitch of the targa image data.
-	rowPitch = (4 * 4) * sizeof(unsigned char);
+	rowPitch = (4 * 4) * sizeof(XMFLOAT3);
 
 	// Copy the targa image data into the texture.
 	devcon->UpdateSubresource(m_texture, 0, NULL, &ssaoNoise[0], rowPitch, 0);

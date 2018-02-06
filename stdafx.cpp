@@ -4,6 +4,8 @@
 
 #include "stdafx.h"
 
+#include <iostream>
+#include <fstream>
 
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
@@ -229,4 +231,19 @@ const std::string currentDateTime() {
 	strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
 
 	return buf;
+}
+
+void writeToFile(std::vector<std::string> data)
+{
+	std::ofstream file;
+
+	file.open("skydata.txt");
+
+	for (size_t i = 0; i < data.size(); i++)
+	{
+		file << data[i] + "\n";
+	}
+
+	file.close();
+
 }

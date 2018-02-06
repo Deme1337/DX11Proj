@@ -5,7 +5,7 @@
  */
 
 
-#define TONEMAP_GAMMA 1.0
+#define TONEMAP_GAMMA 2.2
 
 // Reinhard Tonemapper
 float4 tonemap_reinhard(in float3 color)

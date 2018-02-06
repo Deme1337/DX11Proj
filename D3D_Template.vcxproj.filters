@@ -183,6 +183,9 @@
     <ClInclude Include="Ext\HosekSky\Include\ArHosekSkyModel.h">
       <Filter>hosek</Filter>
     </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
