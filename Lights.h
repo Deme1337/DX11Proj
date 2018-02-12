@@ -26,7 +26,7 @@ private:
 		float size = 120.0f;
 		float sunPower = 0.04f;
 		float scale1 = 1.5;
-		float scale2 = 1.7;
+		float scale2 = 0.915;
 		float shadowBias = 0.0001f;
 		float attenuation = 1.0f;
 	};

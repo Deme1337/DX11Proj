@@ -490,6 +490,9 @@ bool CTextureRenderShader::SetShaderParameters(ID3D11DeviceContext* deviceContex
 	dataPtr1->ssaoBias = this->ssaoBiasAndRadius.x;
 	dataPtr1->ssaoRadius = this->ssaoBiasAndRadius.y;
 	dataPtr1->projectionMatrix = devclass->GetProjectionMatrix();
+	dataPtr1->lightViewMat = this->lightViewMatrix;
+	dataPtr1->lightProjectionMat = this->lightProjectionMatrix;
+	dataPtr1->cameraPosition = this->cameraPosition;
 	
 	for (size_t i = 0; i < ssaoSampl.size(); i++)
 	{

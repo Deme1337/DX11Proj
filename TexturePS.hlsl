@@ -43,8 +43,11 @@ cbuffer PostProcessData : register(b0)
 	float expa;
     float ssaoBias;
     float ssaoRadius;
-	float4 ssaoKernel[64];
+	float4 ssaoKernel[64]; 
     matrix projectionMatrix;
+    matrix lightViewMat;
+    matrix lightProjectionMat;
+    float4 cameraPosition;
 };
 
 // Calculates the gaussian blur weight for a given distance and sigmas
@@ -366,6 +369,64 @@ float4 ToneMapPass(PixelInputType input) : SV_Target
     return texColor;
 }
 
+float getShadow(Texture2D shaderShadow, SamplerState SampleTypeShadow, float4 lightMatrix, float shBias)
+{
+    float vis = 0.1f;
+    lightMatrix.xyz = lightMatrix.xyz / lightMatrix.w;
+	
+    if (lightMatrix.x < -1.0f || lightMatrix.x > 1.0f ||
+		lightMatrix.y < -1.0f || lightMatrix.y > 1.0f ||
+		lightMatrix.z < 0.0f || lightMatrix.z > 1.0f
+		)
+    {
+        return 1.0f;
+    }
+	
+    lightMatrix.x = lightMatrix.x / 2.0f + 0.5f;
+    lightMatrix.y = lightMatrix.y / -2.0f + 0.5f;
+	
+    float bias = shBias;
+
+    float shaderTex = shaderShadow.Sample(SampleTypeShadow, lightMatrix.xy).r;
+			
+    if (shaderTex > lightMatrix.z - bias)
+    {
+        vis = 0.1f;
+    }
+    else
+    {
+        vis = 1.0f;
+    }
+
+
+    return vis;
+}
+
+
+float4 SSAO(PixelInputType input) : SV_TARGET
+{
+    float4 position = positionTex.Sample(SampleType, input.tex);
+    //float3 vsNormal = tangentTex.Sample(SampleType, input.tex); //shadow map
+
+    //float4 lightMatrix = mul(input.position, lightViewMat);
+    //lightMatrix = mul(lightMatrix, lightProjectionMat);
+    //
+    //
+    //float3 shadow = getShadow(tangentTex, PointSampler, lightMatrix, 0.05);
+
+    float4 fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
+    //float fogPower = expa;
+
+
+    //float dist = position.z + expa;
+
+
+  
+    return fogColor;
+    
+}
+
+/*
 //http://www.learnopengl.com/#!Advanced-Lighting/SSAO changed to hlsl
 float4 SSAO(PixelInputType input) : SV_TARGET
 {
@@ -398,7 +459,7 @@ float4 SSAO(PixelInputType input) : SV_TARGET
 
 	for (int i = 0; i < 64; i++)
 	{
-        float3 sample = mul(TBN, ssaoKernel[i]);
+        float3 sample = mul(ssaoKernel[i], TBN);
         sample = position.xyz + sample * radius;
 
 		float4 offset = float4(sample, 1.0f);
@@ -414,8 +475,9 @@ float4 SSAO(PixelInputType input) : SV_TARGET
         occlusion += (sampleDepth <= sample.z - bias ? 1.0f : 0.0f) * rangeCheck;
     }
 
-	occlusion = 1.0f - (occlusion / 64);
+	occlusion = 1 - (occlusion / 64);
     occlusion = pow(occlusion, expa);
     return float4(occlusion, occlusion, occlusion, 1.0f);
     //return float4(vsNormal, 1.0f);
 }					  
+*/

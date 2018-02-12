@@ -264,7 +264,7 @@ void SceneClass::GeometryPass(CDeviceClass * DevClass)
 		{
 			MessageBox(NULL, L"Error skydome rendering", L"ERROR", MB_OK);
 		}
-		skyDomeRotator += 0.0001f;
+		skyDomeRotator += skyDomeRotationSpeed;
 	}
 
 	//Terrain
@@ -323,8 +323,11 @@ void SceneClass::LightPass(CDeviceClass * DevClass)
 	DevClass->TurnZBufferOff();
 	m_Window->UpdateWindow(DevClass->GetDevCon(), viewPortOffSet, 0);
 
-	ID3D11ShaderResourceView* ssaoRes = postProcessor->CreateSSAO(DevClass, m_Window, m_DeferredBuffer->GetShaderResourceView(6), m_DeferredBuffer->GetShaderResourceView(1), ssaoNoiseTexture->GetTexture(), 
-																  ssaoBlurSigma, m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(5));
+	
+
+	ID3D11ShaderResourceView* ssaoRes = postProcessor->CreateSSAO(DevClass, m_Window, m_DeferredBuffer->GetShaderResourceView(6), shadowMap->GetShaderResourceView(), ssaoNoiseTexture->GetTexture(), 
+																  ssaoBlurSigma, m_DeferredBuffer->GetShaderResourceView(5), m_DeferredBuffer->GetShaderResourceView(5), 
+															      dirLight.GetLightViewMatrix(), dirLight.GetLightProjectionMatrix(), m_Camera);
 
 	DevClass->ResetViewPort();
 	if (ApplyPostProcess)

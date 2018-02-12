@@ -90,13 +90,15 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
     float4 sunColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
     float cosSunAngularRad = cos(sunPower);
 
+
+
     if (cosSunAngle >= cosSunAngularRad)
     {
-        output.color = sunColor * 5;
+        output.color = sunColor;
     }
     else
     {
-        output.color = outputColor + SkyTexture;
+        output.color = lerp(outputColor + SkyTexture, sunColor, cosSunAngle * scale1);
     }
 
     output.color = clamp(output.color, 0.0f, FP16Max);

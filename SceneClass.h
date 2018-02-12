@@ -60,7 +60,7 @@ public:
 	 
 	float ssaoBlurSigma = 1.0f;
 	float BlurSigma = 19.0f;
-	float skyDomeRotationSpeed = 0.00001f;
+	float skyDomeRotationSpeed = 0.0f;
 
 	XMFLOAT2 ssaoBiasAndRadius;
 	DirectionalLight dirLight;

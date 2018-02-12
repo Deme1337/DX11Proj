@@ -51,7 +51,7 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 {
 	PixelOutputType output;
 
-    float linDepth = LinearizeDepth(input.vsPosition.z);
+    //float linDepth = LinearizeDepth(input.vsPosition.z);
 
     if (shaderTexture.Sample(SampleTypeWrap, input.tex).w < 0.4 && input.HasAlpha == 1)
     {
@@ -90,7 +90,7 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
 
             output.roughness = shaderRoughness.Sample(SampleTypeWrap, input.tex).x + roughnessOffset;
 
-            output.vsPosition = float4(input.vsPosition.xy, linDepth, 1.0f);
+            output.vsPosition = float4(input.vsPosition.xyz, 1.0f);
             //output.vsPosition = input.worldPosition;
             output.tangent = float4(input.vsNormal, 1.0f);
 
@@ -103,7 +103,7 @@ PixelOutputType DeferredPixelShader(PixelInputType input) : SV_TARGET
             output.position = input.worldPosition;
             output.normal = float4(input.normal, 1.0f);
             output.roughness = 1.0f + roughnessOffset;
-            output.vsPosition = float4(input.vsPosition.xy, linDepth, 1.0f);
+            output.vsPosition = float4(input.vsPosition.xyz, 1.0f);
             //output.vsPosition = input.worldPosition;
             output.tangent = float4(input.vsNormal, 1.0f);
         }

@@ -362,5 +362,11 @@
     <None Include="TerrainVS.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="SSLRConstantBuffer.hlsli">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="SSLR.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

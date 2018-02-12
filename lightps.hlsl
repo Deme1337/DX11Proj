@@ -536,15 +536,15 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
    
     float3 fragColor; 
 
-    //float AmbientOcclusion = ssaoTexture.Sample(SampleTypePoint, input.tex).r;
+    //float fogsome = ssaoTexture.Sample(SampleTypePoint, input.tex).r;
     
     float3 irradianceColor = 0.4f.xxx;
-    float3 reflectionIntensity = 0.2f.xxx;
+    float3 reflectionIntensity = 0.8f.xxx;
 
     //terrain for now without shadow
     if(normals.w < 0.3f)
     {
-        fragColor = attenuation * 1.0 * brdf_Disney + envFresnel * envColor * reflectionIntensity + realalbedoColor * irradianceColor * globalAmbient;
+        fragColor = attenuation * 1.0 * brdf_Disney  + envFresnel * envColor * reflectionIntensity + realalbedoColor * irradianceColor * globalAmbient;
     }
     else
     {

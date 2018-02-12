@@ -9,6 +9,7 @@
 #include "DeferredBufferClass.h"
 #include "TextureRenderShader.h"
 #include "TextureTA.h"
+#include "FreeCamera.h"
 
 class PostProcessor
 {
@@ -26,7 +27,8 @@ public:
 	ID3D11ShaderResourceView* prepareSmaa(COrthoWindow * window, ID3D11ShaderResourceView* input, ID3D11ShaderResourceView * areaTex, ID3D11ShaderResourceView * searchTex);
 
 	ID3D11ShaderResourceView* CreateSSAO(CDeviceClass* devclass, COrthoWindow* window, ID3D11ShaderResourceView* pos, ID3D11ShaderResourceView* normal, 
-										 ID3D11ShaderResourceView* ssaoNoise, float expss, ID3D11ShaderResourceView* tangentTexture, ID3D11ShaderResourceView* bitangentTexture);
+										 ID3D11ShaderResourceView* ssaoNoise, float expss, ID3D11ShaderResourceView* tangentTexture, ID3D11ShaderResourceView* bitangentTexture,
+											XMMATRIX& lightView, XMMATRIX& lightProjection, FreeCamera *cam);
 
 	ID3D11ShaderResourceView* BlurShadows(CDeviceClass* devclass, COrthoWindow* window, ID3D11ShaderResourceView* pos);
 

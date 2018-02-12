@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PostProcessor.h"
+#include "FreeCamera.h"
 #include <random>
 
 PostProcessor::PostProcessor()
@@ -267,7 +268,8 @@ ID3D11ShaderResourceView* PostProcessor::prepareSmaa(COrthoWindow * window, ID3D
 }
 
 ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, COrthoWindow * window, ID3D11ShaderResourceView * pos, ID3D11ShaderResourceView * normal, 
-													 ID3D11ShaderResourceView* ssaoNoise, float expss, ID3D11ShaderResourceView* tangentTexture, ID3D11ShaderResourceView* bitangentTexture)
+													 ID3D11ShaderResourceView* ssaoNoise, float expss, ID3D11ShaderResourceView* tangentTexture, ID3D11ShaderResourceView* bitangentTexture,
+														XMMATRIX& lightView, XMMATRIX& lightProjection, FreeCamera *cam)
 {
 	
 	devclass->ResetViewPort();
@@ -277,6 +279,9 @@ ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, CO
 	UpdatePostProcessorMatrices();
 	window->Render(devclass->GetDevCon());
 	
+	rtShader->cameraPosition = cam->GetCameraPosition();
+	rtShader->lightViewMatrix = XMMatrixTranspose(lightView);
+	rtShader->lightProjectionMatrix = XMMatrixTranspose(lightProjection);
 	rtShader->ssaoBiasAndRadius = this->ssaoBiasAndRadius;
 	rtShader->Exposure = expss;
 	rtShader->UpdateTextureIndex(devclass->GetDevCon(), ssaoNoise, 2);

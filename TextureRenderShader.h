@@ -28,6 +28,9 @@ private:
 		float ssaoRadius = 1.5f;
 		XMFLOAT4 ssaoSampl[64];
 		XMMATRIX projectionMatrix;
+		XMMATRIX lightViewMat;
+		XMMATRIX lightProjectionMat;
+		XMVECTOR cameraPosition;
 	};
 
 public:
@@ -36,7 +39,7 @@ public:
 	~CTextureRenderShader();
 
 	float Exposure = 0.0f;
-
+	XMVECTOR cameraPosition;
 	XMFLOAT2 ssaoBiasAndRadius;
 
 	bool Initialize(CDeviceClass *devclass, HWND);
@@ -91,6 +94,9 @@ public:
 	ID3D11PixelShader* m_SMAANeighborhoodBlendPS;
 
 	XMMATRIX tempViewMat;
+
+	XMMATRIX lightViewMatrix;
+	XMMATRIX lightProjectionMatrix;
 
 private:
 
