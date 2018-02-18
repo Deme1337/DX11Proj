@@ -44,11 +44,82 @@ struct PixelOutputType
 
 
 
+//-------------------------------------------------------------------------------------------------
+// Calculates the angle between two vectors
+//-------------------------------------------------------------------------------------------------
+float AngleBetween(in float3 dir0, in float3 dir1)
+{
+    return acos(dot(dir0, dir1));
+}
 
 
+float3 skyModelCIA(PixelInputType input)
+{
+ 
+    float3 dir = normalize(input.normals.xyz);
+    float3 sunDir = normalize(sunPosition);
+
+    float gamma = AngleBetween(dir, sunDir);
+    float S = AngleBetween(sunDir, float3(0, 1, 0));
+    float theta = AngleBetween(dir, float3(0, 1, 0));
+
+    float cosTheta = cos(theta);
+    float cosS = cos(S);
+    float cosGamma = cos(gamma);
+
+    float num = (0.91f + 10 * exp(-3 * gamma) + 0.45 * cosGamma * cosGamma) * (1 - exp(-0.32f / cosTheta));
+    float denom = (0.91f + 10 * exp(-3 * S) + 0.45 * cosS * cosS) * (1 - exp(-0.32f));
+
+    float lum = num / denom;
+
+	// Clear Sky model only calculates luminance, so we'll pick a strong blue color for the sky
+    const float3 SkyColor = float3(0.2f, 0.5f, 1.0f);
+    const float3 SunColor = float3(1.0f, 0.8f, 0.3f) * 150;
+    const float SunWidth = 0.05f;
+
+    float3 color = SkyColor;
+    color = lerp(SunColor, SkyColor, saturate(abs(gamma) / SunWidth));
+
+    return max(color * lum, 0);
+}
+
+PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
+{
+    PixelOutputType output;
+    float height, width;
+    // Determine the position on the sky dome where this pixel is located.
+    height = input.domePosition.y;
+
+    width = input.domePosition.x;
+	// The value ranges from -1.0f to +1.0f so change it to only positive values.
+
+	
+    float4 SkyTexture = skyDomeTextureCube.Sample(SamplerLinear, -input.normals.xyz);
+
+    if (height < 0.0)
+    {
+        height = 0.0f;
+    }
+    if (width < 0.0)
+    {
+        width = 0.0f;
+    }
+    
+	// Determine the gradient color by interpolating between the apex and center based on the height of the pixel in the sky dome.
+    float3 skyColor = lerp(centerColor, apexColor, height);
+
+    output.color = float4(skyModelCIA(input) + skyColor + SkyTexture, 1.0f);
+
+    output.normal = float4(1.0f, 1.0f, 1.0f, 0.8f);
+    output.specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    output.position = input.domePosition;
+    output.roughness = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    return output;
+}
 
 
 //TODO:: Add sun for this shader for sunlike effect to the sky
+/*
 PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 {
 	PixelOutputType output;
@@ -94,7 +165,7 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 
     if (cosSunAngle >= cosSunAngularRad)
     {
-        output.color = sunColor;
+        output.color = sunColor * 5.0;
     }
     else
     {
@@ -111,4 +182,4 @@ PixelOutputType SkyDomePixelShader(PixelInputType input) : SV_TARGET
 	output.roughness = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	return output;
-}
+}*/

@@ -279,21 +279,7 @@ float4 PointLightCalculation(PixelInputType input, float4 N, float r, float3 t, 
 
 }
 
-const float G_SCATTERING = 0.2f;
-const float NB_STEPS = 100.0f;
 
-const matrix biasMat = matrix(
-	0.5, 0.0, 0.0, 0.0,
-	0.0, 0.5, 0.0, 0.0,
-	0.0, 0.0, 1.0, 0.0,
-	0.5, 0.5, 0.0, 1.0);
-
-float ComputeScattering(float lightDotView)
-{
-    float result = 1.0f - G_SCATTERING * G_SCATTERING;
-    result /= (4.0f * PI * pow(1.0f + G_SCATTERING * G_SCATTERING - (2.0f * G_SCATTERING) * lightDotView, 1.5f));
-    return result;
-}
 
 /*
 LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
@@ -464,6 +450,9 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
      DISNEY BRDF
 **********************/
 
+
+
+
 LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
 {
 	LightPixelShaderOutput output;
@@ -536,7 +525,7 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
    
     float3 fragColor; 
 
-    //float fogsome = ssaoTexture.Sample(SampleTypePoint, input.tex).r;
+    float fogsome = ssaoTexture.Sample(SampleTypePoint, input.tex).r;
     
     float3 irradianceColor = 0.4f.xxx;
     float3 reflectionIntensity = 0.8f.xxx;
@@ -544,13 +533,15 @@ LightPixelShaderOutput LightPixelShader(PixelInputType input) : SV_TARGET
     //terrain for now without shadow
     if(normals.w < 0.3f)
     {
-        fragColor = attenuation * 1.0 * brdf_Disney  + envFresnel * envColor * reflectionIntensity + realalbedoColor * irradianceColor * globalAmbient;
+        fragColor = attenuation * 1.0 * brdf_Disney + envFresnel * envColor * reflectionIntensity + realalbedoColor * irradianceColor * globalAmbient;
     }
     else
     {
         fragColor = attenuation * shadow * brdf_Disney + envFresnel * envColor * reflectionIntensity + realalbedoColor * irradianceColor * globalAmbient;
     }
 	
+   
+
     output.color = float4(fragColor, 1.0f); //PointLightCalculation(input, normals, roughness, tangent, binormal, positionTex, Metallic, specularColor, Ambient);
 
 	if (shadow > 0.98)

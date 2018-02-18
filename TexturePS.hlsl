@@ -372,24 +372,26 @@ float4 ToneMapPass(PixelInputType input) : SV_Target
 float getShadow(Texture2D shaderShadow, SamplerState SampleTypeShadow, float4 lightMatrix, float shBias)
 {
     float vis = 0.1f;
-    lightMatrix.xyz = lightMatrix.xyz / lightMatrix.w;
-	
+
+    /*
     if (lightMatrix.x < -1.0f || lightMatrix.x > 1.0f ||
 		lightMatrix.y < -1.0f || lightMatrix.y > 1.0f ||
 		lightMatrix.z < 0.0f || lightMatrix.z > 1.0f
 		)
     {
-        return 1.0f;
+        return 5.0f;
     }
-	
+	    */
+
     lightMatrix.x = lightMatrix.x / 2.0f + 0.5f;
-    lightMatrix.y = lightMatrix.y / -2.0f + 0.5f;
-	
+    lightMatrix.y = lightMatrix.y / 2.0f + 0.5f;
+
+
     float bias = shBias;
 
     float shaderTex = shaderShadow.Sample(SampleTypeShadow, lightMatrix.xy).r;
 			
-    if (shaderTex > lightMatrix.z - bias)
+    if (shaderTex > lightMatrix.z / 2.0f + 0.5f -bias)
     {
         vis = 0.1f;
     }
@@ -403,23 +405,44 @@ float getShadow(Texture2D shaderShadow, SamplerState SampleTypeShadow, float4 li
 }
 
 
+const float G_SCATTERING = 0.2f;
+const float NB_STEPS = 100.0f;
+
+const matrix biasMat = matrix(
+	0.5, 0.0, 0.0, 0.0,
+	0.0, 0.5, 0.0, 0.0,
+	0.0, 0.0, 1.0, 0.0,
+	0.5, 0.5, 0.0, 1.0);
+
+float ComputeScattering(float lightDotView)
+{
+    const float PI = 3.14159265359;
+
+    float result = 1.0f - G_SCATTERING * G_SCATTERING;
+    result /= (4.0f * PI * pow(1.0f + G_SCATTERING * G_SCATTERING - (2.0f * G_SCATTERING) * lightDotView, 1.5f));
+    return result;
+}
+
+
+
 float4 SSAO(PixelInputType input) : SV_TARGET
 {
-    float4 position = positionTex.Sample(SampleType, input.tex);
-    //float3 vsNormal = tangentTex.Sample(SampleType, input.tex); //shadow map
+    float4 worldPos = positionTex.Sample(SampleType, input.tex);
 
-    //float4 lightMatrix = mul(input.position, lightViewMat);
-    //lightMatrix = mul(lightMatrix, lightProjectionMat);
-    //
-    //
-    //float3 shadow = getShadow(tangentTex, PointSampler, lightMatrix, 0.05);
+    float4 eyeDir = worldPos-cameraPosition;
+    
 
-    float4 fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
-    //float fogPower = expa;
+    float4 lightMatrix = mul(worldPos, lightViewMat);
+    lightMatrix = mul(lightMatrix, lightProjectionMat);
+    lightMatrix = mul(lightMatrix, transpose(input.viewMatrix));
+   
+    float4 projectedEyeDir = mul(lightMatrix, eyeDir);
+    projectedEyeDir /= projectedEyeDir.w;
+    float shadow = getShadow(normalTex, SampleType, eyeDir, 0.0001);
 
+    float4 fogColor = float4(shadow, shadow, shadow, 1.0f);
 
-    //float dist = position.z + expa;
-
+	
 
   
     return fogColor;

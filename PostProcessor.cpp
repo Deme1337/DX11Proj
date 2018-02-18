@@ -279,6 +279,7 @@ ID3D11ShaderResourceView * PostProcessor::CreateSSAO(CDeviceClass * devclass, CO
 	UpdatePostProcessorMatrices();
 	window->Render(devclass->GetDevCon());
 	
+	rtShader->tempViewMat = cam->GetCameraView();
 	rtShader->cameraPosition = cam->GetCameraPosition();
 	rtShader->lightViewMatrix = XMMatrixTranspose(lightView);
 	rtShader->lightProjectionMatrix = XMMatrixTranspose(lightProjection);
